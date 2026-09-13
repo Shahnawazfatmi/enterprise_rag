@@ -1,0 +1,139 @@
+# ↑
+
+**ISO 9001** Certified·**ISO 27001** Certified·**NASSCOM** Member·**DSCI** Member · DSCI/AM/2026/089·**DPIIT** Recognised· [**Download White Paper**](https://consiva.ai/assets/documents/Consiva-The-Provable-Enterprise.pdf)
+
+[Home](https://consiva.ai/) › [Legal](https://consiva.ai/legal/refund-and-cancellation-policy#) › Refund & Cancellation Policy
+
+# Refund & Cancellation Policy
+
+📅 Effective: August 2026🏢 Swaran Soft Support Solutions Pvt. Ltd.⚖️ Governed by DPDP Act 2023
+
+Consiva.ai is a product and technology platform operated by **Swaran Soft Support Solutions Private Limited** ("Provider", "we", "us"), Tower A, Unit No. 2, 2nd Floor, The Cityscape, Sector-66, Golf Course Extension Road, Gurugram, Haryana – 122102, India. CIN: U72200DL2005PTC136405 · GSTIN: 06AAJCS7515G1Z9.
+
+This policy forms part of our [Terms of Service](https://consiva.ai/legal/terms-of-service).
+
+Contents
+
+## 01. [Summary](https://consiva.ai/legal/refund-and-cancellation-policy#s1)
+## 02. [Free Plan](https://consiva.ai/legal/refund-and-cancellation-policy#s2)
+## 03. [Cancelling a Monthly Plan](https://consiva.ai/legal/refund-and-cancellation-policy#s3)
+## 04. [Cancelling an Annual Plan](https://consiva.ai/legal/refund-and-cancellation-policy#s4)
+## 05. [Add-On Packs](https://consiva.ai/legal/refund-and-cancellation-policy#s5)
+## 06. [Renewal](https://consiva.ai/legal/refund-and-cancellation-policy#s6)
+## 07. [Refunds](https://consiva.ai/legal/refund-and-cancellation-policy#s7)
+## 08. [Failed Payments](https://consiva.ai/legal/refund-and-cancellation-policy#s8)
+## 09. [Taxes](https://consiva.ai/legal/refund-and-cancellation-policy#s9)
+## 10. [What Happens to Your Data](https://consiva.ai/legal/refund-and-cancellation-policy#s10)
+## 11. [Changes to This Policy](https://consiva.ai/legal/refund-and-cancellation-policy#s11)
+## 12. [Contact](https://consiva.ai/legal/refund-and-cancellation-policy#s12)
+
+## 1\. Summary
+
+You may cancel at any time. Cancellation takes effect at the end of your current billing period — monthly or annual — and **no further amount is charged**. Fees already paid are **not refundable** once the Service has been accessed.
+
+## 2\. Free Plan
+
+The Free plan is ₹0 and includes 1,000 cookie consents and 50 form consents per month, for one domain, with no time limit and no card required. There is nothing to cancel and nothing to refund. You may stop using it or delete your account at any time.
+
+Before deleting a Free account, export any consent or rights records you need. See clause 10.
+
+## 3\. Cancelling a Monthly Plan
+
+**3.1** Pro is billed monthly in advance at ₹5,999 plus applicable taxes.
+
+**3.2** You may cancel at any time up to and including the day before your next billing date, from your account settings or by writing to [billing@consiva.ai](mailto:billing@consiva.ai).
+
+**3.3** Cancellation takes effect at the **end of your current monthly billing period**. You keep full access for the remainder of that month.
+
+**3.4** No further amount is charged after that date.
+
+**3.5** We do not refund part of a month. If you cancel on day 3 of a billing month, you keep the service until day 30 and are not charged again.
+
+## 4\. Cancelling an Annual Plan
+
+**4.1** Annual Pro is billed once in advance for a twelve-month term at ₹60,000 plus applicable taxes, reflecting a ₹11,988 saving against monthly billing.
+
+**4.2** You may cancel at any time up to and including the day before your renewal date.
+
+**4.3** Cancellation takes effect at the **end of your current twelve-month term**. You keep full access until then.
+
+**4.4 Cancelling an annual plan does not produce a refund of the unused months.** The annual price is discounted precisely because it is a twelve-month commitment. If you would prefer the flexibility to stop mid-term, choose monthly billing.
+
+We would rather state that plainly here than have you discover it in month four.
+
+## 5\. Add-On Packs
+
+**5.1** Add-on packs — Domain Pack, Cookie Consent Pack, Form Consent Pack — are available to customers on **annual Pro or Enterprise** billing. They are not available to customers on monthly Pro billing, so that a pack's twelve-month term always runs alongside a subscription term of at least the same length.
+
+**5.2** An add-on pack runs for twelve months from its purchase date and is not cancellable mid-term. It renews annually unless cancelled before its own renewal date, or terminates alongside your subscription if that ends first.
+
+**5.3** If you cancel your annual subscription while a pack is running, the pack terminates at the same time and the remaining pack fees are **not refunded**.
+
+**5.4** Pack allowances are monthly and do not roll over. Unused cookie or form consents in a month expire at the end of that month.
+
+## 6\. Renewal
+
+**6.1** Monthly plans renew automatically each month at the then-current price. Annual plans renew automatically for a further twelve months.
+
+**6.2** We will notify you before an annual renewal, **at least 30 days** in advance, by email to your Account email address. Monthly renewals are not individually notified; your invoice serves as the record.
+
+**6.3** If we increase the price applicable to your plan, we will give you **at least 30 days'** notice before the renewal to which the increase applies, so you can cancel beforehand if you choose.
+
+## 7\. Refunds
+
+**7.1 General position.** Once the Service has been accessed under a paid plan, fees are **not refundable**, in whole or in part. This includes the unused remainder of a monthly or annual term following cancellation, and unused monthly allowances.
+
+**7.2 Cancellation is not a refund.** Cancelling stops future billing. It does not return fees paid for the current period.
+
+**7.3 Applies to.** Monthly and annual subscription fees, add-on pack fees, and Enterprise fees except where a signed agreement provides otherwise.
+
+**7.4 Enterprise agreements prevail.** Where you have a signed Order Form or Master Services Agreement with different terms, that agreement overrides this policy.
+
+**7.5 Exceptions we do make.** Notwithstanding clause 7.1, we will refund on a pro-rata basis where:
+
+1. **we terminate your subscription for convenience** — that is, other than for your breach of the Terms or the Acceptable Use Policy;
+2. **we discontinue the Service, or a material part of it that you subscribed for**, during a period you have paid for;
+3. **we make a billing error** — you were charged an incorrect amount, charged twice, or charged after a valid cancellation took effect; or
+## 4. **a refund is required by applicable law.**
+
+Refunds under this clause are processed to the original payment method within **14 business days** of being agreed.
+
+**7.6 Warranty remedy.** Separately, clause 18.2 of our Terms of Service provides a pro-rata refund of prepaid fees where we are unable to correct a material non-conformity with the Documentation within a reasonable time.
+
+## 8\. Failed Payments
+
+**8.1** If a payment fails, we will attempt to notify you and may retry.
+
+**8.2** If payment remains outstanding after **14 days**, we may suspend access to paid features. Suspension is not termination.
+
+**8.3** If it remains outstanding after **30 days**, we may terminate the subscription. Termination for non-payment is not termination for convenience, and clause 7.5(a) does not apply.
+
+**8.4** During suspension for non-payment, we will continue to make Data Principal rights request records accessible to you, and rights-request intake will continue to function. Your statutory obligations do not pause because an invoice failed, and we will not put you in breach over a payment issue.
+
+## 9\. Taxes
+
+**9.1** All prices are exclusive of taxes. GST is charged at the prevailing rate and shown on your invoice.
+
+**9.2** Where a refund is made under clause 7.5, applicable tax is refunded proportionately, subject to the tax treatment permitted at the time.
+
+**9.3** You are responsible for providing accurate GSTIN and billing details. We can only reissue an invoice to correct details you supplied incorrectly to the extent tax law permits.
+
+## 10\. What Happens to Your Data
+
+**10.1** For **90 days** after your subscription ends, your account data remains available for export.
+
+**10.2** After that period we delete or anonymise it in accordance with the retention periods published in our [Privacy Policy](https://consiva.ai/legal/privacy-policy) and, where one is in place, your Data Processing Agreement.
+
+**10.3 Two things worth knowing.** First, **export before you cancel.** Consent records and rights-request records may be evidence you need for your own compliance obligations for years after you stop using Consiva, and we cannot restore data after deletion. Second, Rule 8(3) of the DPDP Rules, 2025 requires personal data, associated traffic data and processing logs to be retained for a **minimum of one year** from the date of processing — **we will not delete below that floor even on your instruction**, because doing so would place you in breach.
+
+## 11\. Changes to This Policy
+
+We may update this policy. Changes apply to billing periods beginning after the change takes effect, never retrospectively to a period you have already paid for. Material changes will be notified.
+
+## 12\. Contact
+
+Billing and cancellation: [**billing@consiva.ai**](mailto:billing@consiva.ai)
+
+General: [support@consiva.ai](mailto:support@consiva.ai)
+
+Post: Swaran Soft Support Solutions Private Limited, Tower A, Unit No. 2, 2nd Floor, The Cityscape, Sector-66, Golf Course Extension Road, Gurugram, Haryana – 122102, India

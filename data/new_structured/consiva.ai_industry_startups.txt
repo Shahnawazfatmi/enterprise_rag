@@ -1,0 +1,139 @@
+# ↑
+
+**ISO 9001** Certified·**ISO 27001** Certified·**NASSCOM** Member·**DSCI** Member · DSCI/AM/2026/089·**DPIIT** Recognised· [**Download White Paper**](https://consiva.ai/assets/documents/Consiva-The-Provable-Enterprise.pdf)
+
+[Home](https://consiva.ai/) › [Industry](https://consiva.ai/industry/startups#) › Startups
+
+**The short answer:** Section 17(3) permits the Central Government to notify certain Data Fiduciaries, **including startups**, as ones to whom five specified provisions do not apply. It is an **enabling power, not a live exemption**. Until a notification names your class, every obligation in the Act applies to you in full, regardless of size or funding stage.
+
+# DPDP for Startups
+
+🚀 Sector: Startups⚖️ Key provisions: s. 17(3) with its explanation · ss. 5, 8(3), 8(7), 10, 11📅 In force: 13 May 2027
+
+On this page
+
+1. [The single most important point on this page](https://consiva.ai/industry/startups#most-important)
+## 2. [What the relief would consist of, if notified](https://consiva.ai/industry/startups#what-relief)
+## 3. [Who counts as a startup](https://consiva.ai/industry/startups#who-counts)
+## 4. [The other relief route, and its expiry](https://consiva.ai/industry/startups#other-relief)
+## 5. [What a startup should actually do](https://consiva.ai/industry/startups#what-to-do)
+## 6. [A proportionate sequence for a small team](https://consiva.ai/industry/startups#proportionate)
+## 7. [Where Consiva fits](https://consiva.ai/industry/startups#consiva)
+## 8. [Frequently asked questions](https://consiva.ai/industry/startups#faq)
+
+## The single most important point on this page
+
+There is a widely repeated claim that startups are exempt from the DPDP Act. That is wrong, and acting on it is expensive.
+
+Section 17(3) reads as a power granted to the Central Government:
+
+> The Central Government may, having regard to the volume and nature of personal data processed, notify certain Data Fiduciaries or class of Data Fiduciaries, including startups, as Data Fiduciaries to whom the provisions of section 5, sub-sections (3) and (7) of section 8 and sections 10 and 11 shall not apply.
+
+Three words carry the weight: **"may … notify certain."** The relief exists only for Fiduciaries or classes that have actually been notified. A power to grant an exemption is not an exemption, and no amount of DPIIT recognition changes that by itself.
+
+**Where that leaves a startup today:** subject to the whole Act, on the same terms as everyone else, from 13 May 2027.
+
+## What the relief would consist of, if notified
+
+Worth knowing, because it shapes what to build first — and because it is narrower than the word "exemption" suggests.
+
+| Provision | What it requires | Relieved? |
+| --- | --- | --- |
+| **s. 5** — Notice | Notice of data, purpose, rights and complaint route | Yes |
+| **s. 8(3)** — Accuracy | Completeness and accuracy where data drives decisions or is shared | Yes |
+| **s. 8(7)** — Erasure | Erase on withdrawal or when purpose served | Yes |
+| **s. 10** — SDF obligations | DPO, independent audit, DPIA | Yes |
+| **s. 11** — Right to access | Processing summary and onward-sharing disclosure | Yes |
+| **s. 4** — Lawful purpose and basis | — | **No** |
+| **s. 6** — Valid consent and withdrawal | — | **No** |
+| **s. 8(5)** — Reasonable security safeguards | — | **No** |
+| **s. 8(6)** — Breach intimation | — | **No** |
+| **s. 8(9)** — Grievance mechanism | — | **No** |
+| **s. 9** — Children's data | — | **No** |
+| **s. 12** — Correction and erasure on request | — | **No** |
+| **ss. 13–14** — Grievance and nomination | — | **No** |
+
+So even a fully notified startup must still: process only for a lawful purpose on a valid basis, obtain and honour proper consent including easy withdrawal, **secure the data** — the highest-penalty obligation — report breaches, run a grievance mechanism, handle correction and erasure requests, honour nominations, and comply fully in respect of children.
+
+**Read the table honestly and the conclusion is that the exemption removes paperwork, not architecture.** Notice, accuracy and access disclosure are relieved. Consent, security, breach and rights are not. The expensive parts to build remain compulsory.
+
+## Who counts as a startup
+
+The explanation to section 17(3) defines it as a **private limited company, partnership firm or limited liability partnership incorporated in India** which is eligible to be, and is, recognised as a startup in accordance with the criteria and process notified by the department to which startup matters are allocated in the Central Government — in practice, DPIIT recognition.
+
+Note the entity-form requirement: incorporated in India, and one of those three forms. And note that eligibility plus actual recognition are both required.
+
+But recognition is a **precondition to being capable of notification**, not a grant of relief. A DPIIT-recognised startup with no notification covering it is in the same position as any other Data Fiduciary.
+
+## The other relief route, and its expiry
+
+Section 17(5) allows the Central Government, **before the expiry of five years from the commencement of the Act**, to declare by notification that any provision shall not apply to a Data Fiduciary or class of Fiduciaries for a specified period.
+
+This is broader than 17(3) — any provision, rather than the five listed — but it is time-limited and, again, requires a notification. It is worth monitoring rather than relying on.
+
+## What a startup should actually do
+
+The temptation is to wait, on the reasoning that a notification may arrive and the deadline is 2027. Three arguments against that, in ascending order of force.
+
+**The relief might not come.** No notification under section 17(3) can be assumed. Planning on an exemption that may never be issued is planning on nothing.
+
+**Even full relief leaves the expensive obligations standing.** Per the table above, consent architecture, security safeguards, breach response and rights fulfilment are all outside section 17(3). These are the parts that require engineering rather than drafting.
+
+**Retrofitting consent is disproportionately expensive.** This is the practical argument that matters most. A company that builds purpose-level consent into its data model from the start pays very little. A company that bolts it onto a live product with an existing user base pays for schema migration, a re-consent programme against a customer base that responds at whatever rate it responds at, and the opportunity cost of engineering time at the worst possible moment. **The cost of getting this right rises with every user you add.**
+
+There is also a commercial argument that has nothing to do with compliance. From 2027, your enterprise customers will be Data Fiduciaries accountable under section 8(1) for processing carried out on their behalf. They will require a DPA, a subprocessor list and evidence of your security posture. A startup that can produce these closes enterprise deals; one that cannot, stalls in procurement. **Compliance readiness becomes a sales asset before it becomes a legal obligation.**
+
+## A proportionate sequence for a small team
+
+You do not need an enterprise privacy programme. You need these, in this order:
+
+1. **Know what personal data you hold and why.** A spreadsheet is a legitimate starting inventory at this stage.
+2. **Build purpose-level consent into the data model now**, while the schema is cheap to change. Consent attaches to purposes, not a global boolean.
+## 3. **Make withdrawal work properly**, with parity to the giving.
+4. **Get security right** — it is the highest-penalty obligation and not relievable. Access control, encryption, logging.
+5. **Publish a contact route** for privacy questions. Rule 9 will require it and there is no reason to wait.
+6. **Have a breach process**, even if it is one page. Not reporting is penalised as heavily as harming children's data.
+## 7. **Handle rights requests**, even manually at first — but record them.
+## 8. **Then** worry about notice polish, DPIAs and the rest.
+
+Items 2 and 4 are the ones that get more expensive every month you defer them. Everything else can be improved incrementally.
+
+## Where Consiva fits
+
+Consiva's Free plan — one domain, 1,000 cookie consents and 50 form consents a month, forever — exists for exactly this stage. It gets purpose-level consent and rights intake live before you have a user base large enough to make retrofitting painful, and the records accumulate from day one rather than starting whenever you eventually buy something.
+
+**Consiva's Free plan exists for exactly this stage** — 1 domain, 1,000 cookie consents and 50 form consents a month, forever, no card. It gets purpose-level consent and rights intake live before your user base is large enough to make retrofitting painful, and the records accumulate from day one. Pro is ₹5,999/month plus applicable taxes when you outgrow it. → [Pricing](https://consiva.ai/pricing)
+
+## Frequently asked questions
+
+**Are startups exempt from the DPDP Act?**
+
+No. Section 17(3) is a power for the Central Government to notify certain Data Fiduciaries, including startups, as exempt from five specified provisions. Until such a notification covers your class, the full Act applies.
+
+**What is the section 17(3) startup exemption?**
+
+If notified, it disapplies section 5 (notice), sections 8(3) and 8(7) (accuracy and erasure on purpose completion), section 10 (Significant Data Fiduciary obligations) and section 11 (right to access information). Consent, security, breach reporting, grievance, children's data and section 12 rights are not covered.
+
+**Does DPIIT recognition give a DPDP exemption?**
+
+No. Recognition is part of the definition of "startup" for section 17(3) and is therefore a precondition to being capable of notification. It does not itself confer relief.
+
+**Does the DPDP Act apply to companies with few users?**
+
+Yes. The Act applies by role and activity, not by size. There is no small-business threshold, though section 17(3) and 17(5) create routes by which the Government may grant relief to notified classes.
+
+**Should a startup wait for the exemption before building consent?**
+
+No. The relief may never be notified, it would not cover consent or security in any event, and retrofitting purpose-level consent onto a live product with an existing user base is substantially more expensive than building it in early.
+
+**Do our enterprise customers care about our DPDP posture?**
+
+Increasingly, yes. Section 8(1) makes them accountable for processing carried out on their behalf, so they will require a data processing agreement, a subprocessor list and evidence of your security controls as a condition of purchase.
+
+_Verified against the Gazette of India on 17 August 2026. Sources: Digital Personal Data Protection Act, 2023, s. 17(3) with its explanation, s. 17(5), and ss. 4–12. Reference material about the law, not legal advice — see [/disclaimer](https://consiva.ai/legal/disclaimers-and-ai-notice)._
+
+### DPDP compliance built for Startups
+
+Consiva.ai covers every obligation above with pre-configured workflows, templates, and automated jobs — purpose-built for India's data protection law.
+
+[Start Free — No Credit Card →](https://app.consiva.ai/register)

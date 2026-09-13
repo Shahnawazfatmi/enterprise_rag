@@ -1,0 +1,362 @@
+{
+  "version": 2,
+  "created_at": "2026-09-03T10:05:08.636731+00:00",
+  "last_updated": null,
+  "pages": {
+    "consiva.ai_": {
+      "file": "consiva.ai_.txt",
+      "hash": "0b1c26c6084ec0453c4eb7c44194c81c1bb3c11f9a0203fa743847a41f8b232a",
+      "updated_at": "2026-09-11T08:48:14.578188+00:00"
+    },
+    "consiva.ai_about": {
+      "page_id": "consiva.ai_about",
+      "file_name": "consiva.ai_about.txt",
+      "content_hash": "0411be49c40391fa42a3fea06497c94f1ab4f6f8116ddaec5941d2c634745907",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_blog": {
+      "file": "consiva.ai_blog.txt",
+      "hash": "da9041afd20972aa80a306ea00b6965808bfe7cb19e6738cc9f64f45428c1bb8",
+      "updated_at": "2026-09-08T10:20:49.815227+00:00"
+    },
+    "consiva.ai_blog_ai-powered-dpdp-compliance-automation": {
+      "page_id": "consiva.ai_blog_ai-powered-dpdp-compliance-automation",
+      "file_name": "consiva.ai_blog_ai-powered-dpdp-compliance-automation.txt",
+      "content_hash": "e31c389730b7464890d628dda73433a3cdbb7198fbc92830b53eebef8723572a",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_blog_automate-ropa-dpdp-compliance": {
+      "page_id": "consiva.ai_blog_automate-ropa-dpdp-compliance",
+      "file_name": "consiva.ai_blog_automate-ropa-dpdp-compliance.txt",
+      "content_hash": "92d8d54e4a0fd876f24b4368df10bc41db6fb55bbfecece081a9cc9e11d782ab",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_blog_breach-response-regulatory-command-center-businesses": {
+      "file": "consiva.ai_blog_breach-response-regulatory-command-center-businesses.txt",
+      "hash": "df8fc3546fd2c966b11fc14c2cf8b599dd8caee12c5192ae7bdb70fdfc539b2d",
+      "updated_at": "2026-09-08T10:20:49.815227+00:00"
+    },
+    "consiva.ai_blog_cert-in-6-hour-breach-reporting": {
+      "file": "consiva.ai_blog_cert-in-6-hour-breach-reporting.txt",
+      "hash": "d5ac16556c061248f988c726a39b4627ba1ed72e270566ea288657df16c7faea",
+      "updated_at": "2026-09-08T10:20:49.815227+00:00"
+    },
+    "consiva.ai_blog_data-discovery-dpdp-compliance": {
+      "file": "consiva.ai_blog_data-discovery-dpdp-compliance.txt",
+      "hash": "3e1200ecf33788e9995914b03ff78c4856ca65e341b30dee69b16b2618fd0344",
+      "updated_at": "2026-09-08T10:20:49.831156+00:00"
+    },
+    "consiva.ai_blog_data-principal-rights-dpdp-act": {
+      "file": "consiva.ai_blog_data-principal-rights-dpdp-act.txt",
+      "hash": "39305c63ca547cfd32733488d44c5911d538303c8eabc514203194b5eb60e1f7",
+      "updated_at": "2026-09-08T10:20:49.836663+00:00"
+    },
+    "consiva.ai_blog_dpdp-compliance-checklist-ecommerce": {
+      "file": "consiva.ai_blog_dpdp-compliance-checklist-ecommerce.txt",
+      "hash": "be1edccbeca9d72e2ac26ba7f1036c4b85640d45cd26a4eb628f03845337634d",
+      "updated_at": "2026-09-08T10:20:49.836663+00:00"
+    },
+    "consiva.ai_blog_dpdp-compliance-saas-companies": {
+      "file": "consiva.ai_blog_dpdp-compliance-saas-companies.txt",
+      "hash": "3a28e27db43d0e4aa2f6ef9a65fb877938d07119f0eb6baa1a51cb4d9189f871",
+      "updated_at": "2026-09-08T10:20:49.836663+00:00"
+    },
+    "consiva.ai_blog_dpdp-cookie-consent-implementation": {
+      "file": "consiva.ai_blog_dpdp-cookie-consent-implementation.txt",
+      "hash": "220d374954f21d8c48b9ef9e5a92246bdff87e255ae23511f372b9c723987ec4",
+      "updated_at": "2026-09-08T10:20:49.836663+00:00"
+    },
+    "consiva.ai_blog_dpdp-vs-gdpr": {
+      "file": "consiva.ai_blog_dpdp-vs-gdpr.txt",
+      "hash": "9cd2a0a79e52f097350416b918e7bc2f321a2d7c7d482453f68c503a4595d3ff",
+      "updated_at": "2026-09-08T10:20:49.836663+00:00"
+    },
+    "consiva.ai_blog_what-is-consent-management-platform": {
+      "page_id": "consiva.ai_blog_what-is-consent-management-platform",
+      "file_name": "consiva.ai_blog_what-is-consent-management-platform.txt",
+      "content_hash": "3f82db3db6a2a32f1b024c872fa7dfd3330337f6bb22e81102d1736c695e6d1c",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_contact": {
+      "page_id": "consiva.ai_contact",
+      "file_name": "consiva.ai_contact.txt",
+      "content_hash": "724da295bca74d63d5eb944f440b4e1ac4fe12460471837a6fa9cf51c6cefdb4",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_dpdp_data-fiduciary-obligations": {
+      "page_id": "consiva.ai_dpdp_data-fiduciary-obligations",
+      "file_name": "consiva.ai_dpdp_data-fiduciary-obligations.txt",
+      "content_hash": "945b0eaac368f2b7878a0e8b92d233727569ad8e60f4ccdc4236eff43a15529f",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_dpdp_data-principal-rights-and-duties": {
+      "page_id": "consiva.ai_dpdp_data-principal-rights-and-duties",
+      "file_name": "consiva.ai_dpdp_data-principal-rights-and-duties.txt",
+      "content_hash": "01c9389cedbc3c13394dbeb9cd6447573955e58debaf23611cd2df10d9a4791a",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_dpdp_dpdp-act-2023": {
+      "page_id": "consiva.ai_dpdp_dpdp-act-2023",
+      "file_name": "consiva.ai_dpdp_dpdp-act-2023.txt",
+      "content_hash": "1a617e06e053e3855c22148d8e54a80cf2b01845b16cfcd67dce55c5a266db8b",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_dpdp_dpdp-rules-2025": {
+      "page_id": "consiva.ai_dpdp_dpdp-rules-2025",
+      "file_name": "consiva.ai_dpdp_dpdp-rules-2025.txt",
+      "content_hash": "7cebf6a77bf807250b7a2a8b9a70c3da6ce9bcf5e1d36905186028bffa14aaba",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_dpdp_penalties-and-enforcement": {
+      "page_id": "consiva.ai_dpdp_penalties-and-enforcement",
+      "file_name": "consiva.ai_dpdp_penalties-and-enforcement.txt",
+      "content_hash": "1c971c6e9c83c462c203dadd04a71b2cb3c21dd342ac4b4512d06ed63e30cdf7",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_dpdp_retention-and-erasure": {
+      "page_id": "consiva.ai_dpdp_retention-and-erasure",
+      "file_name": "consiva.ai_dpdp_retention-and-erasure.txt",
+      "content_hash": "a963e42efcb83d148a535fbf0e6fef46ec57a1db32d19a0f92e89756d5e8a3ed",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_faq": {
+      "page_id": "consiva.ai_faq",
+      "file_name": "consiva.ai_faq.txt",
+      "content_hash": "4e2d2eb8e1d1a9b394f97ac6a3c96a63e474cdc335f2b91cbb3f068e048c7034",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_industry_bfsi": {
+      "page_id": "consiva.ai_industry_bfsi",
+      "file_name": "consiva.ai_industry_bfsi.txt",
+      "content_hash": "308026eb9566a5d714509bec6e7bbee0fd3df63eb0d269947e0513c80f1ea8d5",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_industry_d2c-ecommerce": {
+      "page_id": "consiva.ai_industry_d2c-ecommerce",
+      "file_name": "consiva.ai_industry_d2c-ecommerce.txt",
+      "content_hash": "318faa6571b2ae0ae4d225634092dbdb99f6efbe64a083e814ad9d1dc60a855e",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_industry_digital-marketing-agencies": {
+      "page_id": "consiva.ai_industry_digital-marketing-agencies",
+      "file_name": "consiva.ai_industry_digital-marketing-agencies.txt",
+      "content_hash": "2b03cccb8f2df7b4c510d78391146b900892b337f8636d0d8e28b0e05c8bf44c",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_industry_edtech": {
+      "page_id": "consiva.ai_industry_edtech",
+      "file_name": "consiva.ai_industry_edtech.txt",
+      "content_hash": "6a207234320646e4f22516b1221ff0840e801987fb79c20c2a0782a0de2bcb3f",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_industry_healthcare": {
+      "page_id": "consiva.ai_industry_healthcare",
+      "file_name": "consiva.ai_industry_healthcare.txt",
+      "content_hash": "359e0a24980e1effb1ed137e019e4a64979b308d93055a9fe60fcf11e22e2bac",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_industry_saas-it": {
+      "page_id": "consiva.ai_industry_saas-it",
+      "file_name": "consiva.ai_industry_saas-it.txt",
+      "content_hash": "a53e9f28e094a9e1a2593e4075e212e48a6b80838229b34273669b06aa540f2f",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_industry_startups": {
+      "page_id": "consiva.ai_industry_startups",
+      "file_name": "consiva.ai_industry_startups.txt",
+      "content_hash": "ecb67b599a2163b433a1709ad32912062df149362630d6475a21db6bac8c6f02",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_legal_acceptable-use-policy": {
+      "page_id": "consiva.ai_legal_acceptable-use-policy",
+      "file_name": "consiva.ai_legal_acceptable-use-policy.txt",
+      "content_hash": "05d487cb891ad879a25378318f0281291169a1e91654b24c7ef51dd9ba7bd4e1",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_legal_contact-us": {
+      "page_id": "consiva.ai_legal_contact-us",
+      "file_name": "consiva.ai_legal_contact-us.txt",
+      "content_hash": "33623d80967e9dc659201d70f8137b1c7c533e5f682c4ec6bb02a9daab472a9a",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_legal_cookie-policy": {
+      "page_id": "consiva.ai_legal_cookie-policy",
+      "file_name": "consiva.ai_legal_cookie-policy.txt",
+      "content_hash": "d3af6e4ec355797dd79402e74f9ca9d97e80de37175f55325d710f4951999384",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_legal_disclaimers-and-ai-notice": {
+      "page_id": "consiva.ai_legal_disclaimers-and-ai-notice",
+      "file_name": "consiva.ai_legal_disclaimers-and-ai-notice.txt",
+      "content_hash": "68227c804dfc56b02f8e4b06ad52d16f7662ca67ed755366a09678e712b29761",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_legal_privacy-policy": {
+      "page_id": "consiva.ai_legal_privacy-policy",
+      "file_name": "consiva.ai_legal_privacy-policy.txt",
+      "content_hash": "ccf6200c8febd1df6f8e5f3065198f7726089435c97af7b95a7179237b77b666",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_legal_privacy-rights-and-grievance": {
+      "page_id": "consiva.ai_legal_privacy-rights-and-grievance",
+      "file_name": "consiva.ai_legal_privacy-rights-and-grievance.txt",
+      "content_hash": "beb533fbe62885efe0ca1484c7ca3a9c436e8d58936eceafb3f41af9a66283e6",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_legal_refund-and-cancellation-policy": {
+      "page_id": "consiva.ai_legal_refund-and-cancellation-policy",
+      "file_name": "consiva.ai_legal_refund-and-cancellation-policy.txt",
+      "content_hash": "3dabde19d82269f19456a4b9eaceb9f69ea72dc2fc160256f1fa565e9e638878",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_legal_support-policy": {
+      "page_id": "consiva.ai_legal_support-policy",
+      "file_name": "consiva.ai_legal_support-policy.txt",
+      "content_hash": "1611e1752940664175ad041b4e711b9d7ee7cd7182b48424b1482a5759304d70",
+      "status": "baseline",
+      "last_ingested": null
+    },
+    "consiva.ai_legal_terms-of-service": {
+      "file": "consiva.ai_legal_terms-of-service.txt",
+      "hash": "08e3a494e3f204d2e39307923414c0ab2cf42125aaef6fdd0eab1427cc3323f7",
+      "updated_at": "2026-09-08T10:20:49.836663+00:00"
+    },
+    "consiva.ai_pricing": {
+      "file": "consiva.ai_pricing.txt",
+      "hash": "549d53a8e8082349e706f369c49b42ef6586213e667c556cb66fd27206d8d51f",
+      "updated_at": "2026-09-08T10:20:49.836663+00:00"
+    },
+    "consiva.ai_blog_48-hour-pre-erasure-notice": {
+      "file": "consiva.ai_blog_48-hour-pre-erasure-notice.txt",
+      "hash": "a19cd283d35323b6dcf7ee0700d0ab11946c66a319d57db4b995f7d252d13ce1",
+      "updated_at": "2026-09-08T10:20:49.797433+00:00"
+    },
+    "consiva.ai_blog_consent-manager-vs-cmp": {
+      "file": "consiva.ai_blog_consent-manager-vs-cmp.txt",
+      "hash": "f659908cf459e0e72ea8eb317d92a482be1737febeaa8a3c9078c77568aaf4e1",
+      "updated_at": "2026-09-08T10:20:49.797433+00:00"
+    },
+    "consiva.ai_blog_consent-mode-v2-is-not-consent": {
+      "file": "consiva.ai_blog_consent-mode-v2-is-not-consent.txt",
+      "hash": "f5e67cb1982a4ce302cf8b5bec37e518ab3514701c7718f9740c59657a906b2d",
+      "updated_at": "2026-09-08T10:20:49.797433+00:00"
+    },
+    "consiva.ai_blog_dpdp-compliance-software-cost-india": {
+      "file": "consiva.ai_blog_dpdp-compliance-software-cost-india.txt",
+      "hash": "c357c1b2713dd4095e57f94cbae376780226950e7ca3ef6f13767413f34f2709",
+      "updated_at": "2026-09-08T10:20:49.797433+00:00"
+    },
+    "consiva.ai_blog_dpdp-data-processing-agreement": {
+      "file": "consiva.ai_blog_dpdp-data-processing-agreement.txt",
+      "hash": "59bd60b84f5c36eec98cead64b4c4d3c040fe6c2e5f7c91303ccf85a542cbe69",
+      "updated_at": "2026-09-08T10:20:49.813059+00:00"
+    },
+    "consiva.ai_blog_dpdp-erasure-vs-retention": {
+      "file": "consiva.ai_blog_dpdp-erasure-vs-retention.txt",
+      "hash": "a21cd4b686963ab5d501e702f802ce7a712da31a110c24e236a65d3502a00c3c",
+      "updated_at": "2026-09-08T10:20:49.815227+00:00"
+    },
+    "consiva.ai_blog_free-dpdp-consent-banner": {
+      "file": "consiva.ai_blog_free-dpdp-consent-banner.txt",
+      "hash": "60278cff50169ffa5578c1f0dc066fe2b83e3f2435c079244129adc18ae86c60",
+      "updated_at": "2026-09-08T10:20:49.815227+00:00"
+    },
+    "consiva.ai_blog_is-dpdp-enforceable-yet": {
+      "file": "consiva.ai_blog_is-dpdp-enforceable-yet.txt",
+      "hash": "0413d6c91ecce8a94cb385158fe2df4041961503a533a473f2f656bab0601bca",
+      "updated_at": "2026-09-08T10:20:49.815227+00:00"
+    },
+    "consiva.ai_blog_onetrust-alternatives-india": {
+      "file": "consiva.ai_blog_onetrust-alternatives-india.txt",
+      "hash": "666c98dd29c851c835a93b5ae39b7b287625710ea416ded57c816f775a217396",
+      "updated_at": "2026-09-08T10:20:49.815227+00:00"
+    },
+    "consiva.ai_blog_tags-firing-before-consent": {
+      "file": "consiva.ai_blog_tags-firing-before-consent.txt",
+      "hash": "565584de94f9b9a8a6067da1f8644ff44c3b75e5f9028c420b3798b3c6328091",
+      "updated_at": "2026-09-08T10:20:49.815227+00:00"
+    },
+    "consiva.ai_consent-management-platform": {
+      "file": "consiva.ai_consent-management-platform.txt",
+      "hash": "5267a39cf454c787fe8989a96bcc9789ff4f4e0bb7aa3504395db289e41e2cee",
+      "updated_at": "2026-09-11T08:48:14.569306+00:00"
+    },
+    "consiva.ai_cookie-consent-management-platform": {
+      "file": "consiva.ai_cookie-consent-management-platform.txt",
+      "hash": "848ec5c780298304dd6185242a1525efa40dbd8e1d10afe192b86e8b7e048211",
+      "updated_at": "2026-09-11T08:48:14.569306+00:00"
+    },
+    "consiva.ai_data-breach-management-software": {
+      "file": "consiva.ai_data-breach-management-software.txt",
+      "hash": "c932d30382260b3f968b727d607e0206f158bc50ce0084303534ac11bcc69610",
+      "updated_at": "2026-09-11T08:48:14.569306+00:00"
+    },
+    "consiva.ai_data-discovery-software": {
+      "file": "consiva.ai_data-discovery-software.txt",
+      "hash": "a0311dc5124cb3e323b95a48b4dd0f677a5f4a87ffd8796b5a656efe1af822c9",
+      "updated_at": "2026-09-11T08:48:14.569306+00:00"
+    },
+    "consiva.ai_data-mapping-software": {
+      "file": "consiva.ai_data-mapping-software.txt",
+      "hash": "e40d7524c5a01ec5c1f97639bd47466c4fa7ad33bdc09d24552dc70ee6312c5e",
+      "updated_at": "2026-09-11T08:48:14.577582+00:00"
+    },
+    "consiva.ai_data-principal-rights-management": {
+      "file": "consiva.ai_data-principal-rights-management.txt",
+      "hash": "302443db52e8cc89c56e6fcd3b64694c30d0d87b6f4c49cbf86ae756e693f31c",
+      "updated_at": "2026-09-11T08:48:14.578188+00:00"
+    },
+    "consiva.ai_dpdp-and-gdpr-consent": {
+      "file": "consiva.ai_dpdp-and-gdpr-consent.txt",
+      "hash": "b507e3aa7bd5b6bba22668c965bea270a1ffc7162e44d4fa7f33aa8d2c027869",
+      "updated_at": "2026-09-11T08:48:14.578188+00:00"
+    },
+    "consiva.ai_dsar-management-software": {
+      "file": "consiva.ai_dsar-management-software.txt",
+      "hash": "ef6e7f4c27410a8fa8af7c093194e9c6d644771e4e1d845d39000dad3a58b4b6",
+      "updated_at": "2026-09-11T08:48:14.578188+00:00"
+    },
+    "consiva.ai_platform": {
+      "file": "consiva.ai_platform.txt",
+      "hash": "26607a2d4fdca735a7270140fc84e065412673925865b2009121caa9e59b1657",
+      "updated_at": "2026-09-11T08:48:14.578188+00:00"
+    },
+    "consiva.ai_ropa-software": {
+      "file": "consiva.ai_ropa-software.txt",
+      "hash": "5c2bc7208602fabcd6c6aaf8406c1d0f216a6de96f2c4fb28f10500c841b0e65",
+      "updated_at": "2026-09-11T08:48:14.578188+00:00"
+    },
+    "consiva.ai_vendor-dpa-register": {
+      "file": "consiva.ai_vendor-dpa-register.txt",
+      "hash": "07d83c2e20e92f77dee71d88c227fcaff535e2ae90c34e903a2c0c1e471af0d1",
+      "updated_at": "2026-09-11T08:48:14.578188+00:00"
+    }
+  },
+  "updated_at": "2026-09-11T08:48:14.578188+00:00"
+}

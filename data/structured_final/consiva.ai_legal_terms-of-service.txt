@@ -1,0 +1,389 @@
+# ↑
+
+**ISO 9001** Certified·**ISO 27001** Certified·**NASSCOM** Member·**DSCI** Member · DSCI/AM/2026/089·**DPIIT** Recognised· [**Download White Paper**](https://consiva.ai/assets/documents/Consiva-The-Provable-Enterprise.pdf)
+
+[Home](https://consiva.ai/) › [Legal](https://consiva.ai/legal/terms-of-service#) › Terms of Service
+
+# Terms of Service
+
+📅 Effective: August 2026🏢 Swaran Soft Support Solutions Pvt. Ltd.⚖️ Governed by DPDP Act 2023
+
+Contents
+
+## 01. [How to Read This](https://consiva.ai/legal/terms-of-service#s0)
+## 02. [Who We Are](https://consiva.ai/legal/terms-of-service#s1)
+## 03. [Definitions](https://consiva.ai/legal/terms-of-service#s2)
+## 04. [Acceptance and Eligibility](https://consiva.ai/legal/terms-of-service#s3)
+## 05. [Account and Authorised Users](https://consiva.ai/legal/terms-of-service#s4)
+## 06. [The Service](https://consiva.ai/legal/terms-of-service#s5)
+## 07. [Plans, Fees and Billing](https://consiva.ai/legal/terms-of-service#s6)
+## 08. [Free Plan and Trials](https://consiva.ai/legal/terms-of-service#s7)
+## 09. [Renewal, Cancellation and Suspension](https://consiva.ai/legal/terms-of-service#s8)
+## 10. [Your Responsibilities and Customer Data](https://consiva.ai/legal/terms-of-service#s9)
+## 11. [Usage Restrictions](https://consiva.ai/legal/terms-of-service#s10)
+## 12. [Intellectual Property](https://consiva.ai/legal/terms-of-service#s11)
+## 13. [APIs and Integrations](https://consiva.ai/legal/terms-of-service#s12)
+## 14. [Support and Maintenance](https://consiva.ai/legal/terms-of-service#s13)
+## 15. [Availability](https://consiva.ai/legal/terms-of-service#s14)
+## 16. [Security](https://consiva.ai/legal/terms-of-service#s15)
+## 17. [Confidentiality](https://consiva.ai/legal/terms-of-service#s16)
+## 18. [Data Protection](https://consiva.ai/legal/terms-of-service#s17)
+## 19. [Warranties](https://consiva.ai/legal/terms-of-service#s18)
+## 20. [Disclaimers](https://consiva.ai/legal/terms-of-service#s19)
+## 21. [Limitation of Liability](https://consiva.ai/legal/terms-of-service#s20)
+## 22. [Data on Termination](https://consiva.ai/legal/terms-of-service#s21)
+## 23. [Website Use](https://consiva.ai/legal/terms-of-service#s22)
+## 24. [Force Majeure](https://consiva.ai/legal/terms-of-service#s23)
+## 25. [Governing Law and Disputes](https://consiva.ai/legal/terms-of-service#s24)
+## 26. [Notices](https://consiva.ai/legal/terms-of-service#s25)
+## 27. [Assignment](https://consiva.ai/legal/terms-of-service#s26)
+## 28. [Amendments](https://consiva.ai/legal/terms-of-service#s27)
+## 29. [General](https://consiva.ai/legal/terms-of-service#s28)
+## 30. [Contact](https://consiva.ai/legal/terms-of-service#s29)
+
+## 0\. How to Read This
+
+These Terms cover both **browsing this website** and **using the Consiva platform**. Sections 1–3 and 22–30 apply to everyone; Sections 4–21 apply if you have an account.
+
+If you have signed a Master Services Agreement or Order Form with us, that agreement prevails over these Terms where they conflict.
+
+## 1\. Who We Are
+
+**1.1** Consiva.ai (the " **Service**") is a product and technology platform operated by **Swaran Soft Support Solutions Private Limited**, a company incorporated in India under CIN U72200DL2005PTC136405, with its correspondence address at Tower A, Unit No. 2, 2nd Floor, The Cityscape, Sector-66, Golf Course Extension Road, Gurugram, Haryana – 122102, India (" **Provider**", "we", "us", "our").
+
+**1.2** Consiva.ai is not a separate legal entity. All rights and obligations under these Terms are those of the Provider.
+
+## 2\. Definitions
+
+**"Account"** — your registered account for the Service.
+
+**"Authorised User"** — an individual you permit to use the Service under your Account.
+
+**"Customer"**, **"you"** — the person or entity agreeing to these Terms. Where an individual accepts on behalf of an entity, "you" means that entity.
+
+**"Customer Data"** — all data, content and information you or your Authorised Users submit to, or generate through, the Service, including Personal Data.
+
+**"Data Fiduciary"**, **"Data Principal"**, **"Data Processor"**, **"Personal Data"** — as defined in the Digital Personal Data Protection Act, 2023.
+
+**"DPA"** — the Data Processing Agreement between us in respect of Personal Data in Customer Data.
+
+**"Documentation"** — the technical and user documentation we make available for the Service.
+
+**"Order Form"** — a document specifying your plan, term and fees, signed by both parties.
+
+**"Plan"** — the subscription tier you have selected.
+
+**"Service"** — the Consiva platform, website, APIs and Documentation.
+
+**"Subscription Term"** — the period for which you have subscribed.
+
+## 3\. Acceptance and Eligibility
+
+**3.1** By accessing the website, creating an Account or using the Service, you agree to these Terms. If you do not agree, do not use the Service.
+
+**3.2** You must be at least 18 years old and legally capable of contracting.
+
+**3.3** Where you accept on behalf of an organisation, you warrant that you have authority to bind it.
+
+**3.4** These Terms incorporate by reference: the [**Privacy Policy**](https://consiva.ai/legal/privacy-policy), [**Cookie Policy**](https://consiva.ai/legal/cookie-policy), [**Acceptable Use Policy**](https://consiva.ai/legal/acceptable-use-policy), [**Refund & Cancellation Policy**](https://consiva.ai/legal/refund-and-cancellation-policy), [**Support Policy**](https://consiva.ai/legal/support-policy) and [**Disclaimers & AI Notice**](https://consiva.ai/legal/disclaimers-and-ai-notice).
+
+## 4\. Account and Authorised Users
+
+**4.1** You must provide accurate registration information and keep it current.
+
+**4.2** You are responsible for maintaining the confidentiality of Account credentials and API keys, and for all activity under your Account, whether or not authorised by you.
+
+**4.3** You are responsible for your Authorised Users' compliance with these Terms and remain liable for their acts and omissions.
+
+**4.4** Notify us promptly at [security@consiva.ai](mailto:security@consiva.ai) of any suspected unauthorised access.
+
+**4.5** Credentials must not be shared between individuals. Plans are not seat-limited at launch; Authorised Users are subject to fair use.
+
+## 5\. The Service
+
+**5.1** Subject to these Terms and payment of applicable fees, we grant you a non-exclusive, non-transferable, non-sublicensable right during the Subscription Term to access and use the Service for your internal business purposes.
+
+**5.2** The Service is provided on a software-as-a-service basis. We do not deliver copies of software for installation.
+
+**5.3** We may modify, enhance or discontinue features. Where we discontinue a material feature you subscribed for during a paid term, clause 7.5(b) of the Refund & Cancellation Policy applies.
+
+**5.4 What the Service does not do.** The Service provides technology and workflows to help you operationalise privacy and data protection requirements. It does not constitute legal advice, does not guarantee compliance with any law, and does not make regulatory filings on your behalf. See [Disclaimers & AI Notice](https://consiva.ai/legal/disclaimers-and-ai-notice), which forms part of these Terms.
+
+## 6\. Plans, Fees and Billing
+
+**6.1** Fees are as set out on our pricing page or your Order Form.
+
+**6.2** All fees are in Indian Rupees and **exclusive of GST and other applicable taxes**, which we will add and you will pay.
+
+**6.3 Billing periods.** The Pro Plan is billed either **monthly in advance** at ₹5,999 plus taxes, or **annually in advance** at ₹60,000 plus taxes, at your election on subscribing. Enterprise Plans are billed as set out in the Order Form.
+
+**6.4 Allowances and Add-On Packs.** Each Plan includes monthly allowances of Cookie Consents, Form Consents and Domains as published on the pricing page. Allowances are monthly, do not roll over, and unused allowance expires at the end of each month.
+
+Additional capacity is purchased as **Add-On Packs** rather than charged as per-unit overage. Add-On Packs are available to customers on annual Pro or Enterprise billing, run for a twelve-month term, and are subject to clause 5 of the Refund & Cancellation Policy.
+
+**6.4A Definitions of billable units.** For the purposes of this agreement:
+
+- **"Cookie Consent"** means one recorded consent choice by a unique visitor to a Domain, counted once per unique visitor per Domain per calendar month regardless of how many times that visitor returns, which categories they accept or reject, or how many times they revisit their choice within that month;
+- **"Form Consent"** means one recorded consent choice captured against a form submission, counted once per submission;
+- **"Domain"** means one distinct fully qualified domain name connected to the Service for consent collection. A subdomain configured separately from its parent domain counts as a separate Domain.
+
+These definitions govern how usage is counted in the product against the allowances in clause 6.4.
+
+**6.4B Exceeding an allowance.** Where usage exceeds your allowance and no Add-On Pack covers it, we will notify you and you may purchase a Pack. We will not suspend consent collection or Data Principal rights intake for exceeding an allowance — see clause 6.5.
+
+**6.5 Never metered, and never suspended.** Notwithstanding clauses 6.4 and 8.3, **Data Principal rights requests are not counted, capped or charged on any Plan, including the Free Plan.** Intake and fulfilment of such requests is unmetered, and we will not suspend or degrade rights-request intake for exceeding a usage allowance or for non-payment.
+
+Responding to a Data Principal is an unconditional statutory obligation with a response deadline. Plans differ in how much of the work is automated — the Free Plan provides manual handling, Pro and Enterprise provide automated workflows with SLA tracking — never in how many requests you may receive. **This clause prevails over any inconsistent provision in this agreement or any other Consiva document.**
+
+**6.6** Invoices are payable within **15 days** of the invoice date, or immediately for self-serve card payments.
+
+**6.7** We may charge interest on overdue amounts at **1.5%** per month, and recover reasonable costs of collection.
+
+**6.8** You must provide accurate billing and GSTIN details. Payments are processed by a third-party payment provider; we do not store full card details. Payments are processed by Razorpay Software Private Limited.
+
+**6.9** We may change prices with effect from a renewal, on notice as set out in the Refund & Cancellation Policy.
+
+## 7\. Free Plan and Trials
+
+**7.1** The Free Plan is provided at no charge, subject to the allowances published on the pricing page — currently 1,000 Cookie Consents and 50 Form Consents per month, for one Domain, with no time limit.
+
+**7.2 The Free Plan is provided "as is"**, without warranty, without support commitment and without any availability commitment. We may modify, limit or discontinue it at any time.
+
+**7.3** We may suspend or terminate a Free Plan Account at any time, with or without cause. We will use reasonable efforts to give notice so you can export your data.
+
+**7.4** We do not offer time-limited trials of paid Plans. The Free Plan serves that purpose, and an account may be upgraded at any time.
+
+## 8\. Renewal, Cancellation and Suspension
+
+**8.1** Subscriptions renew automatically — monthly Plans each month, annual Plans each twelve months — as set out in the Refund & Cancellation Policy.
+
+**8.2** You may cancel at any time. Cancellation takes effect at the end of your current billing period — the current month for monthly Plans, the current twelve-month term for annual Plans. **Fees paid are not refundable once the Service has been accessed**, subject to the exceptions in clause 7.5 of the Refund & Cancellation Policy. Add-On Packs carry their own twelve-month term.
+
+**8.3 Suspension.** We may suspend access, in whole or part, where: (a) fees are overdue as set out in the Refund & Cancellation Policy; (b) your use breaches the Acceptable Use Policy; (c) there is a security risk to the Service or its users; or (d) required by law. We will give notice where practicable, and lift the suspension once the cause is resolved.
+
+**8.4 Termination for cause.** Either party may terminate on written notice if the other materially breaches these Terms and fails to remedy the breach within 30 days of notice.
+
+**8.5 Immediate termination.** We may terminate immediately for a material breach of the Acceptable Use Policy, unlawful use, or insolvency.
+
+**8.6 Effect of termination.** Your right to access the Service ends. Clause 21 (data on termination) applies. Accrued payment obligations survive.
+
+## 9\. Your Responsibilities and Customer Data
+
+**9.1** You are responsible for Customer Data: its accuracy, its legality, and your right to submit it.
+
+**9.2** You warrant that you have all necessary rights, notices and lawful bases to submit Customer Data to the Service and to have us process it as contemplated.
+
+**9.3 You remain the Data Fiduciary** in respect of Personal Data in Customer Data. We act as a **Data Processor** processing such Personal Data on your instructions. Nothing in these Terms makes us a Data Fiduciary for your Data Principals' Personal Data.
+
+**9.4** You are responsible for determining your processing purposes, lawful bases, notice wording, consent wording, retention periods, and whether requests and incidents are actionable. See [Disclaimers & AI Notice](https://consiva.ai/legal/disclaimers-and-ai-notice).
+
+**9.5** You must configure the Service appropriately for your obligations, and keep your configuration current as your processing changes.
+
+**9.6 Ownership.** You retain all right, title and interest in Customer Data. We claim no ownership of it.
+
+**9.7 Our limited licence.** You grant us a non-exclusive licence to host, copy, transmit, display and process Customer Data solely to provide, secure and support the Service, and as set out in the DPA.
+
+**9.8 Restricted data.** You must not submit to the Service:
+
+1. full payment card numbers, CVV or magnetic stripe data — the Service is not designed or certified to process cardholder data;
+2. Aadhaar numbers in full, other than where the Service's Data Discovery feature detects a pattern in your connected systems. Where a pattern is detected, the Service records the location and classification of the finding and **does not retain the detected value itself**;
+3. personal data of children, unless you have obtained verifiable parental consent under section 9 of the DPDP Act and are using the Service's parental consent workflow.
+
+## 10\. Usage Restrictions
+
+You must not, and must not permit any person to:
+
+## 01. use the Service unlawfully, or in breach of the Acceptable Use Policy;
+## 02. copy, modify, translate or create derivative works of the Service;
+03. reverse engineer, decompile or disassemble the Service, except to the extent such restriction is prohibited by law;
+04. access the Service to build a competing product, or for competitive benchmarking without our prior written consent;
+## 05. resell, sublicense, rent or provide the Service to a third party except as expressly permitted;
+## 06. circumvent usage limits, metering, authentication or access controls;
+07. conduct penetration testing, vulnerability scanning or load testing against the Service without our prior written authorisation;
+## 08. introduce malicious code, or interfere with the integrity or performance of the Service;
+## 09. remove or obscure proprietary notices;
+10. **falsify, backdate, alter or delete consent records, rights-request records or audit records**, or use the Service to create a misleading impression of compliance activity that did not occur.
+
+Paragraph (j) is a material term. The evidential value of the Service to every customer depends on records being trustworthy, and misuse of it is grounds for immediate termination under clause 8.5.
+
+## 11\. Intellectual Property
+
+**11.1 Our IP.** We and our licensors own all right, title and interest in the Service, including the Consiva platform, software, website, Documentation, workflows, user interfaces, designs, and the Consiva name and logo. Except for the limited rights in clause 5.1, no rights are granted.
+
+**11.2 Trade marks.** "Consiva" and the Consiva logo are trade marks of the Provider.
+
+**11.3 Your IP.** You retain all rights in your own trade marks, content and Customer Data. You grant us a limited licence to display your name and logo to identify you as a customer only where you have separately agreed in writing.
+
+**11.4 Feedback.** If you give us suggestions or feedback, you grant us a perpetual, irrevocable, royalty-free licence to use it without restriction or obligation to you. You are not obliged to give feedback.
+
+**11.5 Usage data.** We may collect and use aggregated, de-identified data about use of the Service to operate, secure and improve it, and to produce statistics. Such data will not identify you, your Authorised Users or any Data Principal, and we will not disclose Customer Data in this way.
+
+**11.6 IP complaints.** Send notices of claimed infringement to [legal@consiva.ai](mailto:legal@consiva.ai).
+
+## 12\. APIs and Integrations
+
+**12.1** Where we provide APIs, your use is subject to these Terms, the Documentation and any published rate limits.
+
+**12.2** We may impose or change rate limits to protect the Service. We will give reasonable notice of changes that materially affect documented behaviour, where practicable.
+
+**12.3** You are responsible for securing your API credentials. Activity authenticated with your credentials is attributed to you.
+
+**12.4 Third-party integrations.** Integrations you enable are between you and the third party. We are not responsible for third-party services, their availability, or their handling of data. Enabling an integration may transfer Customer Data to that third party on your instruction.
+
+**12.5 Database credentials for Data Discovery.** Where you connect a database to the Data Discovery feature, you warrant that you are authorised to grant that access. Credentials you supply are encrypted at rest and are write-only — they are not returned by any API response or displayed in the interface after entry. You are responsible for provisioning an account with the minimum privileges necessary for schema introspection, and we recommend a read-only account scoped to the schemas you intend to scan.
+
+## 13\. Support and Maintenance
+
+**13.1** Support is provided in accordance with the [**Support Policy**](https://consiva.ai/legal/support-policy) for your Plan.
+
+**13.2** We may carry out planned maintenance, and will use reasonable efforts to schedule it to minimise disruption and to give advance notice where practicable.
+
+**13.3** We may carry out emergency maintenance without notice where necessary for security or integrity.
+
+## 14\. Availability
+
+**14.1** We will use commercially reasonable efforts to make the Service available.
+
+**14.2 No availability commitment is given for the Free Plan or, unless expressly agreed in an Order Form, for paid self-serve Plans.** We do not publish an uptime percentage. Where service level terms are agreed, they will be set out in an Order Form or SLA attachment forming part of your agreement.
+
+## 15\. Security
+
+**15.1** We will maintain reasonable technical and organisational measures designed to protect Customer Data. Further detail is available on request via [Contact Us](https://consiva.ai/contact), and for Enterprise customers in the Security Addendum.
+
+**15.2** You are responsible for security within your control: user access management, credential protection, configuration, and your own systems and endpoints.
+
+**15.3** Security incidents are handled as described in the DPA and clause 10 of the Security & Trust page. **We do not make regulatory notifications on your behalf** unless expressly agreed in writing.
+
+## 16\. Confidentiality
+
+**16.1** Each party may receive the other's confidential information. Each will protect it with at least reasonable care, use it only for purposes of this agreement, and disclose it only to personnel and advisers with a need to know who are bound by confidentiality obligations.
+
+**16.2** Exclusions: information that is public without breach, independently developed, lawfully received from a third party, or already known without obligation.
+
+**16.3** Disclosure compelled by law is permitted, with prior notice where lawful and practicable.
+
+**16.4** Obligations survive for **three years** after termination, and indefinitely for Personal Data and trade secrets.
+
+## 17\. Data Protection
+
+**17.1** Our processing of Personal Data in Customer Data is governed by the **DPA**, which forms part of these Terms and prevails over these Terms in the event of conflict on Personal Data matters.
+
+**17.2** Our processing of Personal Data for which we are the Data Fiduciary — such as your Account contact details and website visitor data — is described in the [Privacy Policy](https://consiva.ai/legal/privacy-policy).
+
+**17.3** Subprocessors we engage are published at [/subprocessors](https://consiva.ai/legal/privacy-policy#subprocessors), and the DPA sets out notification and objection rights.
+
+## 18\. Warranties
+
+**18.1 We warrant** that: (a) we have the right to enter into these Terms; (b) the Service will perform materially in accordance with the Documentation; and (c) we will provide the Service with reasonable skill and care.
+
+**18.2 Your remedy** for breach of clause 18.1(b) is for us to use reasonable efforts to correct the non-conformity, and if we cannot do so within a reasonable time, to terminate the affected subscription with a pro-rata refund of prepaid fees for the unexpired term. This is an exception to the general no-refund position, and it applies only to this clause.
+
+**18.3 You warrant** that Customer Data and your use of the Service comply with applicable law, and that you have the rights and lawful bases described in clause 9.2.
+
+## 19\. Disclaimers
+
+**19.1** Except as expressly stated in clause 18.1, and to the maximum extent permitted by law, the Service is provided **"as is"** and we disclaim all other warranties, express or implied, including merchantability, fitness for a particular purpose and non-infringement.
+
+**19.2 In particular, we do not warrant that:** the Service will be uninterrupted or error-free; that automated discovery will identify all Personal Data in your environment; that automated classification or suggestions will be accurate; or that **your use of the Service will result in compliance with the DPDP Act, the DPDP Rules or any other law**.
+
+**19.3** We do not warrant that use of the Service will prevent or reduce any penalty, order or direction of any regulator.
+
+**19.4** The Free Plan and any beta or preview feature are provided without any warranty whatsoever.
+
+## 20\. Limitation of Liability
+
+**20.1** Neither party excludes liability for death or personal injury caused by negligence, fraud or fraudulent misrepresentation, or any liability that cannot lawfully be excluded.
+
+**20.2** Subject to 20.1, neither party is liable for indirect, incidental, special, consequential or punitive loss, or for loss of profit, revenue, business, goodwill, anticipated savings, or loss or corruption of data (save as set out in 20.4), however arising.
+
+**20.3 Cap.** Subject to 20.1 and 20.4, each party's total aggregate liability arising out of or in connection with this agreement is limited to the **total fees paid or payable by you in the 12 months immediately preceding the first event giving rise to the claim**.
+
+**20.4 Enhanced cap.** Subject to clause 20.1, our total aggregate liability for (a) breach of clause 16 (Confidentiality), or (b) breach of the DPA by us causing a Personal Data breach, is limited to **two times (2x) the total fees paid or payable by you in the 12 months immediately preceding the first event giving rise to the claim**.
+
+**20.5** The Free Plan: our total liability in respect of the Free Plan is limited to **₹5,000**.
+
+**20.6** These limits apply in aggregate across all claims, and reflect the allocation of risk underpinning the fees charged.
+
+## 21\. Data on Termination
+
+**21.1** For **90 days** after termination, Customer Data remains available for export.
+
+**21.2** After that period we will delete or anonymise Customer Data in accordance with the DPA and our retention position, except where retention is required by law.
+
+**21.3 Export before termination takes effect.** Consent records and rights-request records may be evidence you need for your own obligations for years afterwards. We cannot restore deleted data.
+
+**21.4** On request before deletion, we will provide Customer Data in a structured, commonly used, machine-readable format. Exports are provided as CSV and JSON.
+
+## 22\. Website Use
+
+**22.1** These Terms govern your use of consiva.ai whether or not you have an Account.
+
+**22.2** Website content is provided for general information. It is not legal advice. See [Disclaimers & AI Notice](https://consiva.ai/legal/disclaimers-and-ai-notice).
+
+**22.3** You must not scrape, crawl or harvest content from the website except as permitted by our robots.txt, or use automated means to access it in a way that imposes an unreasonable load.
+
+**22.4** Links to third-party websites are provided for convenience and are not endorsements.
+
+## 23\. Force Majeure
+
+Neither party is liable for failure or delay in performance caused by events beyond its reasonable control, including act of God, flood, fire, earthquake, epidemic, war, terrorism, civil disturbance, governmental action, labour dispute, failure of a telecommunications or internet provider, or failure of a utility. This does not excuse an obligation to pay amounts due. If the event continues for more than **60** days, either party may terminate the affected subscription.
+
+## 24\. Governing Law and Disputes
+
+**24.1** These Terms are governed by the laws of **India**.
+
+**24.2** The courts at **Gurugram, Haryana** have exclusive jurisdiction over any dispute arising out of or in connection with these Terms.
+
+**24.3 Arbitration.** No arbitration clause applies to these Terms. Disputes under these self-serve Terms are subject to clause 24.2. Arbitration under the Arbitration and Conciliation Act, 1996 — sole arbitrator, seated at Gurugram, proceedings in English — will be offered in the Enterprise Master Services Agreement only.
+
+**24.4** Nothing prevents either party seeking urgent interim relief from a court.
+
+## 25\. Notices
+
+**25.1** Notices to us: in writing to [legal@consiva.ai](mailto:legal@consiva.ai) and by post to Swaran Soft Support Solutions Private Limited, Tower A, Unit No. 2, 2nd Floor, The Cityscape, Sector-66, Golf Course Extension Road, Gurugram, Haryana – 122102, India.
+
+**25.2** Notices to you: to the email address on your Account, or by in-product notification. You must keep your Account email current.
+
+## 26\. Assignment
+
+**26.1** You may not assign or transfer these Terms without our prior written consent.
+
+**26.2** **We may assign, transfer or novate these Terms, in whole or in part, to an affiliate, group company or successor** in connection with a merger, acquisition, corporate reorganisation, or transfer of all or a substantial part of the business or assets to which the Service relates, on notice to you and without your consent, provided the transferee assumes our obligations under these Terms and the DPA.
+
+## 27\. Amendments
+
+**27.1** We may amend these Terms. We will publish the updated version with a new effective date.
+
+**27.2** For material changes adverse to you, we will give at least **30 days'** notice before they take effect for you. If you do not accept, you may cancel before the effective date; clause 8.2 applies.
+
+**27.3** Changes required by law may take effect immediately.
+
+**27.4** Continued use after the effective date constitutes acceptance.
+
+## 28\. General
+
+**28.1 Severability.** If any provision is held unenforceable, it will be modified to the minimum extent necessary, or severed, and the remainder continues.
+
+**28.2 Waiver.** Failure to enforce is not a waiver.
+
+**28.3 No partnership.** Nothing creates a partnership, agency, joint venture or employment relationship.
+
+**28.4 Third parties.** These Terms confer no rights on any third party.
+
+**28.5 Entire agreement.** These Terms, together with the documents incorporated in clause 3.4 and any Order Form, MSA and DPA, constitute the entire agreement and supersede prior discussions. Nothing limits liability for fraudulent misrepresentation.
+
+**28.6 Order of precedence.** Where documents conflict: (1) Order Form; (2) DPA; (3) Security Addendum; (4) MSA; (5) these Terms; (6) Acceptable Use Policy; (7) Support Policy — except that the DPA prevails over all others on the processing of Personal Data, and clause 6.5 of these Terms prevails over any inconsistent provision anywhere regarding charging for Data Principal rights requests.
+
+**28.7 Survival.** Clauses 2, 9.6, 11, 16, 19, 20, 21, 24, 25 and 28 survive termination.
+
+**28.8 Language.** These Terms are in English, which governs their interpretation.
+
+## 29\. Contact
+
+Legal: [legal@consiva.ai](mailto:legal@consiva.ai) · Support: [support@consiva.ai](mailto:support@consiva.ai) · Billing: [billing@consiva.ai](mailto:billing@consiva.ai) · Privacy: [privacy@consiva.ai](mailto:privacy@consiva.ai)
+
+## > **Swaran Soft Support Solutions Private Limited**
+>
+> Tower A, Unit No. 2, 2nd Floor, The Cityscape, Sector-66, Golf Course Extension Road, Gurugram, Haryana – 122102, India
+>
+## > CIN: U72200DL2005PTC136405 · GSTIN: 06AAJCS7515G1Z9 · Telephone: +91 9220313650

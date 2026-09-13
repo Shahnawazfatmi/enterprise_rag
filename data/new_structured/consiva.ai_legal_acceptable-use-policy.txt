@@ -1,0 +1,57 @@
+# ↑
+
+**ISO 9001** Certified·**ISO 27001** Certified·**NASSCOM** Member·**DSCI** Member · DSCI/AM/2026/089·**DPIIT** Recognised· [**Download White Paper**](https://consiva.ai/assets/documents/Consiva-The-Provable-Enterprise.pdf)
+
+[Home](https://consiva.ai/) › [Legal](https://consiva.ai/legal/acceptable-use-policy#) › Acceptable Use Policy
+
+# Acceptable Use Policy
+
+📅 Effective: August 2026🏢 Swaran Soft Support Solutions Pvt. Ltd.⚖️ Governed by DPDP Act 2023
+
+This policy is incorporated into, and forms part of, our [Terms of Service](https://consiva.ai/legal/terms-of-service). Terms defined there have the same meaning here.
+
+Contents
+
+## 1. [Purpose](https://consiva.ai/legal/acceptable-use-policy#s1)
+## 2. [Prohibited Uses](https://consiva.ai/legal/acceptable-use-policy#s2)
+## 3. [Fair Use of Free and Unmetered Features](https://consiva.ai/legal/acceptable-use-policy#s3)
+## 4. [Content You Submit](https://consiva.ai/legal/acceptable-use-policy#s4)
+## 5. [Consequences of Breach](https://consiva.ai/legal/acceptable-use-policy#s5)
+## 6. [Reporting Misuse](https://consiva.ai/legal/acceptable-use-policy#s6)
+
+## 1\. Purpose
+
+This policy sets out what you must not do with the Service, so that it remains available, secure and trustworthy for every customer. It supplements, and does not replace, clause 10 (Usage Restrictions) of our [Terms of Service](https://consiva.ai/legal/terms-of-service).
+
+## 2\. Prohibited Uses
+
+You must not, and must not permit any person to:
+
+## 01. use the Service unlawfully, or for any purpose prohibited by applicable law;
+02. copy, modify, translate or create derivative works of the Service, except as expressly permitted;
+03. reverse engineer, decompile or disassemble the Service, except to the extent such restriction is prohibited by law;
+04. access the Service to build a competing product, or for competitive benchmarking without our prior written consent;
+## 05. resell, sublicense, rent or provide the Service to a third party except as expressly permitted;
+## 06. circumvent usage limits, metering, authentication or access controls;
+07. conduct penetration testing, vulnerability scanning or load testing against the Service without our prior written authorisation — write to [security@consiva.ai](mailto:security@consiva.ai) if you'd like to arrange this;
+08. introduce malicious code, or otherwise interfere with the integrity, security or performance of the Service or any other customer's use of it;
+## 09. remove, obscure or alter any proprietary notices on the Service;
+10. **falsify, backdate, alter or delete consent records, rights-request records or audit records**, or otherwise use the Service to create a misleading impression of compliance activity that did not occur.
+
+Paragraph (j) is a material term. The evidential value of the Service to every customer depends on its records being trustworthy.
+
+## 3\. Fair Use of Free and Unmetered Features
+
+Plans are not seat-limited, and Data Principal rights-request intake is never metered or capped on any plan, including the Free Plan — see clause 6.5 of the Terms of Service. These are provided in good faith for genuine use of the Service for your own organisation's compliance obligations. We may investigate, and act on, use of an unmetered or unlimited feature in a way that is clearly disproportionate to a single organisation's genuine need — for example, provisioning an implausible number of Authorised Users to circumvent pricing intended for a materially larger deployment.
+
+## 4\. Content You Submit
+
+You are responsible for Customer Data and any other content you submit to the Service, including that you have the right to submit it and that it does not infringe a third party's rights. See clause 9 of the Terms of Service.
+
+## 5\. Consequences of Breach
+
+A breach of this policy may result in suspension under clause 8.3 or immediate termination under clause 8.5 of the Terms of Service, depending on severity. Where practicable, we will give notice and an opportunity to remedy before suspending; we will not do so for a material breach of paragraph (j) above or for unlawful use.
+
+## 6\. Reporting Misuse
+
+If you become aware of a breach of this policy — by another Authorised User on your Account, or by anyone else using the Service — tell us at [security@consiva.ai](mailto:security@consiva.ai).

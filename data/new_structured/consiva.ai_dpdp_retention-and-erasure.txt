@@ -1,0 +1,196 @@
+# ↑
+
+**ISO 9001** Certified·**ISO 27001** Certified·**NASSCOM** Member·**DSCI** Member · DSCI/AM/2026/089·**DPIIT** Recognised· [**Download White Paper**](https://consiva.ai/assets/documents/Consiva-The-Provable-Enterprise.pdf)
+
+[Home](https://consiva.ai/) › [Learn DPDP](https://consiva.ai/dpdp/retention-and-erasure#) › Retention and Erasure
+
+**The short answer:** Rule 8(3) of the DPDP Rules, 2025 requires a Data Fiduciary to retain personal data, associated traffic data and processing logs for a **minimum of one year**, even where the individual has deleted her account. s. 12 separately gives a right to erasure. A system that satisfies an erasure request by hard-deleting the record therefore breaches the retention obligation while satisfying the erasure right.
+
+# Erasure Doesn't Mean Delete
+
+⚖️ Legal structure: s. 8(7), s. 12, Rule 8, Third Schedule, Seventh Schedule📅 In force from: 13 May 2027🔍 Source: DPDP Act 2023 · Rules 2025
+
+On this page
+
+## 01. [The problem, stated plainly](https://consiva.ai/dpdp/retention-and-erasure#problem)
+## 02. [The erasure obligations](https://consiva.ai/dpdp/retention-and-erasure#erasure-obligations)
+03. [Erasure on request — section 12](https://consiva.ai/dpdp/retention-and-erasure#erasure-on-request)
+04. [Erasure on purpose completion — section 8(7)](https://consiva.ai/dpdp/retention-and-erasure#erasure-on-purpose)
+05. [Erasure on inactivity — Rule 8(1) and the Third Schedule](https://consiva.ai/dpdp/retention-and-erasure#erasure-on-inactivity)
+## 06. [The 48-hour notice — Rule 8(2)](https://consiva.ai/dpdp/retention-and-erasure#48hr-notice)
+07. [The retention obligation that overrides all of it — Rule 8(3)](https://consiva.ai/dpdp/retention-and-erasure#retention-floor)
+## 08. [Where the two collide](https://consiva.ai/dpdp/retention-and-erasure#collision)
+09. [What a compliant erasure actually does](https://consiva.ai/dpdp/retention-and-erasure#compliant-erasure)
+## 10. [The suppression record problem](https://consiva.ai/dpdp/retention-and-erasure#suppression)
+11. [Indian sectoral retention mandates that override erasure](https://consiva.ai/dpdp/retention-and-erasure#sectoral)
+## 12. [A worked example](https://consiva.ai/dpdp/retention-and-erasure#worked-example)
+## 13. [What this means for your systems](https://consiva.ai/dpdp/retention-and-erasure#systems)
+## 14. [Frequently asked questions](https://consiva.ai/dpdp/retention-and-erasure#faq)
+
+## The problem, stated plainly
+
+Most organisations preparing for DPDP are building towards a single behaviour: when someone asks you to delete their data, delete it.
+
+That behaviour is non-compliant.
+
+The DPDP framework imposes a retention **floor** and an erasure **ceiling** simultaneously, and they overlap. Getting this wrong is not a technicality — it is the difference between a system that produces defensible evidence and one that destroys it.
+
+This page sets out both obligations, shows where they collide, and describes what a compliant erasure actually consists of.
+
+## The erasure obligations
+
+There are two, and they operate differently.
+
+### Erasure on request — section 12
+
+A Data Principal is entitled to erasure of her personal data for the processing of which she had previously given consent. On receiving the request, the Data Fiduciary must erase the personal data — **unless retention is necessary for the specified purpose or for compliance with any law for the time being in force.**
+
+That exception is not narrow. Indian law is dense with retention mandates.
+
+### Erasure on purpose completion — section 8(7)
+
+Independently of any request, a Data Fiduciary must erase personal data on withdrawal of consent, or as soon as it is reasonable to assume the specified purpose is no longer being served, **whichever is earlier** — unless retention is necessary for compliance with law. The Fiduciary must also cause its Data Processor to erase.
+
+This is the obligation most organisations have not planned for at all, because it requires no trigger from the individual. It requires you to notice, on your own initiative, that a purpose has been served.
+
+### Erasure on inactivity — Rule 8(1) and the Third Schedule
+
+For specified classes, the Rules convert "purpose no longer served" into a clock.
+
+## | Class | Threshold | Erasure after |
+| --- | --- | --- |
+| E-commerce entity | ≥ 2 crore registered users in India | 3 years of Data Principal inactivity |
+| Online gaming intermediary | ≥ 50 lakh registered users in India | 3 years of Data Principal inactivity |
+| Social media intermediary | ≥ 2 crore registered users in India | 3 years of Data Principal inactivity |
+
+The clock runs from the later of: the date the Data Principal last approached the Fiduciary for performance of the specified purpose or to exercise her rights, or the commencement of the Rules.
+
+Two purposes are carved out and survive the clock: enabling the Data Principal to access her **user account**, and enabling her to access a **virtual token** issued by or on behalf of the Fiduciary, stored on its platform, usable to obtain money, goods or services. Wallet balances and store credit do not evaporate at three years.
+
+### The 48-hour notice — Rule 8(2)
+
+At least **forty-eight hours** before the erasure period completes, the Data Fiduciary must inform the Data Principal that her data will be erased on completion of the period, unless she logs into her account, otherwise initiates contact for the specified purpose, or exercises her rights.
+
+Read as an engineering requirement, this is not a policy. It is a scheduled job, running per individual, against a per-class clock, that sends a templated notification, exposes a re-engagement path that resets the clock, and writes an audit record proving the notice was sent. There is no manual version of this at scale.
+
+## The retention obligation that overrides all of it
+
+### Rule 8(3) — the one-year floor
+
+Without prejudice to the erasure duties above, a Data Fiduciary must retain — in respect of any processing undertaken by it or on its behalf by a Data Processor — the personal data, **associated traffic data and other logs of the processing**, for a minimum period of **one year** from the date of processing, for the purposes specified in the Seventh Schedule. Only after that may it erase, and only if no other law requires longer.
+
+The Rules illustrate this directly, and the illustration is the whole argument:
+
+> A person buys an e-book on a platform. Once delivery completes, the specified purpose is served. The platform must nonetheless retain the order details, personal data and processing logs — order confirmation, payment, delivery events — for at least one year from the transaction date, **even if the customer deletes her account.**
+
+A second illustration extends it down the chain: a company using a cloud service provider as its Data Processor must ensure the provider also retains the data and associated logs for at least a year before erasure.
+
+**So account deletion cannot mean data deletion.** And your processor's deletion policy is now your compliance problem.
+
+## Where the two collide
+
+| Scenario | Erasure says | Retention says | Correct action |
+| --- | --- | --- | --- |
+| Customer deletes account 2 months after a purchase | s. 12 / s. 8(7): erase | Rule 8(3): retain 1 year minimum | Suppress from active processing; retain the transaction record and logs; document why |
+| Customer requests erasure of KYC data held by a bank | s. 12: erase | Sectoral mandate: retain client identity records for the statutory period | Refuse erasure for the mandated data; explain the legal basis; erase anything outside the mandate |
+| Marketing consent withdrawn | s. 6(4) / s. 8(7): cease and erase | Nothing mandates retention of marketing profile | Erase the marketing data; **retain a suppression record**, or you will re-contact them |
+| Dormant e-commerce account, 3 years inactive, wallet balance present | Rule 8(1): erase | Third Schedule carve-out: virtual token access | Erase for other purposes; preserve the token and account-access data |
+| Employee leaves | s. 8(7): purpose served | Multiple statutory employment and tax retention periods | Retain per mandate; restrict access; erase discretionary data |
+
+The pattern across every row is the same: **erasure is purpose-scoped, not record-scoped.** The correct unit of erasure is "this data, for this purpose," never "this person's row."
+
+## What a compliant erasure actually does
+
+Six steps. If your system does fewer, it is not doing erasure.
+
+1. **Resolve the request to purposes, not records.** Identify which processing purposes the data supports, because some will be erasable and others will not.
+2. **Check every retention mandate in scope.** Statutory retention under Indian law, the Rule 8(3) one-year floor, and any live legal claim or proceeding.
+## 3. **Erase what is clear.** Delete the data for purposes with no retention basis.
+4. **Suppress and restrict what must be retained.** Retained data must be removed from active processing for the erased purposes, with access narrowed to the retention purpose alone. Retention is not permission to keep using it.
+5. **Cascade to processors.** s. 8(7) requires you to cause your Processor to erase. Rule 8(3) requires you to ensure the Processor retains for the minimum period. Both — which means your processor instructions have to be capable of expressing "erase this, retain that."
+6. **Produce the artefact.** Record what was requested, what was erased, what was retained, the legal basis for retention, when, and by whom. This is what you produce if the matter is ever adjudicated — and under s. 33(2) the timeliness and effectiveness of your action is an express factor in setting a penalty.
+
+## The suppression record problem
+
+Step 4 conceals a trap worth naming separately, because it catches sophisticated teams.
+
+If a person withdraws marketing consent and you erase their record completely, you have destroyed the only evidence that they opted out. The next time their email arrives through an import, a partner list or a re-engagement campaign, you will contact them again — and you will have no record of why you shouldn't have.
+
+The answer is a **suppression record**: the minimum data needed to honour the withdrawal, retained for that purpose alone, and nothing else. It looks like retention and functions as erasure. Getting this wrong in either direction is a breach — over-retain and you have kept a marketing profile you were told to delete; under-retain and you will re-contact a person who withdrew.
+
+## Indian sectoral retention mandates that override erasure
+
+DPDP does not displace these. s. 12 defers to them expressly.
+
+| Source | Broadly requires retention of |
+| --- | --- |
+| Reserve Bank of India directions | KYC and customer identification records, transaction records |
+| Prevention of Money-Laundering Act and rules | Client identity and transaction records |
+| Income-tax Act and rules | Books of account and supporting records |
+| Companies Act, 2013 | Books of account and statutory registers |
+| IRDAI regulations | Policyholder and claims records |
+| TRAI and telecom licence conditions | Subscriber verification and call detail records |
+| SEBI regulations | Client and transaction records for intermediaries |
+
+**\[VERIFY\]** Specific periods vary by instrument and are amended periodically. Confirm the current period from the source instrument before relying on it, and take advice where a period is contested. This table identifies where to look; it is not a substitute for the instrument. The practical consequence for a regulated business: your erasure workflow needs a retention rule per data category per purpose, sourced from the applicable instrument, and it needs to be maintainable when those instruments change. That is a register, not a policy paragraph.
+
+## A worked example
+
+A D2C brand with 2.4 crore registered users. A customer buys in March 2027 and stops using the account.
+
+- **March 2027** — purchase. Rule 8(3) one-year retention of order data, traffic data and logs begins.
+- **March 2028** — the one-year floor expires. Income-tax and Companies Act records relating to the transaction continue under their own periods.
+- **March 2030** — three years of inactivity approaches under Rule 8(1), because the brand is a Third Schedule e-commerce entity above two crore users.
+- **48 hours before that date** — Rule 8(2) notice must be sent: the data will be erased unless she logs in, contacts the brand for the specified purpose, or exercises her rights.
+- **If she logs in** — the clock resets to that date.
+- **If she does not** — erasure proceeds for all purposes except account access and any virtual token, and except anything a retention mandate still covers.
+
+Note what this requires: a per-customer clock, a class determination, a scheduled notification, a re-engagement listener, a retention register, and an audit record at each step. Note also that the brand's user count crossing two crore is what pulls it into this regime at all — a fact that changes as the business grows.
+
+## What this means for your systems
+
+Five capabilities, none of which a policy document provides:
+
+- a **retention register** mapping data category and purpose to a retention rule and its source
+- **purpose-scoped erasure** rather than record deletion
+- a **conflict detector** that surfaces a retention mandate blocking an erasure request instead of resolving it silently in either direction
+- **scheduled clocks with pre-erasure notification**, per individual, per class
+- **artefacts** at every step, retained for the retention period, not the request period
+
+## Frequently asked questions
+
+### What is the minimum data retention period under the DPDP Rules?
+
+One year. Rule 8(3) requires retention of personal data, associated traffic data and processing logs for at least one year from the date of processing, for the purposes in the Seventh Schedule, unless another law requires longer.
+
+### Can a Data Fiduciary refuse to delete personal data?
+
+Yes, where retention is necessary for the specified purpose or for compliance with any law. s. 12 makes the erasure right expressly subject to that. The correct response is to retain the mandated data, erase the rest, and document the basis.
+
+### Does deleting my account delete my data under the DPDP Act?
+
+Not entirely, and not immediately. The Rules illustrate this directly: a platform must retain transaction records and processing logs for at least a year even where the customer has deleted her account. Data outside any retention mandate should be erased.
+
+### Which companies must erase data after three years?
+
+Third Schedule classes: e-commerce entities and social media intermediaries with not less than two crore registered users in India, and online gaming intermediaries with not less than fifty lakh — after three years of Data Principal inactivity, excluding account access and virtual token purposes.
+
+### What is the 48-hour notice under the DPDP Rules?
+
+Rule 8(2) requires a Data Fiduciary to inform the Data Principal at least forty-eight hours before the erasure period completes that her data will be erased, unless she logs in, initiates contact for the specified purpose, or exercises her rights.
+
+### Does the retention obligation apply to our cloud provider too?
+
+Yes, in effect. Rule 8(3) applies to processing undertaken by a Data Processor on the Fiduciary's behalf, and the Rules illustrate it with a cloud service provider hosting customer records. Your provider's deletion policy is part of your compliance position.
+
+### How do we handle erasure when a sectoral regulator requires retention?
+
+Retain what the mandate covers, erase what it does not, restrict the retained data to the retention purpose only, and record the mandate you relied on. Silently deleting mandated records and silently refusing the whole request are both breaches.
+
+### See how Consiva handles this automatically
+
+Consiva.ai maps every obligation above to a workflow, dashboard, or automated job — so your team focuses on decisions, not tracking.
+
+[Start Free — No Credit Card →](https://app.consiva.ai/register)
+
+_Verified against the Gazette of India on 17 August 2026. Sources: Digital Personal Data Protection Act, 2023, ss. 8(7), 12, 33(2); Digital Personal Data Protection Rules, 2025, Rule 8 and the Third and Seventh Schedules, including the illustrations to Rule 8(3). Sectoral retention periods must be confirmed from the applicable instrument. Reference material about the law, not legal advice — see [/disclaimer](https://consiva.ai/legal/disclaimers-and-ai-notice)._

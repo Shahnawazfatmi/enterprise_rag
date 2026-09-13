@@ -1,0 +1,104 @@
+# ↑
+
+**ISO 9001** Certified·**ISO 27001** Certified·**NASSCOM** Member·**DSCI** Member · DSCI/AM/2026/089·**DPIIT** Recognised· [**Download White Paper**](https://consiva.ai/assets/documents/Consiva-The-Provable-Enterprise.pdf)
+
+[Home](https://consiva.ai/) › [Platform](https://consiva.ai/platform) › DSAR Management Software
+
+## GDPR Art.15–21 · DPDP Act 2023 Sections 6, 11–14
+
+# A DSAR and a Data Principal request are not the same thing
+
+If you built your privacy programme around GDPR, “DSAR” is the word you use. India's DPDP Act does not use it, does not grant the same set of rights, and does not impose the same response clock. Here is what actually changes — and what to do if you are running both.
+
+[See DPDP Rights Management →](https://consiva.ai/data-principal-rights-management) [Start Free — No Credit Card](https://app.consiva.ai/register)
+
+## Why the terminology matters more than it sounds like it should
+
+This looks like pedantry and is not. Three concrete consequences follow from treating a DSAR and a Data Principal request as the same object:
+
+**You offer a right that does not exist.** GDPR grants data portability under Article 20. DPDP does not — the word does not appear in the Act. A DSAR intake form ported into an Indian programme typically carries a portability option, which creates an expectation with no statutory basis and no statutory bounds. Refuse it and the requester now has a grievance.
+
+**You apply a deadline that is not there.** GDPR Article 12(3) gives one month. Most teams carry “30 days” across. For DPDP access, correction, erasure and nomination requests there is no prescribed response deadline at all. For grievances there is one, and it is different: Rule 14(3) requires you to publish your grievance response period, capped at ninety days.
+
+**You miss an obligation GDPR does not have.** Rule 9 requires the business contact information of your DPO or contact person to be published and mentioned in every response to a rights communication. A GDPR response template will not include it.
+
+## Side by side: GDPR DSAR vs DPDP Data Principal request
+
+## | | GDPR (DSAR) | DPDP Act 2023 |
+| --- | --- | --- |
+| Term used | Data Subject Access Request | Request by a Data Principal for the exercise of her rights |
+| Access | Art. 15 — a copy of the personal data | s.11 — a summary of the personal data and processing activities, plus the identities of Fiduciaries and Processors it was shared with |
+| Rectification | Art. 16 | s.12 — correction, completion and updating |
+| Erasure | Art. 17 | s.12(3) / s.8(7) — erasure unless retention is necessary for the specified purpose or for compliance with any law in force |
+| Restriction of processing | Art. 18 | No equivalent |
+| Portability | Art. 20 | No equivalent — does not exist in DPDP |
+## | Objection | Art. 21 | No equivalent |
+| Withdrawal of consent | Art. 7(3) | s.6(4) — with ease comparable to that of giving it |
+| Grievance / complaint | Supervisory authority complaint, Art. 77 | s.13 — a right to grievance redressal from the Fiduciary, which must be exhausted before approaching the Board (s.13(3)) |
+| Nomination | No equivalent | s.14 — nominate an individual to exercise rights on death or incapacity |
+| Response deadline | One month, extendable (Art. 12(3)) | None prescribed for ss.11, 12, 14. Grievance period published, capped at 90 days (Rule 14(3)) |
+| Contact details in response | Not required | Required in every response (Rule 9) |
+
+## The four differences that change how you build the workflow
+
+**1\. Access is a summary, not a copy.** Section 11 entitles her to a summary of the personal data being processed and the processing activities undertaken, plus the identities of every other Data Fiduciary and Data Processor the data was shared with and a description of what was shared. That third element has no clean GDPR analogue and most DSAR tooling does not capture it.
+
+**2\. Erasure has an explicit statutory carve-out, and two retention duties behind it.** Section 12(3) requires erasure unless retention is necessary for the specified purpose or for compliance with a law in force. Separately, Rule 6(1)(e) requires one year of log and data retention, and Rule 8(3) requires a minimum one year of retention of personal data, traffic data and logs — expressly extending to a Data Processor. So a refusal is often lawful and sometimes mandatory. Your workflow needs a first-class “reasoned refusal with statutory basis” state, not just fulfil-or-fail.
+
+**3\. Grievance is a separate right with its own clock.** Under GDPR a complaint goes to the supervisory authority. Under DPDP, Section 13 creates a right to grievance redressal from you, and Section 13(3) requires her to exhaust it before approaching the Board. That makes your grievance process a statutory gate, not a customer-service nicety — and it is the only DPDP right with a prescribed period.
+
+**4\. Nomination is new.** Section 14 lets a Data Principal nominate one or more individuals to exercise her rights in the event of her death or incapacity. There is no GDPR equivalent, and most imported workflows have no state for it.
+
+## If you already run a GDPR DSAR process
+
+You are further ahead than you might think — the intake, verification and audit-trail discipline transfers directly. What needs changing is narrower than a rebuild:
+
+- Remove portability, restriction of processing, and objection from your Indian intake form
+- Add nomination as a request type, and grievance as a distinct type with its own published period
+- Re-scope access from “copy of the data” to the three elements Section 11 actually specifies
+- Re-label your 30-day clock as a service commitment rather than a statutory deadline, and publish your grievance period separately
+- Add Rule 9 contact details to every response template
+
+Do not run one merged workflow across both regimes. The rights sets, the carve-outs and the clocks differ enough that a merged process tends to default to the GDPR shape and quietly import rights India did not grant.
+
+## How Consiva handles both vocabularies
+
+Consiva's rights module is built to DPDP as written — the four rights in Sections 11 to 14 plus withdrawal under Section 6(4), with no portability option, a reasoned-refusal state, separate service and grievance clocks, and Rule 9 details in every response.
+
+Requests are unmetered on every plan, including Free, and are never charged by volume.
+
+## [Data Principal Rights Management\\
+\\
+Full detail, including the product screens](https://consiva.ai/data-principal-rights-management) [Data Principal Rights and Duties\\
+\\
+The rights themselves, in the Act's own terms](https://consiva.ai/dpdp/data-principal-rights-and-duties)
+
+[See DPDP Rights Management →](https://consiva.ai/data-principal-rights-management) [Start Free — No Credit Card](https://app.consiva.ai/register)
+
+## Frequently asked questions
+
+## What is DSAR management software?+
+
+Software that handles Data Subject Access Requests — intake, identity verification, locating the data, fulfilling or refusing the request, responding, and keeping an audit trail. The term comes from GDPR. Under India's DPDP Act the equivalent is a request by a Data Principal for the exercise of her rights, and the rights themselves are a different set, so software built purely to a GDPR model will not map cleanly.
+
+Is a DSAR the same as a Data Principal request under DPDP?+
+
+No. The DPDP Act grants four rights — access to information about personal data (s.11), correction and erasure (s.12), grievance redressal (s.13) and nomination (s.14) — plus withdrawal of consent (s.6(4)). GDPR's portability, restriction of processing and objection rights have no DPDP equivalent. DPDP's access right is a summary of the data and processing activities rather than a copy of the data, and it additionally requires disclosing who the data was shared with. Nomination has no GDPR equivalent at all.
+
+## What is data subject request management?+
+
+The operational discipline of handling rights requests reliably: a discoverable intake route, identity verification proportionate to the consequences of the request, a named owner per case, a clock, the ability to record a reasoned refusal against a statutory provision, and an exportable case file. The mechanics are similar across regimes; the rights, carve-outs and deadlines are not.
+
+## How does data principal request management work under DPDP?+
+
+A Data Principal submits a request using the means you are required to publish under Rule 14(1). You may require particulars to identify her — Rule 14(5) lists what counts, including customer ID, application reference number, enrolment ID, email address and mobile number. You then fulfil the request or refuse it on a statutory basis, and respond including the Rule 9 contact information. There is no prescribed deadline for access, correction, erasure or nomination; grievances run against a period you publish, capped at ninety days.
+
+## How long do I have to respond to a DSAR in India?+
+
+There is no DPDP equivalent of GDPR's one-month deadline. For access, correction, erasure and nomination, neither the Act nor the Rules prescribe a response period. For grievances, Rule 14(3) requires you to prominently publish your response period and caps it at ninety days. The widely quoted "30 days" is GDPR Article 12(3) and has no DPDP basis — though adopting a 30-day service commitment is good practice, provided you label it as one.
+
+## See how Consiva handles DPDP rights, as written
+
+Four rights, two clocks, no imported GDPR assumptions — unmetered on every plan including Free.
+
+[See DPDP Rights Management →](https://consiva.ai/data-principal-rights-management) [Start Free — No Credit Card](https://app.consiva.ai/register)

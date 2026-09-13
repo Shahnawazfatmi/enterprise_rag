@@ -1,0 +1,323 @@
+# ↑
+
+**ISO 9001** Certified·**ISO 27001** Certified·**NASSCOM** Member·**DSCI** Member · DSCI/AM/2026/089·**DPIIT** Recognised· [**Download White Paper**](https://consiva.ai/assets/documents/Consiva-The-Provable-Enterprise.pdf)
+
+[Home](https://consiva.ai/) › [Blog](https://consiva.ai/blog) › DPDP Compliance for SaaS Companies
+
+![DPDP compliance for SaaS companies illustration](https://consiva.ai/assets/images/blog/thumb-saas-compliance.jpg)
+
+India's Digital Personal Data Protection Act 2023 is a big change in how SaaS teams must work. If a company processes personal data of people in India, the act applies even if the company is based abroad. So, it matters whether your systems are running in Mumbai or in Milwaukee.
+
+This is meant for SaaS engineering teams, legal teams, and privacy and compliance owners. It covers the main duties, like the scope of the law, the way consent should be built, data residency steps, and how DSR requests can be handled in cloud setups. It also includes sub processor contract terms, added safeguards for multi tenant setups, and a requirement to report specific incidents to CERT In.
+
+## Who Is Covered by DPDP 2023? The Extraterritorial Scope
+
+The law has a territorial test. In Section 3(a), it applies to processing that happens within India. Section 3(b) adds an extra point: the law can also apply to processing done outside India if that processing links to offering goods or services to people in India. In short, this makes it hard to argue that a foreign company is outside the rules just because it is not incorporated in India.
+
+## Key Statutory References
+
+- **Section 3** — Territorial and extraterritorial application of the Act
+- **Section 4** — Grounds for lawful processing: consent and legitimate uses
+- **Section 8** — General obligations of the Data Fiduciary
+- **Section 11** — Right of the Data Principal to withdraw consent
+- **Section 16** — Additional obligations for Significant Data Fiduciaries
+- **Section 19** — Cross-border data transfer restrictions
+
+Section 16 introduces the concept of the **Significant Data Fiduciary (SDF)** — a designation the Central Government can impose on any entity based on volume and sensitivity of data processed, risk to sovereignty or national security, risk to electoral democracy, security of the state, or public order, and the potential impact on the rights of children. An SDF faces elevated obligations: mandatory appointment of an India-resident Data Protection Officer, periodic Data Protection Impact Assessments (DPIAs), algorithm audits, and — critically — data localisation requirements for categories of data notified by the government.
+
+For SaaS companies, the practical implication is immediate: if you have a freemium product popular with Indian consumers, an enterprise tier serving Indian enterprises, or even an API that Indian developers integrate, you are within scope. There is no de minimis exemption based on company size or revenue in India.
+
+## Why SaaS Companies Are High-Risk Under DPDP
+
+Traditional enterprises process personal data in bounded, well-understood systems. SaaS companies are quite different in their architecture — which can create a whole heap of DPDP risk:
+
+- **Massive data volumes coming at you fast:** SaaS platforms are constantly sucking in behavioural telemetry, usage logs and personal info. You've got a mid-sized B2B SaaS with 50,000 Indian enterprise users — that's tens of millions of personal data events being processed every day from things like authentication logs, audit trails, everything they do in collaboration, and API activity. It's not just a trickle.
+- **Data flows across borders,** which is half the design of most SaaS platforms — they're routing data across multiple AWS regions or Azure geos to get lower latency, make sure it all keeps running even if things go wrong, and to get some useful analytics. But every time they send Indian personal data across borders they need to make sure it's allowed — it's got to be one of the countries the Central Government says is okay under Section 19.
+- **Multi-tenant shared infrastructure:** logical isolation in shared databases introduces risk of accidental cross-tenant exposure during bulk operations, schema migrations, or backup restores.
+- **Complex sub-processor chains:** a typical SaaS stack includes a CDN, an error monitoring tool, a product analytics platform, a CRM, an email delivery service, and third-party AI APIs — each potentially processing Indian personal data.
+- **Rapid iteration cycles:** continuous deployment means new data fields, new integrations, and new third-party vendors are added faster than traditional legal review processes can track.
+
+## Regulatory Risk Signal
+
+The Data Protection Board may charge penalties of as much as ₹250 crore for each instance where security safeguards are not followed. It may also charge up to ₹200 crore for each instance where rules linked to children's data are not met. For a SaaS platform that serves users across countries, one wrong setup in the consent flow can affect a huge number of records at the same time.
+
+## Consent Management for SaaS Products
+
+### What Constitutes Valid Consent Under DPDP
+
+Section 6 of the DPDP Act sets a high bar for consent validity. Consent must be free, specific, informed, unconditional, and unambiguous — expressed through a clear affirmative action. Pre-ticked boxes, bundling consent with terms of service, or slipping in consent as a condition of service — even if the data is completely unneeded — won't meet this standard. The thing that really matters is that the consent request notice is clearly explained in English or any of the 22 official Indian languages, which the Eighth Schedule of the Constitution lists. That way, users can at least make sense of what they are agreeing to in their own language.
+
+### In-Product Consent Banners & Flows
+
+When it comes to B2C SaaS products, you have to get the consent in there somewhere before you start collecting people's personal info for anything that isn't essential. You need to make sure your consent notice lists out clearly: the types of personal data that are being collected, exactly what you're going to use it for, the name and contact details of the company that's responsible for looking after it all, and how people can go back on that consent later. Cookie consent banners that slap a big 'I agree' box on top of everything — only to be found out later that that included all sorts of tracking that never got discussed — are not going to cut it. You need to ask people for permission every time you want to do something with their data.
+
+In technical terms, that means your system for handling consent has got to:
+
+- Show a consent request page with all the details before you even start loading in the tools you use to track people, like analytics software, ad pixels, and third-party cookies
+- Block any behind-the-scenes requests to other companies (like Segment, Amplitude, Mixpanel, or Intercom) until people agree to that specific use of their data
+- Store a timestamped, versioned consent record in a dedicated audit log — immutable and queryable by user ID
+- Surface an accessible consent withdrawal mechanism within the product, not buried in a support ticketing flow
+- Re-obtain consent if the processing purpose changes materially or if you onboard a new sub-processor for a consented purpose
+
+### API-Based Consent Signalling for B2B SaaS
+
+In B2B scenarios, the SaaS vendor typically processes data under a contract with an enterprise customer (the downstream Data Fiduciary), making the SaaS vendor a Data Processor. However, where the SaaS vendor independently determines the purpose or means of processing — for instance, using customer data to train AI models or to improve its own product analytics — it transitions into a co-fiduciary role for those processing activities.
+
+| Scenario | DPDP Role | Who Controls Purpose? | Your Obligations |
+| --- | --- | --- | --- |
+| **You process customer data on client's instructions only** | Data Processor | Your enterprise client (Data Fiduciary) | Written DPA, security safeguards, breach notification to fiduciary, delete on contract end |
+| **You use customer data to train your AI / improve your product** | Co-Data Fiduciary | You (for that processing activity) | Separate consent, full DPDP obligations, DPB registration if SDF-designated |
+| **B2C SaaS — you collect user data directly** | Data Fiduciary | You | Full DPDP obligations: consent, rights, ROPA, DPO (if SDF), breach notification |
+| **You are a sub-processor of another SaaS** | Sub-Processor | The upstream SaaS (Processor) | Contractual obligations to upstream processor; security standards; audit rights |
+
+B2B SaaS platforms should implement consent signal propagation via API: when a downstream customer informs you that an end-user has withdrawn consent for a specific purpose, your platform must honour that signal within a defined SLA (24 hours is a reasonable technical target) and cease processing for that purpose across all systems, including analytics pipelines, ML training datasets, and recommendation engines. Platforms like [Consiva](https://app.consiva.ai/register) provide webhook-based consent signal ingestion that can automate this propagation across your infrastructure.
+
+### Start Free on Consiva.ai — No Credit Card Required
+
+Map your SaaS data flows, generate DPDP-compliant consent notices in 22 Indian languages, automate DSR workflows, and get audit-ready in days — not months.
+
+[Get Started Free](https://app.consiva.ai/register)
+
+## Data Residency Requirements Under DPDP
+
+Section 19 of the DPDP Act authorises the Central Government to restrict cross-border transfers of personal data to countries or territories it deems appropriate, based on factors such as the adequacy of data protection laws in the destination country, treaties with India, and national security considerations. The government is expected to publish an approved transfer list — analogous to the EU's adequacy decisions — along with the Rules under the Act.
+
+### What the Current Rules Say
+
+At the time of writing (August 2026), the DPDP Rules have introduced a whitelist mechanism: personal data of Indian data principals may be transferred to countries on the approved list without additional safeguards, while transfers to non-listed countries require government approval or the use of standard contractual clauses. Notably, unlike the original Personal Data Protection Bill 2019, the enacted DPDP Act does not impose a blanket data localisation mandate for all personal data — localisation is reserved for categories notified under the Significant Data Fiduciary framework.
+
+### What Significant Data Fiduciaries Must Do
+
+If you are named an SDF, certain types of personal data must be kept in India. This covers things like financial files and health records, plus other sensitive types that are listed as notified. In practice, it means this:
+
+- Deploying dedicated AWS ap-south-1 (Mumbai) or Azure India Central storage resources for regulated data categories
+- Implementing data classification at the pipeline level — tagging records by sensitivity category at ingestion so that routing policies can enforce residency
+- Configuring geo-restriction policies at the cloud provider level (AWS S3 Bucket Policies with `aws:RequestedRegion` conditions, Azure Policy for allowed locations)
+- Auditing all data replication jobs — cross-region read replicas, disaster recovery snapshots, and data warehouse sync jobs — to ensure regulated categories remain within India boundaries
+
+## Handling DSRs When Data Lives in Cloud Infrastructure
+
+Sections 11 through 14 of the DPDP Act grant data principals the rights to access information, correct inaccurate data, erase personal data, and nominate a nominee. For SaaS companies, the challenge of DSR fulfilment is not legal interpretation — it is engineering: personal data is rarely in a single place.
+
+### Mapping Your Data Footprint
+
+Before you can put in place a Data Subject Request (DSR), you need a complete picture of where all personal data is held — every database table, every object store bucket, every analytics event stream, every machine learning dataset, every backup location, and all the systems using personal data that are connected to the customer or user making the request. For most cloud-based software companies this list will look something like this:
+
+- Primary transactional database (the main database driving the core business logic of your application — PostgreSQL, MySQL, DynamoDB, etc.)
+- Data warehouse — where you put your data after it's been cleaned up and made easier to analyse (BigQuery, Snowflake, Redshift, etc. — don't forget all the stuff you've stored there like aggregated tables and fancy views)
+- Object storage (S3, GCS, Azure Blob and alike) where you keep structured files, exports, and all the user-uploaded goodies
+- Event streaming systems (the logs and audit trails for those Kafka, Kinesis, Pub/Sub systems)
+- Search and caching layers (Elasticsearch, Redis), not to mention the part where you index all the personal data
+- ML/AI training datasets — if any of your models were trained using customer or user data
+- Backup and disaster recovery snapshots — the ones you're supposed to do so you don't lose everything in an emergency
+- Third-party SaaS integrations — all those other tools and services you've integrated into your app like CRM systems, support desks, email platforms and product analytics
+
+### Automating Erasure in Cloud Environments
+
+Manual erasure across this footprint within the DPDP's "without undue delay" standard is operationally impossible at scale. SaaS teams must build or procure automated DSR orchestration that: (1) receives and authenticates the erasure request, (2) identifies all systems containing records for that data principal, (3) executes deletion or anonymisation across each system in dependency order, (4) handles immutable storage via cryptographic erasure or documented backup expiry scheduling, and (5) generates an audit trail proving fulfilment. Cloud-native tools like AWS Macie (data discovery), Azure Purview, and GCP's Data Catalog can accelerate the discovery phase, but orchestration requires a purpose-built layer — which is exactly what Consiva's DSR automation module provides.
+
+## Vendor and Sub-Processor Data Processing Agreements
+
+The DPDP Act requires Data Fiduciaries to engage Data Processors only under a valid contract that prescribes what the processor may do with the personal data. This is not a formality — the contract is a compliance instrument. Critically, the Data Fiduciary remains liable for any non-compliance by its processors, creating strong incentive to conduct due diligence before onboarding new vendors.
+
+### What Your DPAs Must Cover
+
+A DPDP-compliant Data Processing Agreement with each sub-processor should address:
+
+- **Scope and purpose limitation:** the processor is authorised to process Indian personal data only for the specific, described purposes — no secondary use, no AI model training unless explicitly permitted.
+- **Security standards:** save the data using AES-256 encryption, guard the data while it moves by using TLS 1.2 or a later release, put in place access controls, and schedule regular penetration tests.
+- **Sub-processor limits:** the processor cannot hire any extra sub-processors unless it first gets written permission. Keep a running list of sub-sub-processors that are approved, and update that list when changes are needed.
+- **Breach notification:** the processor must notify you within 2 hours of discovering a breach involving Indian personal data (shorter than your obligation to CERT-In, to give you time to comply).
+- **DSR cooperation:** the processor must cooperate with and technically enable DSR fulfilment within defined timelines.
+- **Audit rights:** you must be able to audit the processor's compliance posture — either through direct audit, third-party assessments, or certified attestations (ISO 27001, SOC 2 Type II).
+- **Data deletion:** on termination of the agreement, the processor must delete all Indian personal data within a specified period (30 days is standard) and provide written certification of deletion.
+- **Cross-border transfer controls:** the processor must not transfer Indian personal data to countries outside the approved DPDP list without your explicit authorisation.
+
+If you are a SaaS vendor selling to Indian enterprises, your customers will increasingly require you to sign their DPDP-compliant DPA as the Data Processor. Having a well-structured, pre-negotiated DPA template of your own — and being familiar with DPDP obligations — will accelerate your enterprise sales cycle significantly.
+
+## Multi-Tenant Architecture: Data Isolation and Erasure
+
+Multi-tenancy is the defining architectural characteristic of most SaaS platforms and presents the most technically nuanced compliance challenge under DPDP. When hundreds of enterprise customers share a database schema, fulfilling the right to erasure for a single data principal requires surgical precision.
+
+### Tenant-Aware Data Tagging
+
+Every personal data record must carry a tenant identifier and a data principal identifier at the schema level — not just in application logic. This means adding composite indexes on (tenant\_id, user\_id) across all tables containing personal data, and enforcing this schema constraint in your data engineering pipelines so that events, logs, and derived tables inherit the tagging automatically.
+
+### Erasure Propagation Challenges
+
+In a multi-tenant SaaS, wiping out data is actually pretty complicated by a few factors that can be managed with some forward thinking:
+
+- **Shared aggregations:** if you are working on per-tenant analytics and the numbers come from many users, you cannot just delete one row. You usually have to redo the totals and counts again from the start. Plan your analytics so it can update results step by step when data changes, or apply differential privacy so results are anonymised for specific user groups.
+- **Foreign key nightmares:** erasing a user record can cause a chain reaction that breaks foreign key constraints. Take the time to map out all the possible cascades in your data model and document which tables downstream are better off having their records nullified rather than deleted altogether.
+- **Audit logs and erasure rights:** you may have to hang onto certain data in your audit logs for compliance reasons (think tax or financial regulations), which creates a problem with the erasure rights that data principals are entitled to. Come up with a clear retention policy that draws the line between personal data that has to be erased and anonymised audit records that you're allowed to keep.
+- **Backup snapshots:** it's just not realistic to expect you'll be able to delete personal data from every single backup you've ever made. Instead, set up a backup retention and expiry policy (say, backups get deleted after 30 days), let the data principal know when they ask for their data to be wiped, and then use crypto-erasure to scramble the data in any backups that are in immutable storage.
+
+### Cryptographic Erasure
+
+For data that's locked away in formats like S3 Glacier or encrypted backup archives — where you can't realistically delete the data itself — the best way to “erase” it is to destroy the encryption key. This means you need to do some extra work upfront to make sure every user's (or data principal's) data is encrypted with a unique key that's stored separately in a key management system (like AWS KMS, Azure Key Vault or GCP Cloud KMS). Once you delete the KMS key, the underlying data is inaccessible — even if it's not actually gone forever from a physical point of view.
+
+## CERT-In Incident Reporting Obligations for SaaS
+
+SaaS companies in India operate under a dual reporting regime: the CERT-In Directions of April 2022 (which remain in force) impose a 6-hour incident reporting window, while the DPDP Act requires notification to the Data Protection Board and affected data principals "without undue delay" following a personal data breach. These obligations interact and must both be satisfied.
+
+The three notification targets and their deadlines:
+
+| Notification Target | Deadline | Governing Rule | What to Include |
+| --- | --- | --- | --- |
+| **CERT-In** | Within 6 hours | CERT-In Directions 2022 | Nature of the incident, systems affected, and a quick note on the harm that has already occurred |
+| **Data Protection Board (DPB)** | Within 72 hours | DPDP Act, Section 8(6) | A summary of the data involved, how many people may be affected, and the steps you are taking to fix it |
+| **Affected Data Principals** | Without undue delay | DPDP Act, Section 8(6) | A simple, clear notice: what data was leaked, the risks, and what you are doing to make things better |
+
+### What Actually Triggers a Reportable Incident
+
+When it comes to reporting under CERT-In Directions, SaaS companies have to report a pretty wide range of incidents, including data breaches, personal data being leaked, systems being compromised, ransomware attacks and people getting access to IT infrastructure without permission. The clock starts from the moment you find out about the incident, not when you've finished investigating it or actually managing to shut it down.
+
+### Building a CERT-In-Ready Incident Response Plan
+
+SaaS teams need to be able to get a response plan up and running inside that six-hour window, which is a pretty tight squeeze, even by international standards. What that means in practice is you need:
+
+- A 24/7 security operations team (whether you've got one in-house or you've outsourced it through a SOC) and clear paths of escalation to the person in charge of sending off the CERT-In report
+- Pre-made templates for incident reports that match up with the fields CERT-In wants you to fill in (incident type, systems affected, what you think the scale of the problem is, what you did to contain it)
+- Automated alerts from your SIEM or cloud security tooling that kick off the incident response process as soon as they spot something fishy
+- A parallel notification workflow for the Data Protection Board and affected data principals, with pre-approved communication templates reviewed by legal counsel
+- Log retention for a minimum of 180 days for all ICT systems (including cloud infrastructure logs, VPN logs, and application access logs) as required by CERT-In Directions
+- Synchronisation of logs to Indian time zone (IST) and maintenance of NTP-synchronised timestamps across all systems
+
+### CERT-In Reporting Timeline for SaaS Incidents
+
+A single breach starts six deadlines running in parallel — the CERT-In clock is the tightest.
+
+- **T+0 (Awareness):** Internal escalation triggered automatically via SIEM alert
+- **T+2h:** Sub-processor notifies you per DPA obligation
+- **T+6h:** CERT-In report filed at incident@cert-in.org.in
+- **T+72h:** Data Protection Board notification submitted
+- **T+7 days:** Detailed post-incident report and affected data principal notifications
+- **T+30 days:** Root cause analysis and remediation evidence submitted to Board
+
+## Practical 8-Step Implementation Roadmap for SaaS DPDP Compliance
+
+1
+
+#### Conduct a Data Flow Audit and Classification
+
+Map every system that ingests, stores, transforms, or transmits personal data of Indian data principals. Classify each data element by sensitivity category (general personal data, children's data, health data, financial data). Document cross-border data flows and sub-processor relationships. This audit is the foundation for all subsequent compliance steps and should be completed in the first four weeks.
+
+2
+
+#### Evaluate Significant Data Fiduciary Exposure
+
+Assess whether your volume of Indian personal data, the sensitivity of categories processed, or the nature of your services (children's platforms, health tech, fintech) makes SDF designation likely. Engage outside counsel familiar with the DPDP Rules to obtain a written opinion. If SDF designation is probable, begin planning for an India-resident DPO hire and data localisation architecture immediately.
+
+3
+
+#### Rebuild Your Consent Management Layer
+
+Audit existing consent flows against DPDP's requirements: specificity, affirmative action, multilingual notice, withdrawal mechanism. Replace blanket consent with purpose-level consent UI components. Implement a consent audit log with immutable storage. For B2B products, add API endpoints to receive and propagate consent withdrawal signals from downstream Data Fiduciaries.
+
+4
+
+#### Implement Tenant-Aware Personal Data Tagging
+
+Add (tenant\_id, data\_principal\_id) composite keys to all personal data tables. Retrofit existing event schemas in your data warehouse and streaming pipelines with these identifiers. This tagging infrastructure is what makes scalable DSR fulfilment and data residency enforcement possible.
+
+5
+
+#### Build or Procure DSR Automation
+
+Deploy a DSR intake portal — either custom-built or through a platform like Consiva — that authenticates requestors, classifies requests by type (access, correction, erasure, nomination), routes them to automated fulfilment workflows, tracks SLA compliance, and generates audit-ready evidence. Ensure erasure workflows cover every data store identified in Step 1, including backups (via documented expiry policy) and sub-processors (via DPA-mandated DSR cooperation).
+
+6
+
+#### Audit and Update All Sub-Processor Agreements
+
+Review every vendor contract against the DPDP DPA requirements outlined in this guide. Issue updated DPAs to all sub-processors and set a deadline for countersignature. Terminate or replace any vendor that cannot or will not execute a compliant DPA. Build a sub-processor register and a process for evaluating new vendors before onboarding.
+
+7
+
+#### Implement Data Residency Controls in Cloud Infrastructure
+
+Configure cloud IAM policies, S3 bucket policies, and Azure/GCP equivalents to enforce data residency for regulated categories. Enable data classification labels in your cloud provider's governance tooling (AWS Macie, Microsoft Purview, GCP Data Catalog). Audit all cross-region replication jobs and disable or restrict those that move regulated personal data outside India or approved territories.
+
+8
+
+#### Operationalise Incident Response for CERT-In and DPDP Board Reporting
+
+Document and test your incident response runbook against the 6-hour CERT-In reporting requirement. Choose one CERT-In reporting person by name, available any hour, day or night. Set up your SIEM so it triggers an alert workflow and reaches the on-call security engineer within a few minutes. Draft the incident notice templates for CERT-In, the Data Protection Board, and affected people, and send them for legal review before you use them. Run a tabletop drill that simulates a breach at least once every quarter.
+
+## How Consiva's SaaS-Native Compliance Platform Helps
+
+Consiva was built specifically for the DPDP compliance needs of SaaS companies operating in or serving India. Unlike generic GRC tools adapted from EU GDPR playbooks, Consiva's platform reflects the specific requirements of the DPDP Act and CERT-In Directions from the ground up.
+
+### Data Discovery and Classification
+
+Consiva's automated scanner connects to your cloud environments (AWS, Azure, GCP) via read-only IAM roles and discovers personal data across databases, object stores, and event streams. It classifies data by DPDP category and generates a live, queryable data map — updated continuously as your schema evolves. This replaces the manual spreadsheet-based data inventory that becomes stale within weeks of creation.
+
+### Consent Management SDK
+
+Drop our React/Vue/vanilla JS consent SDK into your product to render purpose-level consent banners compliant with DPDP's language requirements across all 22 Scheduled languages. The SDK handles consent signal storage, audit logging, and withdrawal propagation via webhook to your backend — so your engineering team does not need to build this infrastructure from scratch.
+
+### DSR Orchestration
+
+Consiva's DSR module provides a white-label intake portal for your users, automated identity verification, request classification, and pre-built fulfilment connectors for major cloud databases, data warehouses, and popular third-party SaaS platforms. Every fulfilment step generates an evidence record, giving you an audit trail for Board investigations or customer inquiries.
+
+### Sub-Processor Management and DPA Generation
+
+Keep an eye on your sub-processor log inside Consiva. Watch the DPA progress as it runs. Create DPDP-ready DPA forms for each vendor link. You will get email or in-app nudges when a DPA is not signed yet, when it is close to expiring, or if a vendor's security proof expires.
+
+### Incident Response Playbooks
+
+Consiva has an incident response area. It includes CERT-In report templates with your organisation's info already filled in. You follow a clear process that runs for about six hours, showing you the steps in order. It also sends urgent alerts to the right team fast — for each situation, it can use PagerDuty, Opsgenie, or Slack. After the incident ends, the tool makes the files you need for the Data Protection Board forms.
+
+### Ready to Make Your SaaS DPDP-Compliant?
+
+Join hundreds of SaaS companies using Consiva to automate DPDP compliance — from consent management to DSR fulfilment to incident reporting. Get started in minutes with our free tier.
+
+## [Start Free — No Credit Card](https://app.consiva.ai/register)
+
+## Frequently Asked Questions
+
+Does the DPDP 2023 apply to foreign SaaS companies serving Indian users?+
+
+Yes, it does. And it's pretty straightforward — Section 3 of the Digital Personal Data Protection Act 2023 specifically says that any entity processing data on Indian users is subject to the Act, regardless of where they are based or where that data is stored. So a US-based SaaS company selling to Indian businesses or users here straight away falls under this rule. There's no magic number of customers or a minimum amount of money made which gets them out of it either.
+
+## What is a Significant Data Fiduciary and how will that impact a SaaS business?+
+
+The Government can designate any data handler as a Significant Data Fiduciary (SDF) if they process a lot of sensitive data, pose a risk to national security or the general order. And that comes with a whole extra set of rules. These SDFs will need to have a Data Protection Officer here in India, do data impact assessments regularly, have their algorithms audited and in some cases have to store data locally here. And some companies, especially those in health, finance, ed-tech and platforms that serve kids, are at higher risk of being designated as an SDF.
+
+## How should a multi-tenant SaaS platform manage the right to erasure?+
+
+Multi-tenant SaaS platforms need to tag each piece of data as it comes in with the right person it belongs to, and when someone asks to have that data erased, that has to be done across the board — in storage, backup, analytics and even any cached data. This means they have to have systems in place to track this data and make sure it gets deleted everywhere it's stored. Cryptographic erasure — where the tenant-specific encryption key is destroyed — is an accepted technical approach for data in immutable storage such as object stores or data warehouses, provided the approach is documented and communicated to the data principal at the time of their request.
+
+## What are the CERT-In breach reporting timelines for SaaS companies?+
+
+Under the CERT-In Directions of 2022, SaaS companies must report any personal data breach to CERT-In within six hours of becoming aware of the incident. The DPDP Act separately requires notification to the Data Protection Board and affected data principals without undue delay. In reality, SaaS teams should aim to hit these key milestones: get an initial CERT-In report on the table within 6 hours, inform the Board about what's happened within a 72-hour window, and send individual data principal notices within a week. To give yourself any shot at responding in time, you should also make sure your sub-processors are on top of things and can get a word in about a breach within a couple of hours. That way you'll have the time you need to get the necessary paperwork done.
+
+Can Consiva's platform integrate with cloud-native infrastructure to automate DSR fulfilment?+
+
+Yes. Consiva provides pre-built connectors for AWS, Azure, and GCP that scan tagged datasets, execute deletion or portability jobs, and generate audit-ready evidence logs — all from a single orchestration dashboard. The platform also includes a no-code DSR intake portal that you can embed in your product or connect via API, so end-users can submit requests directly without requiring engineering effort per request.
+
+Do SaaS sub-processors need separate Data Processing Agreements under DPDP?+
+
+Yes. The DPDP Act calls for a contract to govern the relationship between your SaaS operation and any third-party processor you use — and that includes analytics vendors, payment gateways, the companies that provide your content delivery networks, and the teams behind the AI APIs your product relies on. If you've got sub-processors in the mix, you need to have DPAs in place that outline in good detail the ways in which they're supposed to be processing your users' data: the reasons they're allowed to tap into it, the level of security they must ensure, how they'll let you know if there's a breach, and how long it'll take them to wipe any data they've got. The Data Fiduciary itself is still on the hook for anything its sub-processors mess up — so doing your homework on the vendors you work with, and making sure you've got a handle on the contractual obligations and controls in place, is a crucial part of keeping risk at bay.
+
+## Related Articles
+
+[E-Commerce\\
+\\
+## DPDP Compliance Checklist for E-Commerce Platforms Selling in India\\
+\\
+8 min read  ·  Consiva.ai](https://consiva.ai/blog/dpdp-compliance-checklist-ecommerce) [Data Management\\
+\\
+## Data Discovery for DPDP Compliance: Finding Personal Data Across Your Stack\\
+\\
+7 min read  ·  Consiva.ai](https://consiva.ai/blog/data-discovery-dpdp-compliance) [AI & Automation\\
+\\
+## AI-Powered DPDP Compliance Automation: A Complete Guide\\
+\\
+10 min read  ·  Consiva.ai](https://consiva.ai/blog/ai-powered-dpdp-compliance-automation)
+
+### Stay Ahead of DPDP Developments
+
+Get weekly updates on DPDP Rules notifications, Data Protection Board guidance, and practical compliance tips — delivered to your inbox.
+
+I agree to receive DPDP compliance updates and consent to Consiva processing my email for this purpose. [Privacy Policy](https://consiva.ai/legal/privacy-policy).Subscribe

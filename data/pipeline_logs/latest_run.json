@@ -1,0 +1,9 @@
+{
+  "pipeline": "consiva-ingestion-pipeline",
+  "status": "failed",
+  "started_at": "2026-09-11T08:31:37.343455+00:00",
+  "completed_at": "2026-09-11T08:48:14.747579+00:00",
+  "failed_stage": "baseline_promotion",
+  "error": "[WinError 5] Access is denied: 'C:\\\\Users\\\\Lenovo\\\\Desktop\\\\consiva-ai-assistant\\\\data\\\\structured_final_zp2nfr71' -> 'C:\\\\Users\\\\Lenovo\\\\Desktop\\\\consiva-ai-assistant\\\\data\\\\structured_final'",
+  "changes": {}
+}

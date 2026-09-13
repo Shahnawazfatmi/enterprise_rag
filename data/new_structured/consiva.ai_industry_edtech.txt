@@ -1,0 +1,140 @@
+# ↑
+
+**ISO 9001** Certified·**ISO 27001** Certified·**NASSCOM** Member·**DSCI** Member · DSCI/AM/2026/089·**DPIIT** Recognised· [**Download White Paper**](https://consiva.ai/assets/documents/Consiva-The-Provable-Enterprise.pdf)
+
+[Home](https://consiva.ai/) › [Industry](https://consiva.ai/industry/edtech#) › EdTech & Education
+
+**The short answer:** Under the DPDP Act a **child is an individual who has not completed eighteen years of age**. For schools, coaching centres, test-prep and K-12 platforms, that means most of the user base are children — so verifiable parental consent under section 9 and Rule 10 is not an edge case handled by an age gate. It is the centre of the compliance problem.
+
+# DPDP for EdTech & Education
+
+📚 Sector: EdTech & Education⚖️ Key provisions: s. 2 child definition · s. 9(1)–(3) · Rule 10 · s. 9(5)📅 In force: 13 May 2027
+
+On this page
+
+1. [Why the age threshold changes everything for this sector](https://consiva.ai/industry/edtech#age-threshold)
+## 2. [What section 9 requires](https://consiva.ai/industry/edtech#section9)
+## 3. [What "verifiable" means: Rule 10](https://consiva.ai/industry/edtech#rule10)
+## 4. [The tracking prohibition, applied honestly](https://consiva.ai/industry/edtech#tracking)
+5. [The parent, the student and the institution: three relationships](https://consiva.ai/industry/edtech#three-relationships)
+## 6. [What to build, in order](https://consiva.ai/industry/edtech#build)
+## 7. [Where Consiva fits](https://consiva.ai/industry/edtech#consiva)
+## 8. [Frequently asked questions](https://consiva.ai/industry/edtech#faq)
+
+## Why the age threshold changes everything for this sector
+
+For most industries, section 9 is an edge case: put an age gate on the signup form, block under-18s, done.
+
+Education cannot do that, because under-18s are the customer. A school's entire student body, a coaching centre's board-exam cohort, a K-12 platform's users — almost all are children under this Act. The provision other sectors treat as a peripheral control is, here, the primary one.
+
+The eighteen-year threshold is also notably higher than comparable regimes. GDPR permits member states to set the digital consent age anywhere from 13 to 16; the US COPPA regime operates at 13. A platform built to a 13-year threshold is not close to compliant in India.
+
+## What section 9 requires
+
+**Verifiable parental consent — s. 9(1).** A Data Fiduciary must obtain the verifiable consent of the parent before processing any personal data of a child. "Parent" includes a lawful guardian where applicable.
+
+**No detrimental processing — s. 9(2).** A Data Fiduciary must not undertake processing likely to cause any detrimental effect on the well-being of a child. Note that this sub-section is **not** capable of being disapplied under section 9(4), and no Fourth Schedule carve-out reaches it. It applies to everyone, always.
+
+**No tracking or targeted advertising — s. 9(3).** A Data Fiduciary must not undertake tracking or behavioural monitoring of children, or targeted advertising directed at children.
+
+Section 9(5) allows the Central Government, if satisfied that a Fiduciary processes children's data in a **verifiably safe** manner, to notify an age above which that Fiduciary is exempt from all or any of the obligations in 9(1) and 9(3). That is a route to relief, not a present entitlement — it requires a notification specific to the Fiduciary.
+
+## What "verifiable" means: Rule 10
+
+Rule 10 is where the engineering difficulty lives. Before processing a child's personal data, a Data Fiduciary must **observe due diligence to verify that the individual identifying herself as the parent is an identifiable adult**, using:
+
+- **reliable identity and age details already available with the Data Fiduciary**; or
+- identity and age details, or a **virtual token** mapped to them, voluntarily provided and made available by an entitled authority or by a Consent Manager permitted to do so.
+
+Two things follow that are worth sitting with.
+
+**The first limb favours institutions that already hold verified adult records.** A school with enrolment records including a verified parent identity is in a much better position than a consumer app whose only knowledge of the parent is an email address typed into a form.
+
+**The second limb depends partly on infrastructure that isn't live yet.** The Consent Manager route requires registered Consent Managers, and registration under Rule 4 does not open until **13 November 2026**. Building a compliance design that assumes an available Consent Manager ecosystem is a risk.
+
+### The minimisation paradox
+
+Verifying a parent's identity and age requires collecting more personal data — about an adult who may not otherwise be your user — at the same time as the Act requires you to limit collection to what is necessary for the specified purpose.
+
+There is no clean resolution in the text. The practical approach is to verify with the minimum sufficient data, retain the _outcome_ of the verification rather than the underlying documents where possible, and record the method used.
+
+**\[LEGAL COUNSEL REVIEW RECOMMENDED\]** on your chosen method before it goes live, because this is a genuinely unsettled area rather than a solved one.
+
+## The tracking prohibition, applied honestly
+
+Section 9(3) prohibits **tracking or behavioural monitoring of children** and **targeted advertising directed at children**. For EdTech this is more restrictive than it first appears, because so much of the standard product stack is behavioural monitoring by another name.
+
+| Common feature | Position |
+| --- | --- |
+| Advertising and remarketing pixels on student-facing pages | Prohibited where children are the audience |
+| Behavioural profiling for ad targeting | Prohibited |
+| Session recording and heatmaps on student journeys | Behavioural monitoring — treat as prohibited |
+| Third-party analytics building cross-site profiles | High risk; treat as prohibited absent a strong basis |
+| **Learning analytics measuring academic progress** | Arguably distinguishable — pedagogical assessment, not behavioural monitoring for commercial purposes |
+| **Adaptive learning adjusting difficulty from performance** | Arguably distinguishable, on the same reasoning |
+| Engagement nudges and streak mechanics | Depends on design and purpose; assess against s. 9(2) well-being as well as 9(3) |
+
+The last three rows are **interpretation, not settled law.** A reasonable reading distinguishes monitoring a learner's academic performance to deliver the educational service they enrolled for from monitoring behaviour to build a commercial profile. That reading is defensible and it is not guaranteed. It should be documented, reviewed by counsel, and revisited if the Board or MeitY issues guidance.
+
+Row six deserves separate attention. Engagement mechanics designed to maximise time-on-platform sit against section 9(2) — processing likely to cause a detrimental effect on a child's well-being — which cannot be carved out by anything. A streak mechanic that penalises a child for sleeping is an uncomfortable thing to defend under that sub-section.
+
+## The parent, the student and the institution: three relationships
+
+Education is the sector where identifying the Data Principal is hardest, because three parties have claims on the same record.
+
+- **The student** is the Data Principal. Where she is a child, the rights are exercised by the parent or lawful guardian.
+- **The parent** consents, exercises rights on the child's behalf, and is separately a Data Principal in respect of their own data.
+- **The institution** may be the Data Fiduciary, or may be your customer — making you a Processor. A B2B EdTech platform sold to schools is typically a Processor for student data and a Fiduciary for the teacher and administrator accounts. → [SaaS & IT Services](https://consiva.ai/industry/saas-it)
+
+And there is a transition nobody builds for: **a student turns eighteen.** At that moment the parental consent basis falls away, rights transfer to the individual, and the account's consent state needs to change. This is a scheduled event per user, derived from a date of birth you must therefore hold accurately.
+
+## What to build, in order
+
+## 1. **Determine your role per data set** — Fiduciary or Processor. B2B platforms are usually both.
+2. **Hold date of birth accurately**, because both the child determination and the eighteenth-birthday transition depend on it.
+3. **Design the parental verification method** against Rule 10's two limbs, favouring identity data you already hold. Get it reviewed.
+4. **Strip prohibited tracking from child-facing surfaces.** Audit the tag stack on a clean profile — this is where most EdTech platforms are currently non-compliant.
+## 5. **Document your learning-analytics position** as interpretation, with reasoning, for review.
+## 6. **Build the eighteenth-birthday transition** as a scheduled state change.
+## 7. **Assess engagement mechanics against s. 9(2)**, which no carve-out reaches.
+8. **Separate parent, student and staff consent records** so a rights request resolves to the right person.
+
+## Where Consiva fits
+
+Consiva provides purpose-level consent capture with a parental consent workflow, consent state tracking including age-based transitions, tracker consent with detection of tags firing on child-facing pages, and the records that evidence the verification method used. The choice of verification method, and your position on learning analytics, are determinations for you and your counsel.
+
+Parental consent workflows under Rule 10 are on the Pro plan (₹5,999/month plus applicable taxes, or ₹60,000/year plus applicable taxes), together with the 22 Eighth Schedule languages and automated DSR workflows. The choice of verification method, and your position on learning analytics, are determinations for you and your counsel. → [Pricing](https://consiva.ai/pricing)
+
+## Frequently asked questions
+
+**Who is a child under the DPDP Act?**
+
+An individual who has not completed eighteen years of age. This is higher than GDPR, where the digital consent age may be set between 13 and 16, and higher than the US COPPA threshold of 13.
+
+**What is verifiable parental consent under Rule 10?**
+
+Due diligence to verify that the person identifying as the parent is an identifiable adult, using reliable identity and age details already held by the Data Fiduciary, or details or a virtual token voluntarily provided through an entitled authority or a permitted Consent Manager.
+
+**Can EdTech platforms show advertisements to students?**
+
+Section 9(3) prohibits targeted advertising directed at children and tracking or behavioural monitoring of children. Advertising and remarketing infrastructure on child-facing surfaces should be removed rather than reconfigured.
+
+**Is learning analytics prohibited as behavioural monitoring?**
+
+This is unsettled. A defensible reading distinguishes pedagogical assessment of academic performance, delivered as part of the educational service, from behavioural monitoring for commercial profiling. The position should be documented and reviewed by counsel, not assumed.
+
+**What happens when a student turns eighteen?**
+
+The parental consent basis falls away and rights transfer to the individual. This requires a scheduled consent state change per user, which in turn requires accurate date-of-birth data.
+
+**Are schools Data Fiduciaries or are we, as their software vendor?**
+
+Typically the school is the Data Fiduciary for student data and the vendor is a Data Processor, while the vendor is a Data Fiduciary for its own account and billing data. Both roles usually exist in the same platform.
+
+_Verified against the Gazette of India on 17 August 2026. Sources: Digital Personal Data Protection Act, 2023, ss. 2, 9; DPDP Rules, 2025, Rules 4, 10, 12. Positions marked as interpretation are not settled law. Reference material about the law, not legal advice — see [/disclaimer](https://consiva.ai/legal/disclaimers-and-ai-notice)._
+
+### DPDP compliance built for EdTech & Education
+
+Consiva.ai covers every obligation above with pre-configured workflows, templates, and automated jobs — purpose-built for India's data protection law.
+
+[Start Free — No Credit Card →](https://app.consiva.ai/register)

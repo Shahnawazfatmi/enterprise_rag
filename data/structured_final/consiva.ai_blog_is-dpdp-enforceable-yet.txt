@@ -1,0 +1,156 @@
+# ↑
+
+**ISO 9001** Certified·**ISO 27001** Certified·**NASSCOM** Member·**DSCI** Member · DSCI/AM/2026/089·**DPIIT** Recognised· [**Download White Paper**](https://consiva.ai/assets/documents/Consiva-The-Provable-Enterprise.pdf)
+
+[Home](https://consiva.ai/) › [Blog](https://consiva.ai/blog) › [Is DPDP Enforceable Yet](https://consiva.ai/blog/is-dpdp-enforceable-yet)
+
+## DPDP Compliance
+
+# Is DPDP Enforceable Yet?
+
+Partly. The Data Protection Board of India exists and functions. But the substantive obligations — notice, consent, Data Principal rights, security safeguards, breach intimation — and the entire penalty regime commence on 13 May 2027, per commencement notification G.S.R. 843(E). Separately, CERT-In's 6-hour incident reporting duty applies today.
+
+✍ Consiva Editorial Team📅 August 30, 2026⏱ 7 min read
+
+![Is the DPDP Act enforceable yet — the commencement dates](https://consiva.ai/assets/images/blog/thumb-is-dpdp-enforceable-yet.jpg)
+
+If you have read that DPDP is fully in force, that penalties of ₹250 crore apply now, or that you have a twelve-month compliance window from November 2025, all three are incorrect. This piece sets out what the notification actually says, because a compliance programme built on the wrong date is built wrong.
+
+## What is actually in force today?
+
+The Act received presidential assent on 11 August 2023 but did not commence on that date. Different provisions were brought into force on different dates by **notification G.S.R. 843(E), dated 13 November 2025**, and the Rules follow a matching schedule under **G.S.R. 846(E)**, corrected by **G.S.R. 892(E)** on 10 December 2025.
+
+**In force since 13 November 2025:**
+
+- Act sections 1(2) and 2 — commencement and definitions
+- **Act sections 18–26** — establishment, composition, appointment, terms of service and powers of the Data Protection Board, and authentication of its orders
+- Act sections 35, 38–43, and 44(1) and (3)
+- **Rules 1, 2 and 17–21** — definitions, Board procedure, techno-legal measures and appeals
+
+So the definitions are law and the regulator is operating. What the Board cannot yet do is adjudicate a breach of the notice, consent, security or rights provisions — because those provisions have not commenced.
+
+## What happens on 13 November 2026?
+
+Two things, roughly three months from now:
+
+- **Rule 4** — registration of Consent Managers opens, subject to the First Schedule conditions
+- Act section 6(9) and section 27(1)(d)
+
+Worth noting because several vendors describe themselves as "Consent Managers". Until Rule 4 commences, **no entity in India is a registered Consent Manager**, because the registration mechanism does not exist. → [See what a Consent Manager actually is under the Act](https://consiva.ai/blog/consent-manager-vs-cmp)
+
+## What happens on 13 May 2027?
+
+This is the compliance date, and it is when almost everything arrives at once.
+
+**From the Act:** sections 3–5 (application and notice); 6(1)–(8) and (10) (consent); **7–10** (legitimate uses, general obligations of a Data Fiduciary, children's data, Significant Data Fiduciary obligations); **11–17** (Data Principal rights and duties); 27 except (1)(d); **28–34 (Board procedure on complaints, penalties and adjudication)**; 36, 37 and 44(2).
+
+**From the Rules:** 3, 5–16, 22 and 23 — notice content, reasonable security safeguards, breach intimation, retention and erasure, published contact information, verifiable children's consent, SDF obligations, and the procedure for exercising rights.
+
+Note that the obligations and the penalties for breaching them commence together. There is no window in which the duties apply but the consequences do not.
+
+| Date | What takes effect |
+| --- | --- |
+| 13 Nov 2025 | Definitions; the Data Protection Board and its powers; rule-making |
+| 13 Nov 2026 | Consent Manager registration (Rule 4); s. 6(9); s. 27(1)(d) |
+| 13 May 2027 | Notice, consent, all Data Fiduciary obligations, children's data, all Data Principal rights, breach intimation, retention — and the entire penalty regime |
+
+## So are the ₹250 crore penalties real?
+
+The figure is real. The timing and the attribution are both commonly misstated.
+
+The Schedule to the Act, read with section 33(1), sets seven penalty heads. The **₹250 crore maximum attaches to one specific breach: failure to observe the obligation under section 8(5) to take reasonable security safeguards** to prevent a personal data breach.
+
+It does **not** attach to consent defects or rights failures. Those fall under item 7 — "any other provision" — at up to **₹50 crore**.
+
+## ₹250 Cr
+
+**s. 8(5)** — reasonable security safeguards
+
+## ₹200 Cr
+
+**s. 8(6)** — breach intimation
+
+## ₹200 Cr
+
+**s. 9** — children's data obligations
+
+## ₹150 Cr
+
+**s. 10** — Significant Data Fiduciary obligations
+
+## ₹50 Cr
+
+Any other provision
+
+₹10,000
+
+**s. 15** — duties of a Data Principal
+
+All of it commences 13 May 2027. And the maximums are ceilings, not tariffs — section 33(1) allows a penalty only where the Board determines after inquiry that the breach is **significant**, and section 33(2) lists factors including gravity, duration, repetitiveness, gain realised, and **whether you took timely and effective mitigating action.**
+
+## What obligation applies to you today?
+
+One, and it is often overlooked in DPDP conversations: **CERT-In's Directions of April 2022** require a body corporate to report a cybersecurity incident within **6 hours** of detection, and to maintain ICT system logs for a rolling 180 days within Indian jurisdiction.
+
+That is in force now. It is not a DPDP obligation, it is not subject to the 2027 timetable, and non-compliance is dealt with under section 70B(7) of the Information Technology Act, 2000, which carries criminal rather than civil liability.
+
+### 21 months sounds comfortable. It isn't.
+
+Data inventory, purpose mapping, notice drafting, re-consent, rights fulfilment, retention reconciliation, breach rehearsal — the dependent critical path runs six to twelve months before procurement even starts.
+
+[Start Free on Consiva.ai — No Credit Card →](https://app.consiva.ai/register)
+
+## Why the accurate date is more useful than the scary one
+
+From today there are roughly **21 months** to 13 May 2027. That sounds comfortable. Against the actual work, it isn't — data discovery and inventory (2–4 months), purpose mapping and lawful basis determination (1–3 months, needs legal input), notice drafting including language versions (1–2 months), consent capture across properties (1–3 months), **re-consent of existing databases** (2–4 months, and response rates aren't yours to control), rights-fulfilment process and staffing (1–2 months), and a retention schedule reconciled to sectoral mandates (2–3 months, needs legal input).
+
+These overlap, but not entirely — you cannot map purposes before you know what data you hold, and you cannot re-consent before notices exist. The re-consent item is the one that catches people: consent gathered without purpose specificity needs refreshing before 13 May 2027, and your recontact response rate is whatever it is.
+
+**That is the real argument.** Not that you are already illegal — you aren't — but that the work takes longer than the time remaining, and the longest task depends on people replying to emails.
+
+## Frequently Asked Questions
+
+Is the DPDP Act enforceable now?+
+
+Partly. The Board and the definitions are in force since 13 November 2025. The substantive obligations and the penalty regime commence 13 May 2027 under G.S.R. 843(E), so the Board cannot yet adjudicate a breach of the consent, notice, security or rights provisions.
+
+Do the ₹250 crore penalties apply today?+
+
+No. Sections 28–34, which contain the penalty and adjudication machinery, commence 13 May 2027 alongside the obligations they enforce.
+
+Is there a twelve-month compliance window from the November 2025 Rules?+
+
+No. That framing appears in some vendor marketing but has no basis in the notification. The Rules use a phased schedule ending 13 May 2027.
+
+## What does the ₹250 crore penalty actually apply to?+
+
+Breach of the section 8(5) obligation to take reasonable security safeguards to prevent a personal data breach. Consent and rights failures attract up to ₹50 crore under the catch-all head.
+
+Is anything enforceable against us today?+
+
+CERT-In's April 2022 Directions — 6-hour incident reporting and 180-day log retention — apply now and are independent of DPDP.
+
+Could these dates change?+
+
+They could. Commencement is by notification, so a further notification could amend the schedule. Check the gazette rather than a summary.
+
+## Start Before the Notice Wording Is Final
+
+Consiva's Free plan gets purpose-level consent capture and rights intake live on one domain today — 1,000 cookie consents and 50 form consents a month, no credit card.
+
+[Start Free — No Credit Card →](https://app.consiva.ai/register) [View Pricing](https://consiva.ai/pricing)
+
+## Related Articles
+
+Continue learning about DPDP compliance
+
+[Consent Management\\
+**"Consent Manager" Is a Registered Legal Status** Read article →](https://consiva.ai/blog/consent-manager-vs-cmp) [Technology\\
+**What Does DPDP Compliance Software Actually Cost in India?** Read article →](https://consiva.ai/blog/dpdp-compliance-software-cost-india) [CERT-In\\
+**CERT-In 6-Hour Breach Reporting Rule: Everything You Need to Know** Read article →](https://consiva.ai/blog/cert-in-6-hour-breach-reporting)
+
+### Stay Ahead of DPDP Updates
+
+Get compliance alerts, new blog posts, and DPDP rule changes delivered to your inbox. No spam — unsubscribe anytime.
+
+I agree to receive DPDP compliance updates and consent to Consiva processing my email for this purpose. [Privacy Policy](https://consiva.ai/legal/privacy-policy).Subscribe
