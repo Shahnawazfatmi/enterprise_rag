@@ -3,26 +3,12 @@ import logging
 import os
 
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 
 
 # ============================================================
 # CONFIGURATION
-# ============================================================
-
-LLM_BASE_URL = "http://172.16.10.117:8080/v1"
-
-LLM_MODEL = (
-    "unsloth/gemma-4-12B-it-qat-GGUF:UD-Q4_K_XL"
-)
-
-LLM_API_KEY = "not-needed"
-
-
-# ============================================================
-# GEMINI FALLBACK CONFIGURATION
 # ============================================================
 
 load_dotenv()
@@ -66,8 +52,9 @@ Rules:
   "I couldn't find that information in the knowledge base."
 - Keep the answer concise while including necessary information.
 - For pricing questions, provide the relevant Free, Pro,
-- most important lemme know about plans means user asking for prising, so searched for prising related document.
   and Enterprise plan information when available in the context.
+- If the user asks about plans, pricing, or subscriptions,
+  treat the question as a pricing-related question.
 - Use bullet points only when they improve readability.
 
 Source Text:
@@ -137,37 +124,10 @@ def extract_response_content(response) -> str:
 
 
 # ============================================================
-# LOAD GEMMA
+# LOAD GEMINI
 # ============================================================
 
 def load_llm():
-
-    logger.info(
-        f"Initializing local Gemma client: {LLM_MODEL}"
-    )
-
-    llm = ChatOpenAI(
-        model=LLM_MODEL,
-        base_url=LLM_BASE_URL,
-        api_key=LLM_API_KEY,
-        temperature=0.2,
-        max_tokens=1024,
-        timeout=30,
-        max_retries=0,
-    )
-
-    logger.info(
-        "Gemma client initialized successfully"
-    )
-
-    return llm
-
-
-# ============================================================
-# LOAD GEMINI FALLBACK
-# ============================================================
-
-def load_gemini():
 
     if not GEMINI_API_KEY:
 
@@ -176,7 +136,7 @@ def load_gemini():
         )
 
     logger.info(
-        f"Initializing Gemini fallback: {GEMINI_MODEL}"
+        f"Initializing Gemini: {GEMINI_MODEL}"
     )
 
     llm = ChatGoogleGenerativeAI(
@@ -186,7 +146,7 @@ def load_gemini():
     )
 
     logger.info(
-        "Gemini fallback client initialized successfully"
+        "Gemini initialized successfully"
     )
 
     return llm
@@ -198,17 +158,15 @@ def load_gemini():
 
 def run_model(
     model,
-    model_name: str,
     question: str,
     context: str
 ) -> str:
     """
-    Execute the LLM and return a clean answer.
-    Any inference failure is propagated to the caller.
+    Execute Gemini and return a clean answer.
     """
 
     logger.info(
-        f"Starting inference with {model_name}..."
+        "Starting Gemini inference..."
     )
 
     chain = PROMPT | model
@@ -223,7 +181,7 @@ def run_model(
     answer = extract_response_content(response)
 
     logger.info(
-        f"{model_name} inference successful"
+        "Gemini inference successful"
     )
 
     return answer
@@ -237,7 +195,10 @@ def generate_answer(
     question: str,
     context: str,
     llm=None
-):
+) -> str:
+    """
+    Generate an answer using Gemini only.
+    """
 
     # --------------------------------------------------------
     # VALIDATION
@@ -259,7 +220,7 @@ def generate_answer(
     question = question.strip()
 
     # ========================================================
-    # 1. TRY GEMMA
+    # GEMINI
     # ========================================================
 
     try:
@@ -269,60 +230,23 @@ def generate_answer(
             llm = load_llm()
 
         logger.info(
-            "Attempting answer generation with Gemma..."
+            "Generating answer with Gemini..."
         )
 
         return run_model(
             model=llm,
-            model_name="Gemma",
             question=question,
             context=context,
         )
 
-    except Exception as gemma_error:
+    except Exception as error:
 
         logger.error(
-            f"Gemma inference failed: {gemma_error}",
+            f"Gemini inference failed: {error}",
             exc_info=True,
         )
-
-        logger.warning(
-            "Gemma unavailable. "
-            "Switching to Gemini fallback..."
-        )
-
-    # ========================================================
-    # 2. TRY GEMINI FALLBACK
-    # ========================================================
-
-    try:
-
-        gemini = load_gemini()
-
-        logger.info(
-            "Attempting answer generation with Gemini..."
-        )
-
-        return run_model(
-            model=gemini,
-            model_name="Gemini",
-            question=question,
-            context=context,
-        )
-
-    except Exception as gemini_error:
-
-        logger.error(
-            f"Gemini fallback failed: {gemini_error}",
-            exc_info=True,
-        )
-
-        # ----------------------------------------------------
-        # BOTH MODELS FAILED
-        # ----------------------------------------------------
 
         return (
             "Unable to connect to the AI assistant "
             "right now. Please try again later."
         )
-

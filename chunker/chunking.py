@@ -122,26 +122,34 @@ def parse_structured_document(
     current_content = []
 
     def save_section():
-
         if not current_content:
             return
 
-        content = "\n".join(
-            current_content
-        ).strip()
+        content = "\n".join(current_content).strip()
 
         if not content:
             return
 
+        # Check whether the section contains actual body content
+        # beyond Markdown headings.
+        body_lines = [
+            line.strip()
+            for line in content.splitlines()
+            if line.strip()
+            and not HEADING_PATTERN.match(line.strip())
+        ]
+
+        # Skip heading-only sections.
+        if not body_lines:
+            return
+
         active_headings = headings.copy()
 
-        sections.append(
-            {
-                "content": content,
-                "headings": active_headings,
-                "source": source,
-            }
-        )
+        sections.append({
+            "content": content,
+            "headings": active_headings,
+            "source": source
+        })
 
     for line in lines:
 

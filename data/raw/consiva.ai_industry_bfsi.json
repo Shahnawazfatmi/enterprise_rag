@@ -38,7 +38,7 @@
     "article_section": null,
     "source_url": "https://consiva.ai/industry/bfsi",
     "status_code": 200,
-    "scrape_id": "01a08f9e-11d9-700e-859f-a7e8df5a8e36",
+    "scrape_id": "01a0a35d-bd44-715b-889f-a7a8c9e69249",
     "num_pages": null,
     "total_pages": null,
     "content_type": "text/html",
@@ -50,16 +50,16 @@
     "concurrency_limited": false,
     "concurrency_queue_duration_ms": null,
     "error": null,
-    "name": "Consiva.ai",
+    "cmp-verification": "cmp-verify-4666bd7a49d1495c92ef53f8f6641dd9",
     "viewport": "width=device-width, initial-scale=1",
+    "name": "Consiva.ai",
+    "email": "support@consiva.ai",
+    "google-site-verification": "iQDsvOMXrCg1TyLyDM2m7BnolV5rOud7_tFlZ1sBUto",
     "theme-color": [
       "#03070F",
       "#F8FAFF"
     ],
-    "google-site-verification": "iQDsvOMXrCg1TyLyDM2m7BnolV5rOud7_tFlZ1sBUto",
-    "cmp-verification": "cmp-verify-4666bd7a49d1495c92ef53f8f6641dd9",
-    "email": "support@consiva.ai",
-    "indexId": "1ee7da17-e6ea-46ad-8be0-87d769b1b19a"
+    "indexId": "845af076-bf43-4359-89bd-780090110a3a"
   },
   "links": null,
   "images": null,

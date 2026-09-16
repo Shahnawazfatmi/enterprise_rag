@@ -38,7 +38,7 @@
     "article_section": null,
     "source_url": "https://consiva.ai/dpdp/retention-and-erasure",
     "status_code": 200,
-    "scrape_id": "01a08f9d-af7d-707d-acbe-8894ab2dcb54",
+    "scrape_id": "01a0a35d-50d5-7638-8b38-b365291819e8",
     "num_pages": null,
     "total_pages": null,
     "content_type": "text/html",
@@ -50,16 +50,16 @@
     "concurrency_limited": false,
     "concurrency_queue_duration_ms": null,
     "error": null,
+    "cmp-verification": "cmp-verify-4666bd7a49d1495c92ef53f8f6641dd9",
+    "viewport": "width=device-width, initial-scale=1",
+    "google-site-verification": "iQDsvOMXrCg1TyLyDM2m7BnolV5rOud7_tFlZ1sBUto",
     "name": "Consiva.ai",
     "email": "support@consiva.ai",
-    "viewport": "width=device-width, initial-scale=1",
-    "cmp-verification": "cmp-verify-4666bd7a49d1495c92ef53f8f6641dd9",
     "theme-color": [
       "#03070F",
       "#F8FAFF"
     ],
-    "google-site-verification": "iQDsvOMXrCg1TyLyDM2m7BnolV5rOud7_tFlZ1sBUto",
-    "indexId": "5103079f-0d50-4035-9af5-5f4806d7bf0f"
+    "indexId": "9d60fa3c-b15d-426b-bf31-6c467d9e25e7"
   },
   "links": null,
   "images": null,

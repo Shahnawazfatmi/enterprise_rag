@@ -38,7 +38,7 @@
     "article_section": null,
     "source_url": "https://consiva.ai/legal/privacy-rights-and-grievance",
     "status_code": 200,
-    "scrape_id": "01a08f9c-af97-731b-b41c-28d6f8bf5051",
+    "scrape_id": "01a0a35a-644d-708c-8de4-78bd0c7d9b9e",
     "num_pages": null,
     "total_pages": null,
     "content_type": "text/html",
@@ -51,6 +51,7 @@
     "concurrency_queue_duration_ms": null,
     "error": null,
     "google-site-verification": "iQDsvOMXrCg1TyLyDM2m7BnolV5rOud7_tFlZ1sBUto",
+    "email": "support@consiva.ai",
     "theme-color": [
       "#03070F",
       "#F8FAFF"
@@ -58,8 +59,7 @@
     "viewport": "width=device-width, initial-scale=1",
     "cmp-verification": "cmp-verify-4666bd7a49d1495c92ef53f8f6641dd9",
     "name": "Consiva.ai",
-    "email": "support@consiva.ai",
-    "indexId": "7dfa6df2-c141-471b-9f52-e4524e748f3f"
+    "indexId": "3013d950-0d91-4b5e-80a4-24cf960e763d"
   },
   "links": null,
   "images": null,

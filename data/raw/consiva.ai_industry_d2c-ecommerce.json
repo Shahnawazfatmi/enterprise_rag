@@ -38,7 +38,7 @@
     "article_section": null,
     "source_url": "https://consiva.ai/industry/d2c-ecommerce",
     "status_code": 200,
-    "scrape_id": "01a08f9e-01f3-73d2-940c-c812d723d410",
+    "scrape_id": "01a0a35d-a96a-7425-86e6-d866b7bedef6",
     "num_pages": null,
     "total_pages": null,
     "content_type": "text/html",
@@ -50,16 +50,16 @@
     "concurrency_limited": false,
     "concurrency_queue_duration_ms": null,
     "error": null,
-    "google-site-verification": "iQDsvOMXrCg1TyLyDM2m7BnolV5rOud7_tFlZ1sBUto",
+    "viewport": "width=device-width, initial-scale=1",
+    "email": "support@consiva.ai",
     "theme-color": [
       "#03070F",
       "#F8FAFF"
     ],
+    "google-site-verification": "iQDsvOMXrCg1TyLyDM2m7BnolV5rOud7_tFlZ1sBUto",
     "name": "Consiva.ai",
-    "email": "support@consiva.ai",
     "cmp-verification": "cmp-verify-4666bd7a49d1495c92ef53f8f6641dd9",
-    "viewport": "width=device-width, initial-scale=1",
-    "indexId": "13aa5e98-421b-43b3-9870-e0d59c06e7d5"
+    "indexId": "77980aeb-f3e7-42eb-939f-2133322e5559"
   },
   "links": null,
   "images": null,
