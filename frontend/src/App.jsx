@@ -6,8 +6,7 @@ import './App.css'
   FastAPI backend endpoint.
   Change this later if your backend is deployed.
 */
-const API_URL = 'http://127.0.0.1:8000/ask'
-
+const API_URL = 'http://172.16.10.117:8033/ask'
 function App() {
   // Controls whether the chatbot window is open
   const [isOpen, setIsOpen] = useState(false)
