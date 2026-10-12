@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 import hashlib
 import json
 import logging
@@ -11,7 +12,8 @@ from datetime import datetime, timezone
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-BASELINE_DIR = BASE_DIR / "data" / "structured_final"
+sys.path.insert(0, str(BASE_DIR))
+from config import BASELINE_DIR  # noqa: E402
 MANIFEST_FILE = BASE_DIR / "data" / "content_manifest.json"
 
 
@@ -194,7 +196,7 @@ def build_manifest() -> dict:
     Build a complete manifest from the current baseline.
 
     The baseline is:
-        data/structured_final/
+        data/baseline/
     """
 
     BASELINE_DIR.mkdir(

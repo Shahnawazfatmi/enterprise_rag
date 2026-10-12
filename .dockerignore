@@ -1,6 +1,10 @@
 venv/
 node_modules/
+frontend/
 __pycache__/
+*.pyc
 .git/
 .env
-*.pyc
+data/
+frontend.zip
+evals/results/

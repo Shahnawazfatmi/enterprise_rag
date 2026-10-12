@@ -1,68 +1,91 @@
+"""
+Nightly ingestion pipeline.
+
+Stages (each runs as its own process):
+    scraping -> cleaning -> comparison -> vector_update
+    -> manifest_update -> baseline_promotion
+
+Reliability features:
+- A lock file stops two runs from writing to the database at once.
+- latest_run.json says "running" (with the current stage) while a run
+  is in progress, so a run killed by Windows / power loss is detected
+  and reported by the next run instead of looking like a success.
+- Stage output is streamed into the log line by line as it happens.
+- Every stage has a timeout.
+- Child processes run in UTF-8 mode (no cp1252 crashes on Windows).
+- Optional failure alerts to a webhook (ALERT_WEBHOOK_URL).
+- The baseline only moves forward after the vector update succeeded,
+  so a failed run is simply retried by the next run.
+"""
+
 from pathlib import Path
 from datetime import datetime, timezone
+from logging.handlers import RotatingFileHandler
 import json
 import logging
-import shutil
+import os
+import re
 import subprocess
 import sys
+import threading
 import time
-
-
-# ============================================================
-# PATHS
-# ============================================================
+import urllib.request
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+
+from config import (  # noqa: E402
+    ALERT_WEBHOOK_URL,
+    BASELINE_DIR,
+    CHANGES_FILE,
+    COMPARISON_DIR,
+    NEW_STRUCTURED_DIR,
+    PIPELINE_LOG_DIR,
+    RAW_DIR,
+    STAGE_TIMEOUTS_SECONDS,
+)
 
 INGESTION_DIR = BASE_DIR / "ingestion"
 
-RAW_DIR = BASE_DIR / "data" / "raw"
-NEW_STRUCTURED_DIR = BASE_DIR / "data" / "new_structured"
-BASELINE_DIR = BASE_DIR / "data" / "structured_final"
+STATUS_FILE = PIPELINE_LOG_DIR / "latest_run.json"
+HISTORY_FILE = PIPELINE_LOG_DIR / "run_history.jsonl"
+LOCK_FILE = PIPELINE_LOG_DIR / "pipeline.lock"
 
-COMPARISON_DIR = BASE_DIR / "data" / "comparison"
-CHANGES_FILE = COMPARISON_DIR / "changes.json"
-
-MANIFEST_FILE = BASE_DIR / "data" / "content_manifest.json"
-
-PIPELINE_LOG_DIR = BASE_DIR / "data" / "pipeline_logs"
-
-
-# ============================================================
-# PIPELINE CONFIGURATION
-# ============================================================
+# A lock older than this is considered stale even if its PID is reused.
+LOCK_MAX_AGE_SECONDS = 6 * 60 * 60
 
 PIPELINE_NAME = "consiva-ingestion-pipeline"
 
-STAGES = [
-    "scraping",
-    "cleaning",
-    "comparison",
-    "vector_update",
-    "manifest_update",
-    "baseline_promotion",
+STAGE_SCRIPTS = [
+    ("scraping", "scraper.py"),
+    ("cleaning", "master_clean.py"),
+    ("comparison", "compare.py"),
+    ("vector_update", "vector_updater.py"),
 ]
+
+# Child output that is pure noise in the pipeline log.
+NOISY_LINE = re.compile(r"HTTP Request: (HEAD|GET) https://huggingface\.co|it/s\]$")
+ERROR_LINE = re.compile(r"\b(ERROR|CRITICAL|Traceback)\b")
 
 
 # ============================================================
 # LOGGING
 # ============================================================
 
-PIPELINE_LOG_DIR.mkdir(
-    parents=True,
-    exist_ok=True
-)
+PIPELINE_LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler(
+        RotatingFileHandler(
             PIPELINE_LOG_DIR / "pipeline.log",
-            encoding="utf-8"
-        )
-    ]
+            maxBytes=5 * 1024 * 1024,
+            backupCount=5,
+            encoding="utf-8",
+        ),
+    ],
 )
 
 logger = logging.getLogger(__name__)
@@ -73,17 +96,150 @@ logger = logging.getLogger(__name__)
 # ============================================================
 
 def utc_now() -> str:
-    """Return current UTC timestamp."""
-
     return datetime.now(timezone.utc).isoformat()
 
 
-def run_stage(stage_name: str, script_name: str) -> None:
-    """
-    Execute one ingestion stage as a subprocess.
+def write_json_atomic(path: Path, data: dict) -> None:
+    temp_file = path.with_suffix(".tmp")
+    temp_file.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    temp_file.replace(path)
 
-    Each stage remains independently executable and testable.
-    """
+
+def pid_alive(pid: int) -> bool:
+    """Check a process without signalling it (os.kill(pid, 0) kills on Windows)."""
+
+    if pid <= 0:
+        return False
+
+    if os.name == "nt":
+        import ctypes
+
+        process_query_limited_information = 0x1000
+        still_active = 259
+
+        kernel32 = ctypes.windll.kernel32
+        handle = kernel32.OpenProcess(process_query_limited_information, False, pid)
+
+        if not handle:
+            return False
+
+        exit_code = ctypes.c_ulong()
+        kernel32.GetExitCodeProcess(handle, ctypes.byref(exit_code))
+        kernel32.CloseHandle(handle)
+        return exit_code.value == still_active
+
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    return True
+
+
+def send_alert(message: str) -> None:
+    """Post a failure message to ALERT_WEBHOOK_URL (Slack/Teams/generic). Never raises."""
+
+    if not ALERT_WEBHOOK_URL:
+        return
+
+    try:
+        request = urllib.request.Request(
+            ALERT_WEBHOOK_URL,
+            data=json.dumps({"text": message}).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+        )
+        urllib.request.urlopen(request, timeout=15).close()
+    except Exception as error:
+        logger.warning(f"Could not send alert: {error}")
+
+
+# ============================================================
+# LOCK + STATUS
+# ============================================================
+
+def acquire_lock() -> None:
+    if LOCK_FILE.exists():
+        try:
+            lock = json.loads(LOCK_FILE.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            lock = {}
+
+        age = time.time() - LOCK_FILE.stat().st_mtime
+
+        if pid_alive(int(lock.get("pid", 0))) and age < LOCK_MAX_AGE_SECONDS:
+            raise RuntimeError(
+                f"Another pipeline run is in progress (pid {lock.get('pid')}, "
+                f"started {lock.get('started_at')})."
+            )
+
+        logger.warning(f"Removing stale lock from pid {lock.get('pid')}.")
+
+    write_json_atomic(LOCK_FILE, {"pid": os.getpid(), "started_at": utc_now()})
+
+
+def release_lock() -> None:
+    try:
+        lock = json.loads(LOCK_FILE.read_text(encoding="utf-8"))
+        if lock.get("pid") == os.getpid():
+            LOCK_FILE.unlink()
+    except (OSError, json.JSONDecodeError):
+        pass
+
+
+def append_history(status: dict) -> None:
+    with HISTORY_FILE.open("a", encoding="utf-8") as file:
+        file.write(json.dumps(status, ensure_ascii=False) + "\n")
+
+
+def report_interrupted_run() -> None:
+    """If the last run never finished (killed, sleep, power loss), record it now."""
+
+    if not STATUS_FILE.exists():
+        return
+
+    try:
+        previous = json.loads(STATUS_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return
+
+    if previous.get("status") != "running" or pid_alive(int(previous.get("pid", 0))):
+        return
+
+    previous.update({
+        "status": "interrupted",
+        "completed_at": None,
+        "error": "Process ended without finishing (killed, sleep, or power loss).",
+    })
+    append_history(previous)
+
+    message = (
+        f"Consiva pipeline run started {previous.get('started_at')} was interrupted "
+        f"during stage '{previous.get('current_stage')}'."
+    )
+    logger.error(message)
+    send_alert(message)
+
+
+def create_status(status: str, started_at: str, **fields) -> dict:
+    return {
+        "pipeline": PIPELINE_NAME,
+        "status": status,
+        "pid": os.getpid(),
+        "started_at": started_at,
+        "completed_at": fields.get("completed_at"),
+        "current_stage": fields.get("current_stage"),
+        "failed_stage": fields.get("failed_stage"),
+        "error": fields.get("error"),
+        "changes": fields.get("changes") or {},
+        "duration_seconds": fields.get("duration_seconds"),
+    }
+
+
+# ============================================================
+# STAGE EXECUTION
+# ============================================================
+
+def run_stage(stage_name: str, script_name: str) -> None:
+    """Run one stage script, streaming its output into the log."""
 
     logger.info("=" * 70)
     logger.info(f"STARTING STAGE: {stage_name.upper()}")
@@ -92,628 +248,232 @@ def run_stage(stage_name: str, script_name: str) -> None:
     script_path = INGESTION_DIR / script_name
 
     if not script_path.exists():
-        raise FileNotFoundError(
-            f"Required stage script not found: {script_path}"
-        )
+        raise FileNotFoundError(f"Required stage script not found: {script_path}")
 
+    environment = {
+        **os.environ,
+        "PYTHONUTF8": "1",
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUNBUFFERED": "1",
+        "HF_HUB_DISABLE_TELEMETRY": "1",
+    }
+
+    timeout = STAGE_TIMEOUTS_SECONDS.get(stage_name, 30 * 60)
     start_time = time.time()
 
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(script_path)
-        ],
+    process = subprocess.Popen(
+        [sys.executable, "-u", str(script_path)],
         cwd=BASE_DIR,
-        capture_output=True,
-        text=True
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        env=environment,
     )
+
+    timed_out = threading.Event()
+
+    def kill_on_timeout():
+        timed_out.set()
+        process.kill()
+
+    timer = threading.Timer(timeout, kill_on_timeout)
+    timer.start()
+
+    try:
+        for line in process.stdout:
+            line = line.rstrip()
+            if not line or NOISY_LINE.search(line):
+                continue
+            level = logging.ERROR if ERROR_LINE.search(line) else logging.INFO
+            logger.log(level, f"[{stage_name}] {line}")
+        return_code = process.wait()
+    finally:
+        timer.cancel()
 
     duration = time.time() - start_time
 
-    # --------------------------------------------------------
-    # Forward stage output into pipeline logs
-    # --------------------------------------------------------
+    if timed_out.is_set():
+        raise TimeoutError(f"Stage '{stage_name}' timed out after {timeout} seconds.")
 
-    if result.stdout:
-        for line in result.stdout.splitlines():
-            logger.info(f"[{stage_name}] {line}")
+    if return_code != 0:
+        logger.error(f"STAGE FAILED: {stage_name} (exit code={return_code}, duration={duration:.2f}s)")
+        raise RuntimeError(f"Pipeline stage '{stage_name}' failed (exit code {return_code}).")
 
-    if result.stderr:
-        for line in result.stderr.splitlines():
-            logger.error(f"[{stage_name}] {line}")
-
-    # --------------------------------------------------------
-    # Check result
-    # --------------------------------------------------------
-
-    if result.returncode != 0:
-
-        logger.error(
-            f"STAGE FAILED: {stage_name} "
-            f"(exit code={result.returncode}, "
-            f"duration={duration:.2f}s)"
-        )
-
-        raise RuntimeError(
-            f"Pipeline stage '{stage_name}' failed."
-        )
-
-    logger.info(
-        f"STAGE COMPLETED: {stage_name} "
-        f"({duration:.2f}s)"
-    )
+    logger.info(f"STAGE COMPLETED: {stage_name} ({duration:.2f}s)")
 
 
 # ============================================================
-# VALIDATION
-# ============================================================
-
-def validate_pipeline_directories() -> None:
-    """Validate required project directories."""
-
-    logger.info("Validating pipeline directories...")
-
-    required_directories = [
-        BASE_DIR,
-        INGESTION_DIR,
-        RAW_DIR,
-        NEW_STRUCTURED_DIR,
-        BASELINE_DIR,
-        COMPARISON_DIR,
-    ]
-
-    for directory in required_directories:
-
-        if not directory.exists():
-
-            # These directories can safely be created.
-            directory.mkdir(
-                parents=True,
-                exist_ok=True
-            )
-
-            logger.info(
-                f"Created directory: {directory}"
-            )
-
-    logger.info("Directory validation completed.")
-
-
-# ============================================================
-# CHANGE FILE VALIDATION
+# CHANGES
 # ============================================================
 
 def load_changes() -> dict:
-    """
-    Load changes.json generated by compare.py.
-
-    This file determines what should be processed.
-    """
-
     if not CHANGES_FILE.exists():
+        raise FileNotFoundError(f"Comparison file not found: {CHANGES_FILE}")
 
-        raise FileNotFoundError(
-            f"Comparison file not found: {CHANGES_FILE}"
-        )
+    changes = json.loads(CHANGES_FILE.read_text(encoding="utf-8"))
 
-    try:
-
-        with open(
-            CHANGES_FILE,
-            "r",
-            encoding="utf-8"
-        ) as file:
-
-            changes = json.load(file)
-
-    except json.JSONDecodeError as error:
-
-        raise ValueError(
-            f"Invalid changes.json: {error}"
-        )
-
-    if not isinstance(changes, dict):
-
-        raise ValueError(
-            "changes.json must contain a JSON object."
-        )
+    if not isinstance(changes.get("pages"), dict):
+        raise ValueError("Invalid changes.json: 'pages' must be an object.")
 
     return changes
 
 
-# ============================================================
-# CHANGE SUMMARY
-# ============================================================
-
-def extract_change_summary(changes: dict) -> dict:
-    """
-    Extract NEW / CHANGED / UNCHANGED / DELETED information
-    from the current compare.py output structure.
-    """
-
-    summary = {
-        "new": [],
-        "changed": [],
-        "unchanged": [],
-        "deleted": [],
+def summarize(changes: dict) -> dict:
+    pages = changes["pages"]
+    return {
+        status: pages.get(status) if isinstance(pages.get(status), list) else []
+        for status in ("new", "changed", "unchanged", "deleted")
     }
 
-    # Current compare.py structure:
-    #
-    # {
-    #   "summary": {
-    #       "new": 0,
-    #       "changed": 2,
-    #       "unchanged": 37,
-    #       "deleted": 0
-    #   },
-    #   "pages": {
-    #       "new": [...],
-    #       "changed": [...],
-    #       "unchanged": [...],
-    #       "deleted": [...]
-    #   }
-    # }
 
-    pages = changes.get("pages", {})
+def get_successful_page_paths(changes: dict) -> list[Path]:
+    """NEW and CHANGED page files in new_structured (used after vector DB success)."""
 
-    if not isinstance(pages, dict):
-        raise ValueError(
-            "Invalid changes.json: 'pages' must be an object."
-        )
-
-    for status in summary:
-
-        value = pages.get(status, [])
-
-        if isinstance(value, list):
-            summary[status] = value
-
-    return summary
-
-# ============================================================
-# BUILD MANIFEST UPDATE
-# ============================================================
-
-def get_successful_page_paths(
-    change_summary: dict
-) -> list[Path]:
-    """
-    Convert NEW and CHANGED entries into actual files inside
-    new_structured.
-
-    This function is used only after vector DB success.
-    """
-
-    successful_pages = []
+    paths = []
+    details = changes.get("details", {})
 
     for status in ("new", "changed"):
-
-        for item in change_summary[status]:
-
-            # ------------------------------------------------
-            # Handle dictionary-based compare output
-            # ------------------------------------------------
-
-            if isinstance(item, dict):
-
-                filename = (
-                    item.get("file_name")
-                    or item.get("filename")
-                    or item.get("page")
-                )
-
-            # ------------------------------------------------
-            # Handle string-based compare output
-            # ------------------------------------------------
-
-            elif isinstance(item, str):
-
-                filename = item
-
-            else:
-
-                continue
-
+        for page_id in changes["pages"].get(status, []):
+            filename = (details.get(page_id, {}).get("new") or {}).get("file_name")
             if not filename:
+                logger.warning(f"No file name recorded for page: {page_id}")
                 continue
-
-            # Root homepage special filename generated by master_clean.py
-            if filename == "consiva.ai":
-                filename = "consiva.ai_.txt"
-            elif not filename.endswith(".txt"):
-                filename = f"{filename}.txt"
 
             file_path = NEW_STRUCTURED_DIR / filename
 
-            if not file_path.exists():
+            if file_path.exists():
+                paths.append(file_path)
+            else:
+                logger.warning(f"Changed page file not found: {file_path}")
 
-                logger.warning(
-                    f"Changed page file not found: {file_path}"
-                )
-
-                continue
-
-            successful_pages.append(file_path)
-
-    return successful_pages
+    return paths
 
 
-# ============================================================
-# EXTRACT DELETED PAGE IDS
-# ============================================================
-
-def get_deleted_page_ids(
-    change_summary: dict
-) -> list[str]:
-    """
-    Extract page IDs for deleted pages.
-
-    Supports dictionary and string compare entries.
-    """
-
-    deleted_ids = []
-
-    for item in change_summary["deleted"]:
-
-        if isinstance(item, dict):
-
-            page_id = (
-                item.get("page_id")
-                or item.get("id")
-                or item.get("filename")
-                or item.get("file_name")
-            )
-
-        elif isinstance(item, str):
-
-            page_id = item
-
-        else:
-
-            continue
-
-        if page_id:
-
-            # Remove .txt if present.
-            if page_id.endswith(".txt"):
-                page_id = Path(page_id).stem
-
-            deleted_ids.append(page_id)
-
-    return deleted_ids
-
-
-# ============================================================
-# UPDATE MANIFEST
-# ============================================================
-
-def update_manifest(
-    successful_pages: list[Path],
-    deleted_page_ids: list[str]
-) -> None:
-    """
-    Update manifest only after Vector DB update succeeds.
-
-    Imports manifest.py rather than duplicating manifest logic.
-    """
-
-    logger.info("=" * 70)
-    logger.info("UPDATING MANIFEST")
-    logger.info("=" * 70)
-
-    sys.path.insert(
-        0,
-        str(BASE_DIR)
-    )
-
+def update_manifest(successful_pages: list[Path], deleted_page_ids: list[str]) -> None:
     from ingestion.manifest import apply_changes
 
-    apply_changes(
-        successful_pages=successful_pages,
-        deleted_page_ids=deleted_page_ids
-    )
+    logger.info("Updating manifest...")
+    apply_changes(successful_pages=successful_pages, deleted_page_ids=deleted_page_ids)
+    logger.info("Manifest update completed.")
 
-    logger.info("Manifest update completed successfully.")
-
-
-# ============================================================
-# BASELINE PROMOTION
-# ============================================================
 
 def promote_baseline() -> None:
-    """
-    Promote new_structured to structured_final.
-
-    This happens only after Vector DB and manifest updates
-    have succeeded.
-    """
-
-    logger.info("=" * 70)
-    logger.info("PROMOTING BASELINE")
-    logger.info("=" * 70)
-
     from ingestion.promote import promote_baseline as promote
 
+    logger.info("Promoting baseline...")
     promote()
-
-    logger.info(
-        "Baseline promotion completed successfully."
-    )
+    logger.info("Baseline promotion completed.")
 
 
 # ============================================================
-# PIPELINE STATUS
+# PIPELINE
 # ============================================================
 
-def create_pipeline_status(
-    status: str,
-    started_at: str,
-    completed_at: str | None = None,
-    failed_stage: str | None = None,
-    error: str | None = None,
-    changes: dict | None = None
-) -> dict:
-    """
-    Create a structured pipeline execution status.
+def run_pipeline(skip_scrape: bool = False) -> None:
 
-    This can later be sent to:
-    - Cloud Logging
-    - monitoring systems
-    - Slack/email alerts
-    - dashboards
-    - databases
-    """
-
-    return {
-        "pipeline": PIPELINE_NAME,
-        "status": status,
-        "started_at": started_at,
-        "completed_at": completed_at,
-        "failed_stage": failed_stage,
-        "error": error,
-        "changes": changes or {},
-    }
-
-
-# ============================================================
-# SAVE PIPELINE STATUS
-# ============================================================
-
-def save_pipeline_status(status: dict) -> None:
-    """Save execution status for monitoring/debugging."""
-
-    status_file = (
-        PIPELINE_LOG_DIR /
-        "latest_run.json"
-    )
-
-    temp_file = (
-        PIPELINE_LOG_DIR /
-        "latest_run.tmp"
-    )
-
-    with open(
-        temp_file,
-        "w",
-        encoding="utf-8"
-    ) as file:
-
-        json.dump(
-            status,
-            file,
-            ensure_ascii=False,
-            indent=2
-        )
-
-        file.flush()
-       
-
-    # Atomic replacement.
-    temp_file.replace(status_file)
-
-
-# ============================================================
-# MAIN PIPELINE
-# ============================================================
-
-def run_pipeline() -> None:
-    """Execute the complete ingestion pipeline."""
-
-    pipeline_start = utc_now()
+    started_at = utc_now()
     start_time = time.time()
-
-    current_stage = None
+    current_stage = "startup"
 
     logger.info("")
     logger.info("#" * 70)
-    logger.info(f"STARTING {PIPELINE_NAME.upper()}")
-    logger.info(f"Started at: {pipeline_start}")
+    logger.info(f"STARTING {PIPELINE_NAME.upper()} (pid {os.getpid()})")
     logger.info("#" * 70)
 
+    report_interrupted_run()
+    acquire_lock()
+
+    def mark(stage: str) -> None:
+        nonlocal current_stage
+        current_stage = stage
+        write_json_atomic(STATUS_FILE, create_status("running", started_at, current_stage=stage))
+
     try:
+        for directory in (RAW_DIR, NEW_STRUCTURED_DIR, BASELINE_DIR, COMPARISON_DIR):
+            directory.mkdir(parents=True, exist_ok=True)
 
-        # ----------------------------------------------------
-        # 0. Validate environment
-        # ----------------------------------------------------
+        for stage_name, script_name in STAGE_SCRIPTS:
+            if skip_scrape and stage_name == "scraping":
+                logger.info("Skipping scraping (--skip-scrape): using existing data/raw")
+                continue
 
-        current_stage = "validation"
+            mark(stage_name)
+            run_stage(stage_name, script_name)
 
-        validate_pipeline_directories()
+            if stage_name == "comparison":
+                changes = load_changes()
+                change_summary = summarize(changes)
+                logger.info(
+                    "Change summary | "
+                    + ", ".join(f"{key.upper()}={len(value)}" for key, value in change_summary.items())
+                )
 
-        # ----------------------------------------------------
-        # 1. SCRAPE
-        # ----------------------------------------------------
-
-        current_stage = "scraping"
-
-        run_stage(
-            stage_name="scraping",
-            script_name="scraper.py"
-        )
-
-        # ----------------------------------------------------
-        # 2. CLEAN
-        # ----------------------------------------------------
-
-        current_stage = "cleaning"
-
-        run_stage(
-            stage_name="cleaning",
-            script_name="master_clean.py"
-        )
-
-        # ----------------------------------------------------
-        # 3. COMPARE
-        # ----------------------------------------------------
-
-        current_stage = "comparison"
-
-        run_stage(
-            stage_name="comparison",
-            script_name="compare.py"
-        )
-
-        # ----------------------------------------------------
-        # 4. LOAD CHANGES
-        # ----------------------------------------------------
-
-        changes = load_changes()
-
-        change_summary = extract_change_summary(
-            changes
-        )
-
-        logger.info(
-            "Change summary | "
-            f"NEW={len(change_summary['new'])}, "
-            f"CHANGED={len(change_summary['changed'])}, "
-            f"UNCHANGED={len(change_summary['unchanged'])}, "
-            f"DELETED={len(change_summary['deleted'])}"
-        )
-
-        # ----------------------------------------------------
-        # 5. VECTOR DB UPDATE
-        # ----------------------------------------------------
-
-        current_stage = "vector_update"
-
-        run_stage(
-            stage_name="vector_update",
-            script_name="vector_updater.py"
-        )
-
-        # ----------------------------------------------------
-        # IMPORTANT:
-        #
-        # Everything below this point happens only when the
-        # vector updater exits successfully.
-        # ----------------------------------------------------
-
-        successful_pages = get_successful_page_paths(
-            change_summary
-        )
-
-        deleted_page_ids = get_deleted_page_ids(
-            change_summary
-        )
-
-        # ----------------------------------------------------
-        # 6. MANIFEST UPDATE
-        # ----------------------------------------------------
-
-        current_stage = "manifest_update"
-
+        # Everything below runs only after the vector update succeeded.
+        mark("manifest_update")
         update_manifest(
-            successful_pages=successful_pages,
-            deleted_page_ids=deleted_page_ids
+            successful_pages=get_successful_page_paths(changes),
+            deleted_page_ids=list(change_summary["deleted"]),
         )
 
-        # ----------------------------------------------------
-        # 7. BASELINE PROMOTION
-        # ----------------------------------------------------
-
-        current_stage = "baseline_promotion"
-
+        mark("baseline_promotion")
         promote_baseline()
 
-        # ----------------------------------------------------
-        # SUCCESS
-        # ----------------------------------------------------
-
-        completed_at = utc_now()
-
-        duration = time.time() - start_time
-
-        status = create_pipeline_status(
-            status="success",
-            started_at=pipeline_start,
-            completed_at=completed_at,
-            changes={
-                "new": len(change_summary["new"]),
-                "changed": len(change_summary["changed"]),
-                "unchanged": len(change_summary["unchanged"]),
-                "deleted": len(change_summary["deleted"]),
-            }
+        status = create_status(
+            "success",
+            started_at,
+            completed_at=utc_now(),
+            changes={key: len(value) for key, value in change_summary.items()},
+            duration_seconds=round(time.time() - start_time, 2),
         )
+        write_json_atomic(STATUS_FILE, status)
+        append_history(status)
 
-        save_pipeline_status(status)
-
-        logger.info("")
         logger.info("#" * 70)
-        logger.info("PIPELINE COMPLETED SUCCESSFULLY")
-        logger.info(f"Duration: {duration:.2f} seconds")
+        logger.info(f"PIPELINE COMPLETED SUCCESSFULLY ({status['duration_seconds']}s)")
         logger.info("#" * 70)
 
-    except KeyboardInterrupt:
-
-        logger.error(
-            "Pipeline cancelled by user."
-        )
-
-        raise
-
-    except Exception as error:
-
-        completed_at = utc_now()
-
-        duration = time.time() - start_time
-
-        status = create_pipeline_status(
-            status="failed",
-            started_at=pipeline_start,
-            completed_at=completed_at,
+    except BaseException as error:
+        cancelled = isinstance(error, KeyboardInterrupt)
+        status = create_status(
+            "cancelled" if cancelled else "failed",
+            started_at,
+            completed_at=utc_now(),
             failed_stage=current_stage,
-            error=str(error)
+            error=str(error) or type(error).__name__,
+            duration_seconds=round(time.time() - start_time, 2),
         )
+        write_json_atomic(STATUS_FILE, status)
+        append_history(status)
 
-        save_pipeline_status(status)
+        logger.error("#" * 70)
+        logger.error(f"PIPELINE {status['status'].upper()} at stage '{current_stage}': {status['error']}")
+        logger.error("#" * 70)
 
-        logger.error("")
-        logger.error("#" * 70)
-        logger.error("PIPELINE FAILED")
-        logger.error(f"Stage: {current_stage}")
-        logger.error(f"Error: {error}")
-        logger.error(f"Duration: {duration:.2f} seconds")
-        logger.error("#" * 70)
+        if not cancelled:
+            send_alert(f"Consiva pipeline failed at stage '{current_stage}': {status['error']}")
 
         raise
 
+    finally:
+        release_lock()
 
-# ============================================================
-# ENTRY POINT
-# ============================================================
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Consiva ingestion pipeline")
+    parser.add_argument(
+        "--skip-scrape",
+        action="store_true",
+        help="re-process the last scrape in data/raw without calling Firecrawl",
+    )
+    arguments = parser.parse_args()
 
     try:
-
-        run_pipeline()
-
+        run_pipeline(skip_scrape=arguments.skip_scrape)
     except KeyboardInterrupt:
-
         sys.exit(130)
-
     except Exception:
-
         sys.exit(1)

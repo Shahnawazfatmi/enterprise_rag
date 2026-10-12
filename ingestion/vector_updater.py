@@ -1,39 +1,49 @@
+"""
+Incremental vector update driven by data/comparison/changes.json.
+
+For every NEW or CHANGED page (and every page whose vectors were built
+by an older chunker version):
+
+    Read -> Chunk -> Embed only new chunks -> Upsert -> Verify -> Delete obsolete
+
+Chunk IDs are "<page_id>::<hash of chunk text>", so a chunk whose text
+did not change keeps its ID and is not embedded again.
+
+New vectors are written and verified BEFORE old ones are deleted, so a
+crash never leaves a page without vectors. On success the updater writes
+data/vectorstore/index_version.json; the API reloads when it changes.
+"""
+
 from pathlib import Path
+from datetime import datetime, timezone
 import hashlib
 import json
 import logging
 import re
 import sys
-from datetime import datetime, timezone
 
 # Project root
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR))
 
-# IMPORTANT:
-# Reuse the EXACT existing chunking logic from the current RAG.
-from chunker.chunking import process_file
+from config import (  # noqa: E402
+    CHANGES_FILE,
+    CHUNKER_VERSION,
+    COLLECTION_NAME,
+    EMBED_BATCH_SIZE,
+    EMBEDDING_MODEL,
+    INDEX_VERSION_FILE,
+    NEW_STRUCTURED_DIR,
+    VECTORSTORE_DIR,
+    embedding_kwargs,
+    use_offline_model_cache,
+)
+from chunker.chunking import process_file  # noqa: E402
+from app.index import SNAPSHOT_FILE, export_snapshot  # noqa: E402
 
-from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+import chromadb  # noqa: E402
+from langchain_huggingface import HuggingFaceEmbeddings  # noqa: E402
 
-
-# ============================================================
-# PATHS & CONFIGURATION
-# ============================================================
-
-
-NEW_STRUCTURED_DIR = BASE_DIR / "data" / "new_structured"
-CHANGES_FILE = BASE_DIR / "data" / "comparison" / "changes.json"
-
-VECTORSTORE_DIR = BASE_DIR / "data" / "vectorstore"
-
-COLLECTION_NAME = "consiva_knowledge"
-
-MODEL_NAME = "BAAI/bge-m3"
-
-# Embedding batch size.
-EMBED_BATCH_SIZE = 32
 
 # Chroma upsert/delete batch size.
 CHROMA_BATCH_SIZE = 100
@@ -46,33 +56,23 @@ CHROMA_BATCH_SIZE = 100
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s",
+    stream=sys.stdout,
 )
 
 logger = logging.getLogger(__name__)
 
 
 # ============================================================
-# CONTENT NORMALIZATION
+# CONTENT HASH (same normalization as compare.py)
 # ============================================================
 
 def normalize_content(text: str) -> str:
-    """
-    Normalize content exactly enough to produce stable hashes.
-
-    This should remain consistent with compare.py.
-    """
-
     text = text.replace("\r\n", "\n").replace("\r", "\n")
 
     normalized_lines = []
 
     for line in text.split("\n"):
-        line = line.strip()
-
-        # Collapse repeated spaces/tabs.
-        line = re.sub(r"[ \t]+", " ", line)
-
-        # Ignore empty lines.
+        line = re.sub(r"[ \t]+", " ", line.strip())
         if line:
             normalized_lines.append(line)
 
@@ -80,953 +80,329 @@ def normalize_content(text: str) -> str:
 
 
 def calculate_content_hash(file_path: Path) -> str:
-    """
-    Calculate SHA-256 hash using the same normalization
-    strategy used by compare.py.
-    """
-
-    text = file_path.read_text(
-        encoding="utf-8",
-        errors="ignore",
-    )
-
-    normalized = normalize_content(text)
-
-    return hashlib.sha256(
-        normalized.encode("utf-8")
-    ).hexdigest()
+    text = file_path.read_text(encoding="utf-8", errors="ignore")
+    return hashlib.sha256(normalize_content(text).encode("utf-8")).hexdigest()
 
 
 # ============================================================
-# CHANGE FILE
+# CHANGES
 # ============================================================
 
 def load_changes() -> dict:
     """
-    Load and validate changes.json.
-
-    Expected structure:
+    Load and validate changes.json written by compare.py:
 
     {
-        "pages": {
-            "new": [...],
-            "changed": [...],
-            "unchanged": [...],
-            "deleted": [...]
-        },
-        "details": {
-            "page_id": {
-                "status": "...",
-                "baseline": {...},
-                "new": {...}
-            }
-        }
+        "pages": {"new": [...], "changed": [...], "unchanged": [...], "deleted": [...]},
+        "details": {"<page_id>": {"status": ..., "baseline": {...}, "new": {...}}}
     }
     """
 
     if not CHANGES_FILE.exists():
-        raise FileNotFoundError(
-            f"Changes file not found: {CHANGES_FILE}"
-        )
+        raise FileNotFoundError(f"Changes file not found: {CHANGES_FILE}")
 
     try:
-        with CHANGES_FILE.open(
-            "r",
-            encoding="utf-8",
-        ) as file:
-            changes = json.load(file)
-
+        changes = json.loads(CHANGES_FILE.read_text(encoding="utf-8"))
     except json.JSONDecodeError as error:
-        raise ValueError(
-            f"Invalid JSON in changes file: {error}"
-        ) from error
+        raise ValueError(f"Invalid JSON in changes file: {error}") from error
 
     if not isinstance(changes, dict):
-        raise ValueError(
-            "changes.json must contain a JSON object."
-        )
+        raise ValueError("changes.json must contain a JSON object.")
 
     pages = changes.get("pages")
-
-    if not isinstance(pages, dict):
-        raise ValueError(
-            "Invalid changes.json: 'pages' must be an object."
-        )
-
     details = changes.get("details")
 
+    if not isinstance(pages, dict):
+        raise ValueError("Invalid changes.json: 'pages' must be an object.")
+
     if not isinstance(details, dict):
-        raise ValueError(
-            "Invalid changes.json: 'details' must be an object."
-        )
+        raise ValueError("Invalid changes.json: 'details' must be an object.")
 
     for key in ("new", "changed", "unchanged", "deleted"):
-        if key not in pages:
-            raise ValueError(
-                f"Invalid changes.json: missing pages.{key}"
-            )
-
-        if not isinstance(pages[key], list):
-            raise ValueError(
-                f"Invalid changes.json: pages.{key} must be a list."
-            )
+        if not isinstance(pages.get(key), list):
+            raise ValueError(f"Invalid changes.json: pages.{key} must be a list.")
 
     return changes
 
 
-# ============================================================
-# ACTION EXTRACTION
-# ============================================================
+def page_filename(changes: dict, page_id: str, side: str) -> str:
+    """File name of a page on the 'new' or 'baseline' side of the comparison."""
+
+    detail = changes["details"].get(page_id)
+
+    if not isinstance(detail, dict) or not isinstance(detail.get(side), dict):
+        raise ValueError(f"Missing '{side}' details for page: {page_id}")
+
+    filename = detail[side].get("file_name")
+
+    if not filename:
+        raise ValueError(f"Missing {side}.file_name for page: {page_id}")
+
+    return filename
+
 
 def build_actions(changes: dict) -> list[dict]:
-    """
-    Convert changes.json into normalized update actions.
-
-    Example:
-
-    {
-        "page_id": "consiva.ai_pricing",
-        "status": "CHANGED",
-        "filename": "consiva.ai_pricing.txt"
-    }
-    """
+    """Convert changes.json into update actions."""
 
     pages = changes["pages"]
-    details = changes["details"]
+    actions = []
+
+    for status, key, side in (
+        ("NEW", "new", "new"),
+        ("CHANGED", "changed", "new"),
+        ("DELETED", "deleted", "baseline"),
+    ):
+        for page_id in pages[key]:
+            actions.append({
+                "page_id": page_id,
+                "status": status,
+                "filename": page_filename(changes, page_id, side),
+            })
+
+    return actions
+
+
+def build_reindex_actions(collection, changes: dict) -> list[dict]:
+    """
+    Unchanged pages whose vectors are missing or were built with another
+    CHUNKER_VERSION. This is how a chunking change reaches every page.
+    """
 
     actions = []
 
-    # --------------------------------------------------------
-    # NEW
-    # --------------------------------------------------------
+    for page_id in changes["pages"]["unchanged"]:
+        filename = page_filename(changes, page_id, "new")
+        result = collection.get(where={"source": filename}, include=["metadatas"])
+        metadatas = result.get("metadatas") or []
 
-    for page_id in pages["new"]:
-
-        if page_id not in details:
-            raise ValueError(
-                f"Missing details for NEW page: {page_id}"
-            )
-
-        detail = details[page_id]
-
-        new_data = detail.get("new")
-
-        if not isinstance(new_data, dict):
-            raise ValueError(
-                f"Missing 'new' details for page: {page_id}"
-            )
-
-        filename = new_data.get("file_name")
-
-        if not filename:
-            raise ValueError(
-                f"Missing new.file_name for page: {page_id}"
-            )
-
-        actions.append(
-            {
-                "page_id": page_id,
-                "status": "NEW",
-                "filename": filename,
-            }
-        )
-
-    # --------------------------------------------------------
-    # CHANGED
-    # --------------------------------------------------------
-
-    for page_id in pages["changed"]:
-
-        if page_id not in details:
-            raise ValueError(
-                f"Missing details for CHANGED page: {page_id}"
-            )
-
-        detail = details[page_id]
-
-        new_data = detail.get("new")
-
-        if not isinstance(new_data, dict):
-            raise ValueError(
-                f"Missing 'new' details for page: {page_id}"
-            )
-
-        filename = new_data.get("file_name")
-
-        if not filename:
-            raise ValueError(
-                f"Missing new.file_name for page: {page_id}"
-            )
-
-        actions.append(
-            {
-                "page_id": page_id,
-                "status": "CHANGED",
-                "filename": filename,
-            }
-        )
-
-    # --------------------------------------------------------
-    # DELETED
-    # --------------------------------------------------------
-
-    for page_id in pages["deleted"]:
-
-        if page_id not in details:
-            raise ValueError(
-                f"Missing details for DELETED page: {page_id}"
-            )
-
-        detail = details[page_id]
-
-        baseline_data = detail.get("baseline")
-
-        if not isinstance(baseline_data, dict):
-            raise ValueError(
-                f"Missing 'baseline' details for deleted page: {page_id}"
-            )
-
-        filename = baseline_data.get("file_name")
-
-        if not filename:
-            raise ValueError(
-                f"Missing baseline.file_name for deleted page: {page_id}"
-            )
-
-        actions.append(
-            {
-                "page_id": page_id,
-                "status": "DELETED",
-                "filename": filename,
-            }
-        )
+        if not metadatas or any(
+            (metadata or {}).get("chunker_version") != CHUNKER_VERSION
+            for metadata in metadatas
+        ):
+            actions.append({"page_id": page_id, "status": "REINDEX", "filename": filename})
 
     return actions
 
 
 # ============================================================
-# EMBEDDING MODEL
+# EMBEDDING MODEL / VECTOR STORE
 # ============================================================
 
 def create_embedding_model() -> HuggingFaceEmbeddings:
-    """
-    Create the SAME embedding model/configuration used
-    by the existing embedder.py.
-    """
-
-    logger.info(
-        "Loading embedding model: %s",
-        MODEL_NAME,
-    )
-
-    model = HuggingFaceEmbeddings(
-        model_name=MODEL_NAME,
-        model_kwargs={
-            "device": "cpu",
-        },
-        encode_kwargs={
-            "normalize_embeddings": True,
-        },
-    )
-
+    use_offline_model_cache()
+    logger.info("Loading embedding model: %s", EMBEDDING_MODEL)
+    model = HuggingFaceEmbeddings(**embedding_kwargs())
     logger.info("Embedding model loaded successfully.")
-
     return model
 
 
-# ============================================================
-# VECTOR STORE
-# ============================================================
-
-def create_vectorstore(
-    embedding_model: HuggingFaceEmbeddings,
-) -> Chroma:
-    """
-    Open the existing persistent Chroma collection.
-
-    This does NOT create a new collection.
-    """
-
-    VECTORSTORE_DIR.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    vectorstore = Chroma(
-        collection_name=COLLECTION_NAME,
-        persist_directory=str(VECTORSTORE_DIR),
-        embedding_function=embedding_model,
-    )
-
-    return vectorstore
+def open_collection():
+    VECTORSTORE_DIR.mkdir(parents=True, exist_ok=True)
+    client = chromadb.PersistentClient(path=str(VECTORSTORE_DIR))
+    return client.get_or_create_collection(COLLECTION_NAME)
 
 
 # ============================================================
-# CHUNKING
+# CHUNKS
 # ============================================================
 
-def load_and_chunk_page(
-    file_path: Path,
-) -> list[dict]:
-    """
-    Use the EXACT existing RAG chunking implementation.
-
-    This calls chunker/chunking.py -> process_file()
-    so the nightly updater cannot accidentally develop
-    different chunking behavior from the existing RAG.
-    """
-
-    if not file_path.exists():
-        raise FileNotFoundError(
-            f"Structured page not found: {file_path}"
-        )
-
-    logger.info(
-        "Chunking: %s",
-        file_path.name,
-    )
-
+def load_and_chunk_page(file_path: Path) -> list[dict]:
     chunks = process_file(file_path)
 
     if not chunks:
-        raise ValueError(
-            f"No chunks generated for: {file_path.name}"
-        )
+        raise ValueError(f"No chunks generated for: {file_path.name}")
 
-    for index, chunk in enumerate(chunks, start=1):
+    for chunk in chunks:
+        if not isinstance(chunk, dict) or not str(chunk.get("content", "")).strip():
+            raise ValueError(f"Invalid or empty chunk in {file_path.name}")
 
-        if not isinstance(chunk, dict):
-            raise ValueError(
-                f"Invalid chunk generated for {file_path.name}"
-            )
-
-        content = chunk.get("content")
-
-        if not content or not str(content).strip():
-            raise ValueError(
-                f"Empty chunk detected in {file_path.name}"
-            )
-
-    logger.info(
-        "Generated %d chunks: %s",
-        len(chunks),
-        file_path.name,
-    )
+    logger.info("Generated %d chunks: %s", len(chunks), file_path.name)
 
     return chunks
 
 
-# ============================================================
-# CHUNK IDS
-# ============================================================
-
-def build_chunk_id(
-    page_id: str,
-    index: int,
-) -> str:
+def build_chunk_id(page_id: str, content: str) -> str:
     """
-    Generate deterministic page-specific chunk IDs.
-
-    Example:
-
-        consiva.ai_pricing::chunk_000001
-        consiva.ai_pricing::chunk_000002
-
-    This is safer than the old global chunk_000001 scheme
-    because each page owns its own chunk namespace.
+    Stable, content-based ID, e.g.
+        consiva.ai_pricing::3f9a1c0b7d2e4a61
+    The same text always gets the same ID, so unchanged chunks are
+    never re-embedded.
     """
 
-    return f"{page_id}::chunk_{index:06d}"
+    digest = hashlib.sha1(content.encode("utf-8")).hexdigest()[:16]
+    return f"{page_id}::{digest}"
 
 
-# ============================================================
-# METADATA
-# ============================================================
-
-def build_metadata(
-    chunk: dict,
-    chunk_id: str,
-    page_id: str,
-    source: str,
-    content_hash: str,
-) -> dict:
-    """
-    Build Chroma metadata.
-
-    Existing RAG metadata fields are preserved.
-    Additional page_id/content_hash fields are useful
-    for future maintenance and auditing.
-    """
-
+def build_metadata(chunk: dict, chunk_id: str, page_id: str, source: str, content_hash: str) -> dict:
     return {
         "chunk_id": chunk_id,
         "page_id": page_id,
         "source": source,
+        "url": chunk.get("url") or "",
+        "title": chunk.get("title") or "",
+        "section": chunk.get("section") or "",
         "content_hash": content_hash,
-
-        "H1": chunk.get("H1") or "",
-        "H2": chunk.get("H2") or "",
-        "H3": chunk.get("H3") or "",
-        "H4": chunk.get("H4") or "",
-        "H5": chunk.get("H5") or "",
-        "H6": chunk.get("H6") or "",
+        "chunker_version": CHUNKER_VERSION,
+        **{f"H{level}": chunk.get(f"H{level}") or "" for level in range(1, 7)},
     }
 
 
+def embed_texts(embedding_model: HuggingFaceEmbeddings, texts: list[str]) -> list[list[float]]:
+    embeddings = []
+
+    for start in range(0, len(texts), EMBED_BATCH_SIZE):
+        batch = texts[start:start + EMBED_BATCH_SIZE]
+        logger.info("Embedding chunks %d-%d/%d", start + 1, start + len(batch), len(texts))
+        vectors = embedding_model.embed_documents(batch)
+
+        if len(vectors) != len(batch):
+            raise ValueError(f"Embedding count mismatch: expected {len(batch)}, got {len(vectors)}")
+
+        embeddings.extend(vectors)
+
+    return embeddings
+
+
 # ============================================================
-# EMBEDDING
+# CHROMA HELPERS
 # ============================================================
 
-def embed_chunks(
-    embedding_model: HuggingFaceEmbeddings,
-    chunks: list[dict],
-) -> list[list[float]]:
+def get_existing_ids_for_source(collection, source: str) -> list[str]:
+    result = collection.get(where={"source": source}, include=[])
+    return list(result.get("ids") or [])
+
+
+def in_batches(items: list, size: int = CHROMA_BATCH_SIZE):
+    for start in range(0, len(items), size):
+        yield start, items[start:start + size]
+
+
+def delete_vectors(collection, ids: list[str]) -> None:
+    for start, batch in in_batches(ids):
+        logger.info("Deleting vectors %d-%d/%d", start + 1, start + len(batch), len(ids))
+        collection.delete(ids=batch)
+
+
+# ============================================================
+# PROCESS NEW / CHANGED / REINDEX PAGE
+# ============================================================
+
+def update_page(collection, get_model, page_id: str, filename: str, status: str) -> dict:
     """
-    Embed chunks in batches.
-
-    Embeddings are generated BEFORE deleting old vectors.
-    This protects the existing data if embedding fails.
-    """
-
-    texts = [
-        str(chunk["content"])
-        for chunk in chunks
-    ]
-
-    all_embeddings = []
-
-    total = len(texts)
-
-    for start in range(
-        0,
-        total,
-        EMBED_BATCH_SIZE,
-    ):
-
-        end = min(
-            start + EMBED_BATCH_SIZE,
-            total,
-        )
-
-        batch_texts = texts[start:end]
-
-        logger.info(
-            "Embedding chunks %d-%d/%d",
-            start + 1,
-            end,
-            total,
-        )
-
-        batch_embeddings = (
-            embedding_model.embed_documents(
-                batch_texts
-            )
-        )
-
-        if len(batch_embeddings) != len(batch_texts):
-            raise ValueError(
-                "Embedding count mismatch: "
-                f"expected {len(batch_texts)}, "
-                f"received {len(batch_embeddings)}"
-            )
-
-        all_embeddings.extend(
-            batch_embeddings
-        )
-
-    if len(all_embeddings) != len(chunks):
-        raise ValueError(
-            "Final embedding count mismatch: "
-            f"chunks={len(chunks)}, "
-            f"embeddings={len(all_embeddings)}"
-        )
-
-    if not all_embeddings:
-        raise ValueError(
-            "No embeddings were generated."
-        )
-
-    return all_embeddings
-
-
-# ============================================================
-# EXISTING VECTOR IDS
-# ============================================================
-
-def get_existing_ids_for_source(
-    vectorstore: Chroma,
-    source: str,
-) -> list[str]:
-    """
-    Find every vector belonging to a page.
-
-    Source remains the filename because that matches
-    the existing RAG metadata structure.
-    """
-
-    result = vectorstore._collection.get(
-        where={
-            "source": source,
-        },
-        include=[],
-    )
-
-    ids = result.get("ids", [])
-
-    if ids is None:
-        return []
-
-    return list(ids)
-
-
-# ============================================================
-# CHROMA UPSERT
-# ============================================================
-
-def upsert_vectors(
-    vectorstore: Chroma,
-    ids: list[str],
-    documents: list[str],
-    metadatas: list[dict],
-    embeddings: list[list[float]],
-) -> None:
-    """
-    Upsert vectors in safe batches.
-    """
-
-    if not (
-        len(ids)
-        == len(documents)
-        == len(metadatas)
-        == len(embeddings)
-    ):
-        raise ValueError(
-            "Vector data length mismatch."
-        )
-
-    total = len(ids)
-
-    for start in range(
-        0,
-        total,
-        CHROMA_BATCH_SIZE,
-    ):
-
-        end = min(
-            start + CHROMA_BATCH_SIZE,
-            total,
-        )
-
-        logger.info(
-            "Upserting vectors %d-%d/%d",
-            start + 1,
-            end,
-            total,
-        )
-
-        vectorstore._collection.upsert(
-            ids=ids[start:end],
-            documents=documents[start:end],
-            metadatas=metadatas[start:end],
-            embeddings=embeddings[start:end],
-        )
-
-
-# ============================================================
-# CHROMA DELETE
-# ============================================================
-
-def delete_vectors(
-    vectorstore: Chroma,
-    ids: list[str],
-) -> None:
-    """
-    Delete vectors in batches.
-    """
-
-    if not ids:
-        return
-
-    total = len(ids)
-
-    for start in range(
-        0,
-        total,
-        CHROMA_BATCH_SIZE,
-    ):
-
-        end = min(
-            start + CHROMA_BATCH_SIZE,
-            total,
-        )
-
-        batch_ids = ids[start:end]
-
-        logger.info(
-            "Deleting vectors %d-%d/%d",
-            start + 1,
-            end,
-            total,
-        )
-
-        vectorstore._collection.delete(
-            ids=batch_ids
-        )
-
-
-# ============================================================
-# PROCESS NEW / CHANGED PAGE
-# ============================================================
-
-def update_page(
-    vectorstore: Chroma,
-    embedding_model: HuggingFaceEmbeddings,
-    page_id: str,
-    filename: str,
-    status: str,
-) -> dict:
-    """
-    Process a NEW or CHANGED page.
-
-    IMPORTANT ORDER:
-
-        Read
-          ↓
-        Chunk
-          ↓
-        Embed
-          ↓
-        Validate
-          ↓
-        Upsert new vectors
-          ↓
-        Verify new vectors
-          ↓
-        Delete old vectors
-
-    This avoids creating a temporary period where the
-    page has no vectors if embedding/upsert fails.
+    Order: chunk -> embed new chunks -> upsert -> verify -> delete obsolete.
+    The page always has a complete set of vectors in the database.
     """
 
     file_path = NEW_STRUCTURED_DIR / filename
 
     if not file_path.exists():
-        raise FileNotFoundError(
-            f"{status} page file not found: {file_path}"
-        )
+        raise FileNotFoundError(f"{status} page file not found: {file_path}")
 
     logger.info("=" * 70)
-    logger.info(
-        "%s PAGE: %s",
-        status,
-        page_id,
-    )
-    logger.info(
-        "File: %s",
-        filename,
-    )
-    logger.info("=" * 70)
+    logger.info("%s PAGE: %s (%s)", status, page_id, filename)
 
-    # --------------------------------------------------------
-    # 1. Hash new content
-    # --------------------------------------------------------
+    content_hash = calculate_content_hash(file_path)
+    chunks = load_and_chunk_page(file_path)
 
-    content_hash = calculate_content_hash(
-        file_path
-    )
-
-    logger.info(
-        "Content hash: %s",
-        content_hash,
-    )
-
-    # --------------------------------------------------------
-    # 2. Chunk new content
-    # --------------------------------------------------------
-
-    chunks = load_and_chunk_page(
-        file_path
-    )
-
-    # --------------------------------------------------------
-    # 3. Build deterministic IDs
-    # --------------------------------------------------------
-
-    new_ids = [
-        build_chunk_id(
-            page_id,
-            index,
-        )
-        for index in range(
-            1,
-            len(chunks) + 1,
-        )
-    ]
-
-    # --------------------------------------------------------
-    # 4. Build documents
-    # --------------------------------------------------------
-
-    documents = [
-        str(chunk["content"])
-        for chunk in chunks
-    ]
-
-    # --------------------------------------------------------
-    # 5. Build metadata
-    # --------------------------------------------------------
-
+    ids = [build_chunk_id(page_id, chunk["content"]) for chunk in chunks]
+    documents = [chunk["content"] for chunk in chunks]
     metadatas = [
-        build_metadata(
-            chunk=chunk,
-            chunk_id=chunk_id,
-            page_id=page_id,
-            source=filename,
-            content_hash=content_hash,
-        )
-        for chunk, chunk_id in zip(
-            chunks,
-            new_ids,
-        )
+        build_metadata(chunk, chunk_id, page_id, filename, content_hash)
+        for chunk, chunk_id in zip(chunks, ids)
     ]
 
-    # --------------------------------------------------------
-    # 6. Generate embeddings
-    # --------------------------------------------------------
+    old_ids = set(get_existing_ids_for_source(collection, filename))
+    new_positions = [index for index, chunk_id in enumerate(ids) if chunk_id not in old_ids]
+    kept_positions = [index for index, chunk_id in enumerate(ids) if chunk_id in old_ids]
 
-    embeddings = embed_chunks(
-        embedding_model,
-        chunks,
+    logger.info(
+        "Chunks: %d total, %d new, %d unchanged, %d existing vectors",
+        len(ids), len(new_positions), len(kept_positions), len(old_ids),
     )
 
-    # --------------------------------------------------------
-    # 7. Validate everything BEFORE DB modification
-    # --------------------------------------------------------
+    # 1. Embed and upsert only chunks whose text is new.
+    if new_positions:
+        vectors = embed_texts(get_model(), [documents[index] for index in new_positions])
+        embedding_at = dict(zip(new_positions, vectors))
 
-    if not (
-        len(new_ids)
-        == len(documents)
-        == len(metadatas)
-        == len(embeddings)
-    ):
-        raise ValueError(
-            f"Prepared vector data mismatch for {page_id}"
+        for start, batch in in_batches(new_positions):
+            logger.info("Upserting vectors %d-%d/%d", start + 1, start + len(batch), len(new_positions))
+            collection.upsert(
+                ids=[ids[index] for index in batch],
+                documents=[documents[index] for index in batch],
+                metadatas=[metadatas[index] for index in batch],
+                embeddings=[embedding_at[index] for index in batch],
+            )
+
+    # 2. Refresh metadata of unchanged chunks (page hash, chunker version).
+    for _, batch in in_batches(kept_positions):
+        collection.update(
+            ids=[ids[index] for index in batch],
+            metadatas=[metadatas[index] for index in batch],
         )
 
-    logger.info(
-        "Prepared %d vectors for %s",
-        len(new_ids),
-        page_id,
-    )
+    # 3. Verify every chunk of the page is present.
+    present = set(collection.get(ids=ids, include=[]).get("ids") or [])
+    missing = set(ids) - present
 
-    # --------------------------------------------------------
-    # 8. Find existing vectors
-    # --------------------------------------------------------
+    if missing:
+        raise RuntimeError(f"Vector verification failed for {page_id}: {len(missing)} missing")
 
-    old_ids = get_existing_ids_for_source(
-        vectorstore,
-        filename,
-    )
+    # 4. Only now remove vectors that no longer belong to the page.
+    obsolete = sorted(old_ids - set(ids))
+    delete_vectors(collection, obsolete)
 
-    logger.info(
-        "Existing vectors for page: %d",
-        len(old_ids),
-    )
+    remaining = set(get_existing_ids_for_source(collection, filename))
 
-    # --------------------------------------------------------
-    # 9. UPSERT NEW VECTORS FIRST
-    # --------------------------------------------------------
-
-    upsert_vectors(
-        vectorstore=vectorstore,
-        ids=new_ids,
-        documents=documents,
-        metadatas=metadatas,
-        embeddings=embeddings,
-    )
-
-    # --------------------------------------------------------
-    # 10. Verify new vectors exist
-    # --------------------------------------------------------
-
-    verification = vectorstore._collection.get(
-        ids=new_ids,
-        include=[],
-    )
-
-    verified_ids = set(
-        verification.get("ids", [])
-    )
-
-    expected_ids = set(new_ids)
-
-    missing_ids = expected_ids - verified_ids
-
-    if missing_ids:
+    if remaining != set(ids):
         raise RuntimeError(
-            f"Vector verification failed for {page_id}. "
-            f"Missing {len(missing_ids)} vectors."
+            f"Final verification failed for {page_id}: "
+            f"{len(remaining - set(ids))} extra, {len(set(ids) - remaining)} missing"
         )
 
-    logger.info(
-        "Verified %d new vectors.",
-        len(verified_ids),
-    )
-
-    # --------------------------------------------------------
-    # 11. Delete OLD vectors
-    # --------------------------------------------------------
-
-    new_id_set = set(new_ids)
-
-    obsolete_ids = [
-        vector_id
-        for vector_id in old_ids
-        if vector_id not in new_id_set
-    ]
-
-    if obsolete_ids:
-
-        logger.info(
-            "Removing %d obsolete vectors.",
-            len(obsolete_ids),
-        )
-
-        delete_vectors(
-            vectorstore,
-            obsolete_ids,
-        )
-
-    else:
-
-        logger.info(
-            "No obsolete vectors to remove."
-        )
-
-    # --------------------------------------------------------
-    # 12. Final source verification
-    # --------------------------------------------------------
-
-    final_ids = get_existing_ids_for_source(
-        vectorstore,
-        filename,
-    )
-
-    final_id_set = set(final_ids)
-
-    missing_after_update = (
-        new_id_set - final_id_set
-    )
-
-    if missing_after_update:
-        raise RuntimeError(
-            f"Final verification failed for {page_id}. "
-            f"Missing {len(missing_after_update)} vectors."
-        )
-
-    # Check that obsolete vectors are actually gone.
-    remaining_obsolete = (
-        set(obsolete_ids) & final_id_set
-    )
-
-    if remaining_obsolete:
-        raise RuntimeError(
-            f"Old vectors still remain for {page_id}: "
-            f"{len(remaining_obsolete)}"
-        )
-
-    logger.info(
-        "Successfully updated page: %s",
-        page_id,
-    )
+    logger.info("Updated %s: %d vectors (%d removed)", page_id, len(ids), len(obsolete))
 
     return {
         "page_id": page_id,
         "status": status,
         "filename": filename,
-        "vectors": len(new_ids),
-        "old_vectors": len(old_ids),
-        "deleted_vectors": len(obsolete_ids),
+        "vectors": len(ids),
+        "embedded": len(new_positions),
+        "deleted_vectors": len(obsolete),
         "content_hash": content_hash,
     }
 
 
-# ============================================================
-# PROCESS DELETED PAGE
-# ============================================================
-
-def delete_page(
-    vectorstore: Chroma,
-    page_id: str,
-    filename: str,
-) -> dict:
-    """
-    Remove every vector belonging to a deleted page.
-    """
+def delete_page(collection, page_id: str, filename: str) -> dict:
+    """Remove every vector belonging to a deleted page."""
 
     logger.info("=" * 70)
-    logger.info(
-        "DELETED PAGE: %s",
-        page_id,
-    )
-    logger.info(
-        "Source: %s",
-        filename,
-    )
-    logger.info("=" * 70)
+    logger.info("DELETED PAGE: %s (%s)", page_id, filename)
 
-    old_ids = get_existing_ids_for_source(
-        vectorstore,
-        filename,
-    )
+    old_ids = get_existing_ids_for_source(collection, filename)
+    delete_vectors(collection, old_ids)
 
-    if not old_ids:
+    if get_existing_ids_for_source(collection, filename):
+        raise RuntimeError(f"Deletion verification failed for {page_id}")
 
-        logger.info(
-            "No vectors found for deleted page: %s",
-            page_id,
-        )
+    logger.info("Deleted %d vectors for %s", len(old_ids), page_id)
 
-        return {
-            "page_id": page_id,
-            "status": "DELETED",
-            "filename": filename,
-            "deleted_vectors": 0,
-        }
+    return {"page_id": page_id, "status": "DELETED", "filename": filename, "deleted_vectors": len(old_ids)}
 
-    logger.info(
-        "Found %d vectors to delete.",
-        len(old_ids),
-    )
 
-    delete_vectors(
-        vectorstore,
-        old_ids,
-    )
+def write_index_version(vector_count: int) -> None:
+    """Tell the running API that the index changed (write after the snapshot)."""
 
-    # Verify deletion.
-    remaining_ids = get_existing_ids_for_source(
-        vectorstore,
-        filename,
-    )
-
-    if remaining_ids:
-        raise RuntimeError(
-            f"Deletion verification failed for {page_id}. "
-            f"{len(remaining_ids)} vectors remain."
-        )
-
-    logger.info(
-        "Successfully deleted page: %s",
-        page_id,
-    )
-
-    return {
-        "page_id": page_id,
-        "status": "DELETED",
-        "filename": filename,
-        "deleted_vectors": len(old_ids),
+    payload = {
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "vectors": vector_count,
+        "chunker_version": CHUNKER_VERSION,
+        "embedding_model": EMBEDDING_MODEL,
     }
+
+    temp_file = INDEX_VERSION_FILE.with_suffix(".tmp")
+    temp_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    temp_file.replace(INDEX_VERSION_FILE)
 
 
 # ============================================================
@@ -1034,323 +410,103 @@ def delete_page(
 # ============================================================
 
 def run_vector_update() -> dict:
-    """
-    Execute the complete incremental vector update.
-    """
 
-    start_time = datetime.now(
-        timezone.utc
-    )
+    start_time = datetime.now(timezone.utc)
 
     logger.info("=" * 70)
-    logger.info("STARTING INCREMENTAL VECTOR UPDATE")
+    logger.info("STARTING INCREMENTAL VECTOR UPDATE (chunker %s)", CHUNKER_VERSION)
     logger.info("=" * 70)
-
-    # --------------------------------------------------------
-    # Validate directories/files
-    # --------------------------------------------------------
 
     if not NEW_STRUCTURED_DIR.exists():
-        raise FileNotFoundError(
-            f"New structured directory not found: "
-            f"{NEW_STRUCTURED_DIR}"
-        )
-
-    # --------------------------------------------------------
-    # Load changes
-    # --------------------------------------------------------
+        raise FileNotFoundError(f"New structured directory not found: {NEW_STRUCTURED_DIR}")
 
     changes = load_changes()
+    collection = open_collection()
 
-    actions = build_actions(
-        changes
-    )
+    actions = build_actions(changes) + build_reindex_actions(collection, changes)
 
-    summary = changes.get(
-        "summary",
-        {},
-    )
+    for status in ("NEW", "CHANGED", "DELETED", "REINDEX"):
+        logger.info("  %-8s: %d", status, sum(action["status"] == status for action in actions))
 
-    logger.info(
-        "Comparison summary:"
-    )
+    if not actions and INDEX_VERSION_FILE.exists() and SNAPSHOT_FILE.exists():
+        logger.info("NO VECTOR DATABASE CHANGES REQUIRED")
+        return {"success": True, "actions": 0, "failed_pages": []}
 
-    logger.info(
-        "  NEW       : %s",
-        summary.get("new", len(changes["pages"]["new"])),
-    )
+    # The model is loaded only if some chunk really needs embedding.
+    model_holder = {}
 
-    logger.info(
-        "  CHANGED   : %s",
-        summary.get(
-            "changed",
-            len(changes["pages"]["changed"]),
-        ),
-    )
+    def get_model():
+        if "model" not in model_holder:
+            model_holder["model"] = create_embedding_model()
+        return model_holder["model"]
 
-    logger.info(
-        "  UNCHANGED : %s",
-        summary.get(
-            "unchanged",
-            len(changes["pages"]["unchanged"]),
-        ),
-    )
+    before_count = collection.count()
+    logger.info("Vector count before update: %d", before_count)
 
-    logger.info(
-        "  DELETED   : %s",
-        summary.get(
-            "deleted",
-            len(changes["pages"]["deleted"]),
-        ),
-    )
-
-    logger.info(
-        "  ACTIONS   : %d",
-        len(actions),
-    )
-
-    # --------------------------------------------------------
-    # Nothing to update
-    # --------------------------------------------------------
-
-    if not actions:
-
-        logger.info("=" * 70)
-        logger.info(
-            "NO VECTOR DATABASE CHANGES REQUIRED"
-        )
-        logger.info("=" * 70)
-
-        return {
-            "success": True,
-            "new": 0,
-            "changed": 0,
-            "deleted": 0,
-            "updated_pages": [],
-            "duration_seconds": 0,
-        }
-
-    # --------------------------------------------------------
-    # Load embedding model
-    # --------------------------------------------------------
-
-    embedding_model = (
-        create_embedding_model()
-    )
-
-    # --------------------------------------------------------
-    # Open vector DB
-    # --------------------------------------------------------
-
-    vectorstore = create_vectorstore(
-        embedding_model
-    )
-
-    before_count = (
-        vectorstore._collection.count()
-    )
-
-    logger.info(
-        "Vector count before update: %d",
-        before_count,
-    )
-
-    # --------------------------------------------------------
-    # Process actions
-    # --------------------------------------------------------
-
-    successful_updates = []
-
-    failed_updates = []
+    successful = []
+    failed = []
 
     for action in actions:
-
-        page_id = action["page_id"]
-        status = action["status"]
-        filename = action["filename"]
-
         try:
-
-            if status in (
-                "NEW",
-                "CHANGED",
-            ):
-
-                result = update_page(
-                    vectorstore=vectorstore,
-                    embedding_model=embedding_model,
-                    page_id=page_id,
-                    filename=filename,
-                    status=status,
-                )
-
-            elif status == "DELETED":
-
-                result = delete_page(
-                    vectorstore=vectorstore,
-                    page_id=page_id,
-                    filename=filename,
-                )
-
+            if action["status"] == "DELETED":
+                result = delete_page(collection, action["page_id"], action["filename"])
             else:
-
-                raise ValueError(
-                    f"Unsupported action status: {status}"
+                result = update_page(
+                    collection, get_model, action["page_id"], action["filename"], action["status"]
                 )
-
-            successful_updates.append(
-                result
-            )
+            successful.append(result)
 
         except Exception as error:
+            logger.exception("Failed to process page: %s", action["page_id"])
+            failed.append({**action, "error": str(error)})
 
-            logger.exception(
-                "Failed to process page: %s",
-                page_id,
-            )
-
-            failed_updates.append(
-                {
-                    "page_id": page_id,
-                    "status": status,
-                    "filename": filename,
-                    "error": str(error),
-                }
-            )
-
-    # --------------------------------------------------------
-    # Final DB count
-    # --------------------------------------------------------
-
-    after_count = (
-        vectorstore._collection.count()
-    )
-
-    duration = (
-        datetime.now(timezone.utc)
-        - start_time
-    ).total_seconds()
-
-    # --------------------------------------------------------
-    # Final report
-    # --------------------------------------------------------
+    after_count = collection.count()
+    duration = (datetime.now(timezone.utc) - start_time).total_seconds()
 
     logger.info("=" * 70)
-    logger.info(
-        "INCREMENTAL VECTOR UPDATE COMPLETED"
-    )
+    logger.info("VECTOR UPDATE FINISHED")
+    logger.info("Successful pages : %d", len(successful))
+    logger.info("Failed pages     : %d", len(failed))
+    logger.info("Chunks embedded  : %d", sum(item.get("embedded", 0) for item in successful))
+    logger.info("Vectors before   : %d", before_count)
+    logger.info("Vectors after    : %d", after_count)
+    logger.info("Duration         : %.2f seconds", duration)
     logger.info("=" * 70)
 
-    logger.info(
-        "Successful pages : %d",
-        len(successful_updates),
-    )
-
-    logger.info(
-        "Failed pages     : %d",
-        len(failed_updates),
-    )
-
-    logger.info(
-        "Vectors before   : %d",
-        before_count,
-    )
-
-    logger.info(
-        "Vectors after    : %d",
-        after_count,
-    )
-
-    logger.info(
-        "Duration         : %.2f seconds",
-        duration,
-    )
-
-    logger.info("=" * 70)
-
-    # --------------------------------------------------------
-    # Fail the pipeline if ANY page failed
-    # --------------------------------------------------------
-
-    if failed_updates:
-
-        logger.error(
-            "VECTOR UPDATE FAILED."
-        )
-
-        for failure in failed_updates:
-
-            logger.error(
-                "  %s [%s] -> %s",
-                failure["page_id"],
-                failure["status"],
-                failure["error"],
-            )
-
-        return {
-            "success": False,
-            "new": len(changes["pages"]["new"]),
-            "changed": len(changes["pages"]["changed"]),
-            "deleted": len(changes["pages"]["deleted"]),
-            "successful_pages": successful_updates,
-            "failed_pages": failed_updates,
-            "vectors_before": before_count,
-            "vectors_after": after_count,
-            "duration_seconds": duration,
-        }
+    if failed:
+        for failure in failed:
+            logger.error("  %s [%s] -> %s", failure["page_id"], failure["status"], failure["error"])
+    else:
+        exported = export_snapshot(collection)
+        logger.info("Exported search snapshot: %d vectors", exported)
+        write_index_version(after_count)
 
     return {
-        "success": True,
-        "new": len(changes["pages"]["new"]),
-        "changed": len(changes["pages"]["changed"]),
-        "deleted": len(changes["pages"]["deleted"]),
-        "successful_pages": successful_updates,
-        "failed_pages": [],
+        "success": not failed,
+        "actions": len(actions),
+        "successful_pages": successful,
+        "failed_pages": failed,
         "vectors_before": before_count,
         "vectors_after": after_count,
         "duration_seconds": duration,
     }
 
 
-# ============================================================
-# ENTRY POINT
-# ============================================================
-
 def main() -> int:
-
     try:
-
         result = run_vector_update()
-
         if result["success"]:
-
-            logger.info(
-                "Vector updater finished successfully."
-            )
-
+            logger.info("Vector updater finished successfully.")
             return 0
-
-        logger.error(
-            "Vector updater finished with errors."
-        )
-
+        logger.error("Vector updater finished with errors.")
         return 1
 
     except KeyboardInterrupt:
-
-        logger.warning(
-            "Vector update interrupted by user."
-        )
-
+        logger.warning("Vector update interrupted by user.")
         return 130
 
     except Exception as error:
-
-        logger.exception(
-            "Fatal vector updater error: %s",
-            error,
-        )
-
+        logger.exception("Fatal vector updater error: %s", error)
         return 1
 
 

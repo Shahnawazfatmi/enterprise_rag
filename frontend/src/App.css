@@ -173,7 +173,9 @@
 
   align-items: center;
 
-  justify-content: center;
+  justify-content: flex-start;
+
+  overflow: hidden;
 
   border-radius: 11px;
 
@@ -191,8 +193,13 @@
     rgba(37, 99, 235, 0.35);
 }
 
-.assistant-avatar span {
-  font-size: 18px;
+.assistant-avatar img {
+  height: 34px;
+  width: auto;
+  max-width: none;
+  flex-shrink: 0;
+  display: block;
+  transform: translateX(-2px);
 }
 
 
@@ -797,15 +804,27 @@
 }
 
 .launcher-icon {
+  width: 42px;
+  height: 42px;
+
   display: flex;
 
   align-items: center;
 
-  justify-content: center;
+  justify-content: flex-start;
 
-  font-size: 23px;
+  overflow: hidden;
 
-  line-height: 1;
+  border-radius: 10px;
+}
+
+.launcher-icon img {
+  height: 42px;
+  width: auto;
+  max-width: none;
+  flex-shrink: 0;
+  display: block;
+  transform: translateX(-2px);
 }
 
 
@@ -1046,4 +1065,29 @@
 
 .message-bubble.assistant p:last-child {
   margin-bottom: 0;
+}
+/* Source links under assistant answers */
+.message-sources {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+  font-size: 12px;
+}
+
+.message-sources .sources-label {
+  display: block;
+  font-weight: 600;
+  opacity: 0.75;
+  margin-bottom: 2px;
+}
+
+.message-sources ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.message-sources a {
+  color: inherit;
+  text-decoration: underline;
+  word-break: break-word;
 }

@@ -1,13 +1,26 @@
+"""
+Promote data/new_structured to the baseline (data/baseline).
+
+Runs only after the vector update succeeded. Files are replaced one by
+one (copy to a temp file, then os.replace), never by renaming folders:
+on Windows a folder rename fails with "Access is denied" whenever another
+program (antivirus, search indexer, Explorer) has the folder open.
+
+If promotion stops halfway, the next run sees the not-yet-promoted pages
+as CHANGED and processes them again, so no update is lost.
+"""
+
 from pathlib import Path
+import filecmp
 import logging
+import os
 import shutil
 import sys
-import tempfile
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
 
-NEW_STRUCTURED_DIR = BASE_DIR / "data" / "new_structured"
-BASELINE_DIR = BASE_DIR / "data" / "structured_final"
+from config import BASELINE_DIR, NEW_STRUCTURED_DIR  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO,
@@ -17,94 +30,50 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def validate_source() -> None:
+def validate_source() -> list[Path]:
     """Validate that the new structured dataset is safe to promote."""
 
     if not NEW_STRUCTURED_DIR.exists():
-        raise FileNotFoundError(
-            f"New structured directory not found: {NEW_STRUCTURED_DIR}"
-        )
+        raise FileNotFoundError(f"New structured directory not found: {NEW_STRUCTURED_DIR}")
 
-    files = list(NEW_STRUCTURED_DIR.glob("*.txt"))
+    files = sorted(NEW_STRUCTURED_DIR.glob("*.txt"))
 
     if not files:
-        raise ValueError(
-            "No .txt files found in new_structured. "
-            "Baseline promotion aborted."
-        )
+        raise ValueError("No .txt files found in new_structured. Baseline promotion aborted.")
 
     logger.info(f"Validated source dataset: {len(files)} pages")
+    return files
 
 
 def promote_baseline() -> None:
-    """
-    Replace structured_final with new_structured safely.
 
-    This function should only be called AFTER the vector DB update
-    has completed successfully.
-    """
+    files = validate_source()
+    BASELINE_DIR.mkdir(parents=True, exist_ok=True)
 
-    validate_source()
+    names = {source.name for source in files}
 
-    BASELINE_DIR.parent.mkdir(parents=True, exist_ok=True)
+    for source in files:
+        destination = BASELINE_DIR / source.name
+        temp_file = destination.with_name(destination.name + ".tmp")
+        shutil.copy2(source, temp_file)
+        os.replace(temp_file, destination)
 
-    # Create temporary directory beside the baseline.
-    temp_dir = Path(
-        tempfile.mkdtemp(
-            prefix="structured_final_",
-            dir=BASELINE_DIR.parent
-        )
-    )
+    removed = 0
+    for old_file in BASELINE_DIR.glob("*.txt"):
+        if old_file.name not in names:
+            old_file.unlink()
+            removed += 1
 
-    try:
-        # Copy the complete new dataset into the temporary directory.
-        for source_file in NEW_STRUCTURED_DIR.glob("*.txt"):
-            destination = temp_dir / source_file.name
-            shutil.copy2(source_file, destination)
+    mismatched = [
+        source.name
+        for source in files
+        if not filecmp.cmp(source, BASELINE_DIR / source.name, shallow=False)
+    ]
 
-        copied_files = list(temp_dir.glob("*.txt"))
+    if mismatched or len(list(BASELINE_DIR.glob("*.txt"))) != len(files):
+        raise RuntimeError(f"Baseline verification failed: {mismatched[:5]}")
 
-        if len(copied_files) != len(list(NEW_STRUCTURED_DIR.glob("*.txt"))):
-            raise RuntimeError(
-                "Baseline copy verification failed."
-            )
-
-        # Backup existing baseline before replacement.
-        backup_dir = None
-
-        if BASELINE_DIR.exists():
-            backup_dir = BASELINE_DIR.parent / "structured_final_backup"
-
-            if backup_dir.exists():
-                shutil.rmtree(backup_dir)
-
-            BASELINE_DIR.rename(backup_dir)
-
-        try:
-            # Atomic directory replacement.
-            temp_dir.rename(BASELINE_DIR)
-
-        except Exception:
-            # Restore previous baseline if replacement fails.
-            if backup_dir and backup_dir.exists() and not BASELINE_DIR.exists():
-                backup_dir.rename(BASELINE_DIR)
-
-            raise
-
-        # Remove backup only after successful promotion.
-        if backup_dir and backup_dir.exists():
-            shutil.rmtree(backup_dir)
-
-        logger.info(
-            f"Baseline promoted successfully: {len(copied_files)} pages"
-        )
-
-    except Exception:
-        # Clean temporary directory if anything fails.
-        if temp_dir.exists():
-            shutil.rmtree(temp_dir)
-
-        raise
+    logger.info(f"Baseline promoted successfully: {len(files)} pages ({removed} removed)")
 
 
 if __name__ == "__main__":

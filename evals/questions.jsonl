@@ -1,0 +1,42 @@
+{"id": "price-pro", "question": "How much does the Pro plan cost?", "sources": ["pricing"], "facts": ["5,999"]}
+{"id": "price-free-limits", "question": "Is there a free plan and what are its limits?", "sources": ["pricing", "dpdp-consent-banner", "contact-us"], "facts": ["1,000"]}
+{"id": "price-pro-domains", "question": "How many domains are included in the Pro plan?", "sources": ["pricing"], "facts": ["5 domains|domains: 5|5 \\+ add|five domains|up to 5"]}
+{"id": "price-pro-forms", "question": "How many form consents per month does the Pro plan include?", "sources": ["pricing"], "facts": ["1,500"]}
+{"id": "price-domain-pack", "question": "What does the Domain Pack add-on cost?", "sources": ["pricing"], "facts": ["80,000"]}
+{"id": "price-trial", "question": "Is there a free trial for the Pro plan?", "sources": ["pricing"], "facts": ["free plan|permanently free"]}
+{"id": "price-limit-exceeded", "question": "What happens if I exceed my consent limit?", "sources": ["pricing"], "facts": ["80%|95%"]}
+{"id": "price-ngo-discount", "question": "Do you offer discounts for NGOs or startups?", "sources": ["pricing"], "facts": ["30%"]}
+{"id": "price-annual-refund", "question": "Can I get a refund if I cancel an annual plan?", "sources": ["pricing", "refund-and-cancellation"], "facts": ["30 days|30-day|thirty"]}
+{"id": "price-basic", "question": "What does the Basic plan cost per month?", "sources": ["pricing"], "facts": ["₹0|free|0 per month|no cost"]}
+{"id": "price-enterprise", "question": "What does the Enterprise plan include?", "sources": ["pricing"], "facts": ["SSO|on-prem|unlimited"]}
+{"id": "price-sso", "question": "Is SSO / SAML supported, and on which plan?", "sources": ["pricing"], "facts": ["enterprise"]}
+{"id": "price-wordpress", "question": "Does Consiva have a WordPress plugin, and which plan includes it?", "sources": ["pricing", "consiva.ai_", "cookie-consent"], "facts": ["pro"]}
+{"id": "support-hours", "question": "What are your support business hours?", "sources": ["support-policy"], "facts": ["10:00|10 am|10am"]}
+{"id": "email-billing", "question": "Which email address should I use for billing or invoice questions?", "sources": ["contact-us", "refund-and-cancellation", "support-policy"], "facts": ["billing@consiva.ai"]}
+{"id": "email-security", "question": "Where should I report a security issue?", "sources": ["support-policy", "contact-us", "contact"], "facts": ["security@consiva.ai"]}
+{"id": "address", "question": "Where is the company's registered office address?", "sources": ["legal", "contact"], "facts": ["Gurugram|Sector-66|Cityscape"]}
+{"id": "operator", "question": "Which company operates Consiva.ai?", "sources": ["about", "legal", "terms"], "facts": ["Swaran Soft"]}
+{"id": "customers", "question": "How many businesses use Consiva?", "sources": ["about"], "facts": ["500"]}
+{"id": "iso", "question": "Is Consiva ISO 27001 certified?", "sources": ["consiva.ai_", "about", "contact", "legal", "platform", "faq"], "facts": ["ISO 27001|27001"]}
+{"id": "pen-commence", "question": "When do the DPDP penalty provisions come into force?", "sources": ["penalties", "enforceable", "dpdp-rules", "faq", "dpdp-act"], "facts": ["13 May 2027|May 13, 2027"]}
+{"id": "pen-max", "question": "What is the maximum penalty under the DPDP Act?", "sources": ["penalties", "faq", "consiva.ai_", "dpdp-vs-gdpr"], "facts": ["250"]}
+{"id": "assent", "question": "When did the DPDP Act receive presidential assent?", "sources": ["enforceable", "faq", "dpdp-act", "about", "dpdp-vs-gdpr"], "facts": ["11 August 2023|August 11|August 2023"]}
+{"id": "certin", "question": "How quickly must cyber incidents be reported to CERT-In?", "sources": ["cert-in", "breach", "enforceable", "faq"], "facts": ["6 hour|6-hour|six hour|6 hrs"]}
+{"id": "erasure-notice", "question": "What is the 48-hour pre-erasure notice rule?", "sources": ["48-hour", "retention-and-erasure", "erasure"], "facts": ["Rule 8\\(2\\)|48"]}
+{"id": "erasure-threshold", "question": "What user threshold makes an e-commerce entity subject to the Third Schedule erasure duty?", "sources": ["48-hour", "retention", "erasure", "d2c"], "facts": ["2 crore|two crore"]}
+{"id": "child", "question": "Who counts as a child under the DPDP Act?", "sources": ["edtech", "principal-rights", "fiduciary", "dpdp-act"], "facts": ["18|eighteen"]}
+{"id": "small-biz", "question": "Is there a small business exemption in the DPDP Act?", "sources": ["faq", "startups", "dpdp-act"], "facts": ["no small|not exempt|no exemption|no general|does not|isn't|is not"]}
+{"id": "security-8-5", "question": "What does section 8(5) of the DPDP Act require?", "sources": ["fiduciary", "penalties", "breach"], "facts": ["safeguard"]}
+{"id": "ropa", "question": "What is ROPA?", "sources": ["ropa"], "facts": ["Records? of Processing"]}
+{"id": "rights", "question": "What rights does a Data Principal have under DPDP?", "sources": ["principal-rights", "rights"], "facts": ["access|correction|erasure|grievance|nominat"]}
+{"id": "discovery-db", "question": "Which databases can Consiva's data discovery scan?", "sources": ["discovery", "consiva.ai_"], "facts": ["MySQL|PostgreSQL|SQL Server"]}
+{"id": "languages", "question": "How many Indian languages can consent banners be shown in?", "sources": ["consiva.ai_", "pricing", "consent", "cookie"], "facts": ["22|20\\+"]}
+{"id": "consent-mode", "question": "Is Google Consent Mode v2 enough for DPDP consent?", "sources": ["consent-mode"], "facts": []}
+{"id": "consent-manager", "question": "What is the difference between a Consent Manager and a CMP?", "sources": ["consent-manager-vs-cmp", "what-is-consent-management"], "facts": []}
+{"id": "dpdp-vs-gdpr", "question": "What are the key differences between DPDP and GDPR?", "sources": ["dpdp-vs-gdpr", "dpdp-and-gdpr"], "facts": []}
+{"id": "dpa", "question": "What must a processor contract say under DPDP?", "sources": ["data-processing-agreement", "vendor-dpa"], "facts": []}
+{"id": "cost-blog", "question": "What does DPDP compliance software cost in India?", "sources": ["software-cost", "pricing"], "facts": []}
+{"id": "rules-2025", "question": "When were the DPDP Rules 2025 notified?", "sources": ["dpdp-rules", "faq", "enforceable"], "facts": ["13 November 2025|November 13|November 2025"]}
+{"id": "offtopic-capital", "question": "What is the capital of France?", "sources": [], "facts": [], "expect_not_found": true}
+{"id": "offtopic-code", "question": "Write a Python function that sorts a list of numbers.", "sources": [], "facts": [], "expect_not_found": true}
+{"id": "offtopic-competitor-price", "question": "How much does OneTrust charge per month in the USA?", "sources": [], "facts": [], "expect_not_found": true}

@@ -1,14 +1,17 @@
 {
   "pipeline": "consiva-ingestion-pipeline",
   "status": "success",
-  "started_at": "2026-09-15T04:25:43.453999+00:00",
-  "completed_at": "2026-09-15T04:50:52.048990+00:00",
+  "pid": 46344,
+  "started_at": "2026-10-12T04:37:59.894809+00:00",
+  "completed_at": "2026-10-12T04:48:03.258943+00:00",
+  "current_stage": null,
   "failed_stage": null,
   "error": null,
   "changes": {
-    "new": 11,
-    "changed": 1,
-    "unchanged": 48,
+    "new": 0,
+    "changed": 0,
+    "unchanged": 60,
     "deleted": 0
-  }
+  },
+  "duration_seconds": 603.36
 }

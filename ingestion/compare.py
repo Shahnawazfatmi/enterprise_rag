@@ -3,7 +3,7 @@ Production-ready content comparison for RAG ingestion pipeline.
 
 Compares:
 
-    data/structured_final/  -> last accepted baseline
+    data/baseline/  -> last accepted baseline
     data/new_structured/    -> latest structured website content
 
 Detects:
@@ -48,7 +48,8 @@ from typing import Dict, List
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-BASELINE_DIR = BASE_DIR / "data" / "structured_final"
+sys.path.insert(0, str(BASE_DIR))
+from config import BASELINE_DIR  # noqa: E402
 NEW_STRUCTURED_DIR = BASE_DIR / "data" / "new_structured"
 COMPARISON_DIR = BASE_DIR / "data" / "comparison"
 

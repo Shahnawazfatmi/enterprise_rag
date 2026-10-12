@@ -1,29 +1,25 @@
-from pathlib import Path
 import logging
+import re
+import threading
 
-from langchain_chroma import Chroma
+import numpy as np
 from langchain_huggingface import HuggingFaceEmbeddings
 
-from app.llm import load_llm, generate_answer
-
-# ============================================================
-# UPDATED: IMPORT QUERY ROUTER
-# ============================================================
+from app.index import SearchIndex
+from app.llm import LLMUnavailableError, generate_answer, llm_name, load_llm
 from app.router import classify_query, get_direct_response
-
-
-# ============================================================
-# PATHS & CONFIGURATION
-# ============================================================
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-VECTORSTORE_DIR = BASE_DIR / "data" / "vectorstore"
-COLLECTION_NAME = "consiva_knowledge"
-
-EMBEDDING_MODEL = "BAAI/bge-m3"
-
-TOP_K = 5
+from config import (
+    INDEX_VERSION_FILE,
+    MAX_CHUNKS_PER_PAGE,
+    MAX_HISTORY_MESSAGES,
+    MIN_RELEVANCE,
+    NOT_FOUND_ANSWER,
+    RELATIVE_RELEVANCE_MARGIN,
+    RETRIEVAL_CANDIDATES,
+    TOP_K,
+    embedding_kwargs,
+    use_offline_model_cache,
+)
 
 
 # ============================================================
@@ -32,109 +28,94 @@ TOP_K = 5
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(levelname)s: %(message)s"
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
 )
 
 logger = logging.getLogger(__name__)
 
+CITATION = re.compile(r"\[(\d+)\]")
+
+# Follow-ups like "and for Enterprise?" or "does it include SSO?" are
+# searched together with the previous question.
+FOLLOW_UP = re.compile(
+    r"^(and|also|but|so|what about|how about|same|then)\b"
+    r"|\b(it|its|that|this|they|them|those|these|there|one)\b",
+    re.IGNORECASE,
+)
+FOLLOW_UP_MAX_WORDS = 12
+
+
+class KnowledgeBaseUnavailableError(RuntimeError):
+    """The search index could not be loaded."""
+
 
 # ============================================================
-# LOAD BGE-M3
+# CONTEXT
 # ============================================================
 
-def load_embeddings():
+def build_context(hits: list[dict]) -> str:
+    """Numbered sources for the prompt; the numbers are used for citations."""
 
-    logger.info(
-        f"Loading embedding model: {EMBEDDING_MODEL}"
+    parts = []
+
+    for number, hit in enumerate(hits, start=1):
+        url = hit["metadata"].get("url") or hit["metadata"].get("source", "")
+        parts.append(f"[{number}] (from {url})\n{hit['text']}")
+
+    return "\n\n".join(parts)
+
+
+def page_title(metadata: dict) -> str:
+    return (
+        metadata.get("title")
+        or metadata.get("H1")
+        or metadata.get("source", "").removesuffix(".txt")
     )
 
-    embeddings = HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL,
-        model_kwargs={
-            "device": "cpu"
-        },
-        encode_kwargs={
-            "normalize_embeddings": True
+
+def cited_sources(answer: str, hits: list[dict]) -> list[dict]:
+    """Sources the answer cites, in citation-number order."""
+
+    numbers = sorted({int(number) for number in CITATION.findall(answer)})
+
+    return [
+        {
+            "id": number,
+            "title": page_title(hits[number - 1]["metadata"]),
+            "section": hits[number - 1]["metadata"].get("section", ""),
+            "url": hits[number - 1]["metadata"].get("url", ""),
         }
-    )
-
-    logger.info("BGE-M3 loaded")
-
-    return embeddings
+        for number in numbers
+        if 1 <= number <= len(hits)
+    ]
 
 
-# ============================================================
-# LOAD CHROMA
-# ============================================================
+def clean_history(history: list[dict] | None) -> list[dict]:
+    """
+    Keep the last few turns. Old citation numbers are removed: they point
+    to the previous turn's sources, not to the sources of this answer.
+    """
 
-def load_vectorstore(embeddings):
+    messages = []
 
-    if not VECTORSTORE_DIR.exists():
+    for item in history or []:
+        content = CITATION.sub("", str(item.get("content", ""))).strip()
+        if item.get("role") in ("user", "assistant") and content:
+            messages.append({"role": item["role"], "content": content})
 
-        raise FileNotFoundError(
-            f"Vector database not found: "
-            f"{VECTORSTORE_DIR}"
-        )
-
-    vectorstore = Chroma(
-        collection_name=COLLECTION_NAME,
-        persist_directory=str(VECTORSTORE_DIR),
-        embedding_function=embeddings,
-    )
-
-    count = vectorstore._collection.count()
-
-    if count == 0:
-
-        raise ValueError(
-            "Chroma collection is empty."
-        )
-
-    logger.info(
-        f"Chroma loaded successfully: {count} vectors"
-    )
-
-    return vectorstore
+    return messages[-MAX_HISTORY_MESSAGES:]
 
 
-# ============================================================
-# BUILD CONTEXT
-# ============================================================
+def retrieval_query(question: str, history: list[dict]) -> str:
+    """Search short follow-up questions together with the previous user question."""
 
-def build_context(documents):
+    previous = [message["content"] for message in history if message["role"] == "user"]
+    short = len(question.split()) <= FOLLOW_UP_MAX_WORDS
 
-    context_parts = []
+    if previous and short and FOLLOW_UP.search(question):
+        return f"{previous[-1]} {question}"
 
-    for document in documents:
-
-        metadata = document.metadata
-
-        source = metadata.get(
-            "source",
-            "Unknown"
-        )
-
-        h1 = metadata.get("H1")
-        h2 = metadata.get("H2")
-        h3 = metadata.get("H3")
-
-        headings = " > ".join(
-            value
-            for value in [h1, h2, h3]
-            if value
-        )
-
-        context_parts.append(
-            f"""
-Source: {source}
-Section: {headings}
-
-Content:
-{document.page_content}
-"""
-        )
-
-    return "\n\n".join(context_parts)
+    return question
 
 
 # ============================================================
@@ -145,121 +126,141 @@ class ConsivaRAG:
 
     def __init__(self):
 
-        logger.info(
-            "Initializing Consiva RAG..."
-        )
+        logger.info("Initializing Consiva RAG...")
 
-        # Load embedding model
-        self.embeddings = load_embeddings()
+        use_offline_model_cache()
+        self.embeddings = HuggingFaceEmbeddings(**embedding_kwargs())
 
-        # Load Chroma
-        self.vectorstore = load_vectorstore(
-            self.embeddings
-        )
+        self._lock = threading.Lock()
+        self._index = None
+        self._index_version = None
+        self.index_error = None
+        self.reload_index_if_changed()
 
-        # Load Gemma
-        self.llm = load_llm()
+        try:
+            self.llm = load_llm()
+        except LLMUnavailableError as error:
+            logger.error(f"LLM not configured: {error}")
+            self.llm = None
 
-        logger.info(
-            "Consiva RAG initialized successfully"
+        logger.info("Consiva RAG initialized")
+
+    # --------------------------------------------------------
+    # INDEX
+    # --------------------------------------------------------
+
+    def _current_version(self):
+        try:
+            return INDEX_VERSION_FILE.stat().st_mtime_ns
+        except FileNotFoundError:
+            return None
+
+    def reload_index_if_changed(self) -> None:
+        """Load the snapshot at start-up and again after each pipeline run."""
+
+        version = self._current_version()
+
+        if self._index is not None and version == self._index_version:
+            return
+
+        with self._lock:
+            if self._index is not None and version == self._index_version:
+                return
+
+            try:
+                index = SearchIndex.load()
+            except Exception as error:
+                self.index_error = str(error)
+                logger.exception("Could not load the search index")
+                return
+
+            self._index = index
+            self._index_version = version
+            self.index_error = None
+            logger.info(f"Search index loaded: {len(index)} chunks")
+
+    @property
+    def index(self) -> SearchIndex:
+        self.reload_index_if_changed()
+
+        if self._index is None:
+            raise KnowledgeBaseUnavailableError(self.index_error or "Search index not loaded.")
+
+        return self._index
+
+    def status(self) -> dict:
+        return {
+            "index_loaded": self._index is not None,
+            "chunks": len(self._index) if self._index is not None else 0,
+            "index_error": self.index_error,
+            "llm_configured": self.llm is not None,
+            "llm": llm_name(),
+        }
+
+    # --------------------------------------------------------
+    # RETRIEVAL
+    # --------------------------------------------------------
+
+    def retrieve(self, query: str) -> list[dict]:
+        corrected = self.index.correct_spelling(query)
+
+        if corrected != query:
+            logger.info("Spelling corrected for search")
+            query = corrected
+
+        query_vector = np.asarray(self.embeddings.embed_query(query), dtype=np.float32)
+
+        return self.index.search(
+            query_vector=query_vector,
+            query_text=query,
+            candidates=RETRIEVAL_CANDIDATES,
+            top_k=TOP_K,
+            min_relevance=MIN_RELEVANCE,
+            relative_margin=RELATIVE_RELEVANCE_MARGIN,
+            max_per_page=MAX_CHUNKS_PER_PAGE,
         )
 
     # --------------------------------------------------------
     # ASK QUESTION
     # --------------------------------------------------------
 
-    def ask_question(
-        self,
-        question: str,
-        top_k: int = TOP_K
-    ):
+    def ask_question(self, question: str, history: list[dict] | None = None) -> dict:
 
         if not question or not question.strip():
-
-            raise ValueError(
-                "Question cannot be empty."
-            )
+            raise ValueError("Question cannot be empty.")
 
         question = question.strip()
-
-        # ====================================================
-        # UPDATED: QUERY ROUTING
-        # ====================================================
-        # Check whether the query is a greeting, thanks,
-        # goodbye, identity question, or capability question.
-        # These do not need vector search or Gemma.
-        # ====================================================
-
         query_type = classify_query(question)
 
-        logger.info(
-            f"Query type: {query_type}"
-        )
-
-        # ====================================================
-        # UPDATED: HANDLE NON-RAG QUERIES DIRECTLY
-        # ====================================================
-        # If the router identifies the query as something
-        # that does not require the knowledge base, return
-        # the predefined response immediately.
-        # ====================================================
-
         if query_type != "rag":
+            return {"answer": get_direct_response(query_type), "sources": [], "query_type": query_type}
 
-            direct_response = get_direct_response(
-                query_type
-            )
-
-            return {
-                "answer": direct_response
-            }
+        history = clean_history(history)
+        hits = self.retrieve(retrieval_query(question, history))
 
         logger.info(
-            f"Processing question: {question}"
+            "Retrieved %d chunks: %s",
+            len(hits),
+            ", ".join(f"{hit['metadata'].get('source', '?')}({hit['dense']})" for hit in hits),
         )
 
-        # ----------------------------------------------------
-        # RETRIEVAL
-        # ----------------------------------------------------
+        if not hits:
+            return {"answer": NOT_FOUND_ANSWER, "sources": [], "query_type": "not_found"}
 
-        documents = self.vectorstore.similarity_search(
-            question,
-            k=top_k
-        )
-
-        if not documents:
-
-            return {
-                "answer": (
-                    "I couldn't find that information "
-                    "in the knowledge base."
-                )
-            }
-
-        logger.info(
-            f"Retrieved {len(documents)} documents"
-        )
-
-        # ----------------------------------------------------
-        # BUILD CONTEXT
-        # ----------------------------------------------------
-
-        context = build_context(
-            documents
-        )
-
-        # ----------------------------------------------------
-        # GENERATE ANSWER
-        # ----------------------------------------------------
+        if self.llm is None:
+            raise LLMUnavailableError(f"The language model ({llm_name()}) is not configured.")
 
         answer = generate_answer(
             question=question,
-            context=context,
-            llm=self.llm
+            context=build_context(hits),
+            llm=self.llm,
+            history=history,
         )
 
         return {
-            "answer": answer
+            "answer": answer,
+            "sources": cited_sources(answer, hits),
+            "query_type": "rag",
         }
 
 
@@ -270,18 +271,12 @@ class ConsivaRAG:
 def main():
 
     rag = ConsivaRAG()
+    history = []
 
-    print("\n" + "=" * 60)
-    print("CONSIVA AI RAG")
-    print("=" * 60)
-
-    print("\nType 'exit' to quit.")
+    print("\nCONSIVA AI RAG - type 'exit' to quit.")
 
     while True:
-
-        question = input(
-            "\nAsk a question: "
-        ).strip()
+        question = input("\nAsk a question: ").strip()
 
         if question.lower() == "exit":
             break
@@ -290,26 +285,18 @@ def main():
             continue
 
         try:
-
-            result = rag.ask_question(
-                question
-            )
-
-            print(
-                "\nAnswer:\n"
-                + result["answer"]
-            )
+            result = rag.ask_question(question, history)
+            print("\nAnswer:\n" + result["answer"])
+            for source in result["sources"]:
+                print(f"  [{source['id']}] {source['title']} - {source['url']}")
+            history += [
+                {"role": "user", "content": question},
+                {"role": "assistant", "content": result["answer"]},
+            ]
 
         except Exception as error:
+            logger.error(f"Error: {error}")
 
-            logger.error(
-                f"Error: {error}"
-            )
-
-
-# ============================================================
-# ENTRY POINT
-# ============================================================
 
 if __name__ == "__main__":
     main()

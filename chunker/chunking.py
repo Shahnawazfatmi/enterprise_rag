@@ -1,458 +1,303 @@
+"""
+Heading-aware chunking for the structured pages in data/new_structured.
+
+Each chunk is:
+
+    Page: <page title>
+    Section: <H1 > H2 > H3 path>
+
+    <body text>
+
+Why:
+- The page title and heading path are part of the embedded text, so
+  search can tell "Domains 5" on the Pro plan from "Domains 1" on Basic.
+- Small sibling sections under the same parent are merged until a chunk
+  reaches about CHUNK_TARGET_CHARS, so one-line sections do not become
+  weak vectors of their own.
+- FAQ questions and pricing plans / packs always get their own chunk.
+- Sections longer than CHUNK_MAX_CHARS are split on paragraph and line
+  boundaries, and every piece keeps the same breadcrumb.
+- Each page also gets one summary chunk built from its meta description.
+"""
+
 from pathlib import Path
 import json
 import re
+import sys
 
-from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-
-# ============================================================
-# PATHS
-# ============================================================
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
 
-INPUT_DIR = BASE_DIR / "data" / "structured_final"
-OUTPUT_DIR = BASE_DIR / "data" / "chunks"
+from config import (  # noqa: E402
+    CHUNK_MAX_CHARS,
+    CHUNK_MIN_CHARS,
+    CHUNK_OVERLAP_CHARS,
+    CHUNK_TARGET_CHARS,
+    NEW_STRUCTURED_DIR,
+)
 
-OUTPUT_FILE = OUTPUT_DIR / "chunks.jsonl"
+INPUT_DIR = NEW_STRUCTURED_DIR
+OUTPUT_FILE = BASE_DIR / "data" / "chunks" / "chunks.jsonl"
 
+HEADING_PATTERN = re.compile(r"^(#{1,6})[ \t]+(.+?)\s*$")
 
-# ============================================================
-# CHUNK CONFIGURATION
-# ============================================================
-
-# Approximate limits.
-# These are fallback character limits, not token limits.
-CHUNK_SIZE = 2400
-CHUNK_OVERLAP = 400
-
-
-# ============================================================
-# HEADING DETECTION
-# ============================================================
-
-HEADING_PATTERN = re.compile(
-    r"^(#{1,6})[ \t]+(.+?)\s*$"
+SPLITTER = RecursiveCharacterTextSplitter(
+    chunk_size=CHUNK_TARGET_CHARS,
+    chunk_overlap=CHUNK_OVERLAP_CHARS,
+    separators=["\n\n", "\n", ". ", "? ", "! ", "; ", ", ", " "],
 )
 
 
 # ============================================================
-# HEADING HIERARCHY
+# PARSING
 # ============================================================
 
-def update_heading_context(
-    headings: dict,
-    level: int,
-    title: str
-):
+def parse_front_matter(text: str) -> tuple[dict, str]:
+    """Split the '---' header written by master_clean.py from the body."""
+
+    meta = {}
+
+    if not text.startswith("---\n"):
+        return meta, text
+
+    end = text.find("\n---\n", 4)
+
+    if end == -1:
+        return meta, text
+
+    for line in text[4:end].splitlines():
+        key, separator, value = line.partition(":")
+        if separator:
+            meta[key.strip()] = value.strip()
+
+    return meta, text[end + 5:]
+
+
+def parse_sections(body: str) -> list[dict]:
     """
-    Updates heading hierarchy.
-
-    Example:
-
-    H1
-      H2
-        H3
-
-    New H2 automatically clears H3-H6.
-    New H1 clears H2-H6.
+    One section per heading. `path` holds the active headings as
+    (level, title) pairs, including the section's own heading.
     """
-
-    headings[level] = title
-
-    # Clear all lower-level headings
-    for lower_level in range(level + 1, 7):
-        headings[lower_level] = None
-
-
-# ============================================================
-# CREATE SECTION CONTEXT
-# ============================================================
-
-def get_heading_context(headings: dict):
-    """
-    Returns the complete active heading hierarchy.
-    """
-
-    context = []
-
-    for level in range(1, 7):
-        heading = headings[level]
-
-        if heading:
-            context.append(
-                f"H{level}: {heading}"
-            )
-
-    return context
-
-
-# ============================================================
-# PARSE STRUCTURED DOCUMENT
-# ============================================================
-
-def parse_structured_document(
-    text: str,
-    source: str
-):
-    """
-    Parses a structured TXT/Markdown document.
-
-    Important:
-    - Headings are NOT discarded.
-    - H1-H6 are supported.
-    - Heading hierarchy is preserved.
-    - Body formatting is preserved as much as possible.
-    """
-
-    lines = text.splitlines()
-
-    headings = {
-        1: None,
-        2: None,
-        3: None,
-        4: None,
-        5: None,
-        6: None,
-    }
 
     sections = []
+    path = []
+    lines = []
 
-    current_content = []
+    def close_section():
+        content = "\n".join(lines).strip()
+        if content:
+            sections.append({"path": list(path), "body": content})
 
-    def save_section():
-        if not current_content:
-            return
+    for line in body.splitlines():
+        match = HEADING_PATTERN.match(line.rstrip())
 
-        content = "\n".join(current_content).strip()
-
-        if not content:
-            return
-
-        # Check whether the section contains actual body content
-        # beyond Markdown headings.
-        body_lines = [
-            line.strip()
-            for line in content.splitlines()
-            if line.strip()
-            and not HEADING_PATTERN.match(line.strip())
-        ]
-
-        # Skip heading-only sections.
-        if not body_lines:
-            return
-
-        active_headings = headings.copy()
-
-        sections.append({
-            "content": content,
-            "headings": active_headings,
-            "source": source
-        })
-
-    for line in lines:
-
-        # Preserve the original line as much as possible.
-        # Only remove trailing newline/whitespace.
-        original_line = line.rstrip()
-
-        match = HEADING_PATTERN.match(
-            original_line
-        )
-
-        if match:
-
-            # Save content belonging to previous heading
-            save_section()
-
-            current_content = []
-
-            level = len(match.group(1))
-            title = match.group(2).strip()
-
-            # Update hierarchy BEFORE storing
-            # the new heading.
-            update_heading_context(
-                headings,
-                level,
-                title
-            )
-
-            # IMPORTANT:
-            # Keep the heading inside the section text.
-            current_content.append(
-                f"{'#' * level} {title}"
-            )
-
+        if not match:
+            lines.append(line.rstrip())
             continue
 
-        current_content.append(
-            original_line
-        )
+        close_section()
+        lines = []
 
-    # Save final section
-    save_section()
+        level = len(match.group(1))
+        path = [item for item in path if item[0] < level]
+        path.append((level, match.group(2).strip()))
+
+    close_section()
 
     return sections
 
 
-# ============================================================
-# BUILD CHUNK TEXT
-# ============================================================
+PLAN_HEADING = re.compile(r"\b(plan|pack)\b(\s*\([^)]*\))?$", re.IGNORECASE)
 
-def build_chunk_text(
-    content: str,
-    headings: dict
-):
+
+def is_atomic(section: dict) -> bool:
     """
-    Adds heading hierarchy directly into chunk text.
-
-    This is important because vector databases may embed
-    only page_content and ignore metadata.
+    FAQ questions and pricing plans / packs always get their own chunk,
+    so one plan's limits are never mixed into another plan's chunk.
     """
 
-    heading_lines = []
+    if not section["path"]:
+        return False
 
-    for level in range(1, 7):
+    heading = section["path"][-1][1]
+    return heading.endswith("?") or bool(PLAN_HEADING.search(heading))
 
-        heading = headings[level]
 
-        if heading:
-            heading_lines.append(
-                f"{'#' * level} {heading}"
+# ============================================================
+# CHUNK TEXT
+# ============================================================
+
+def breadcrumb(title: str, path: list[tuple[int, str]]) -> str:
+    names = [name for _, name in path]
+
+    # The H1 usually repeats the page title.
+    if names and names[0].lower() == title.lower():
+        names = names[1:]
+
+    lines = [f"Page: {title}"]
+
+    if names:
+        lines.append("Section: " + " > ".join(names))
+
+    return "\n".join(lines)
+
+
+def headings_metadata(path: list[tuple[int, str]]) -> dict:
+    metadata = {f"H{level}": "" for level in range(1, 7)}
+    for level, name in path:
+        metadata[f"H{level}"] = name
+    return metadata
+
+
+def make_chunk(meta: dict, source: str, path: list, body: str) -> dict:
+    title = meta.get("title") or source
+    crumb = breadcrumb(title, path)
+
+    return {
+        "content": f"{crumb}\n\n{body.strip()}",
+        "source": source,
+        "url": meta.get("url", ""),
+        "title": title,
+        "section": " > ".join(name for _, name in path),
+        **headings_metadata(path),
+    }
+
+
+# ============================================================
+# GROUPING
+# ============================================================
+
+def common_prefix(first: list, second: list) -> list:
+    size = 0
+    while size < min(len(first), len(second)) and first[size] == second[size]:
+        size += 1
+    return first[:size]
+
+
+def group_sections(sections: list[dict]) -> list[dict]:
+    """
+    Merge neighbouring small sections that live under the same parent
+    heading as the group's first section.
+
+    A group is {"path": common heading path, "parts": [(path, body)]}.
+    """
+
+    groups = []
+
+    for section in sections:
+        size = len(section["body"])
+        current = groups[-1] if groups else None
+
+        if current and not current["atomic"] and not is_atomic(section):
+            shared = common_prefix(current["path"], section["path"])
+            first_path = current["parts"][0][0]
+            same_parent = len(shared) >= len(first_path) - 1
+            fits = (
+                (current["size"] < CHUNK_MIN_CHARS or current["size"] + size <= CHUNK_TARGET_CHARS)
+                and current["size"] + size <= CHUNK_MAX_CHARS
             )
 
-    heading_context = "\n".join(
-        heading_lines
-    )
+            if same_parent and fits:
+                current["path"] = shared
+                current["parts"].append((section["path"], section["body"]))
+                current["size"] += size
+                continue
 
-    if heading_context:
+        groups.append({
+            "path": section["path"],
+            "parts": [(section["path"], section["body"])],
+            "size": size,
+            "atomic": is_atomic(section),
+        })
 
-        # Avoid duplicating headings if already present
-        content_without_duplicate = content
-
-        first_line = content.splitlines()[0] \
-            if content.splitlines() else ""
-
-        if first_line.strip() == heading_lines[-1].strip():
-
-            return content
-
-        return (
-            heading_context
-            + "\n\n"
-            + content_without_duplicate
-        )
-
-    return content
+    return groups
 
 
-# ============================================================
-# SPLIT OVERSIZED SECTION
-# ============================================================
+def render_group(group: dict) -> str:
+    """Body text of a group; headings below the group path stay inline, once each."""
 
-def split_large_section(section):
-    """
-    Splits only sections that exceed CHUNK_SIZE.
+    lines = []
+    depth = len(group["path"])
+    previous = group["path"]
 
-    Heading context is injected into every resulting chunk.
-    """
+    for sub_path, body in group["parts"]:
+        start = max(depth, len(common_prefix(previous, sub_path)))
+        for level, name in sub_path[start:]:
+            lines.append(f"{'#' * level} {name}")
+        lines.append(body)
+        lines.append("")
+        previous = sub_path
 
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP,
-
-        separators=[
-            "\n\n",
-            "\n",
-            ". ",
-            "? ",
-            "! ",
-            "; ",
-            ", ",
-            " ",
-        ],
-    )
-
-    documents = splitter.create_documents(
-        [section["content"]]
-    )
-
-    chunks = []
-
-    for document in documents:
-
-        chunk_text = build_chunk_text(
-            document.page_content,
-            section["headings"]
-        )
-
-        chunks.append(
-            {
-                "content": chunk_text,
-                "source": section["source"],
-                "H1": section["headings"][1],
-                "H2": section["headings"][2],
-                "H3": section["headings"][3],
-                "H4": section["headings"][4],
-                "H5": section["headings"][5],
-                "H6": section["headings"][6],
-            }
-        )
-
-    return chunks
+    return "\n".join(lines).strip()
 
 
 # ============================================================
 # PROCESS ONE FILE
 # ============================================================
 
-def process_file(file_path: Path):
+def process_file(file_path: Path) -> list[dict]:
 
-    text = file_path.read_text(
-        encoding="utf-8",
-        errors="ignore"
-    )
+    text = file_path.read_text(encoding="utf-8", errors="replace")
+    meta, body = parse_front_matter(text)
+    source = file_path.name
 
-    sections = parse_structured_document(
-        text=text,
-        source=file_path.name
-    )
+    chunks = []
 
-    final_chunks = []
+    description = meta.get("description", "")
+    if len(description) >= 40:
+        chunks.append(make_chunk(meta, source, [], f"Summary: {description}"))
 
-    for section in sections:
+    for group in group_sections(parse_sections(body)):
+        group_body = render_group(group)
 
-        content = section["content"]
+        if len(group_body) <= CHUNK_MAX_CHARS:
+            chunks.append(make_chunk(meta, source, group["path"], group_body))
+            continue
 
-        # ----------------------------------------------------
-        # Small section
-        # ----------------------------------------------------
+        for piece in SPLITTER.split_text(group_body):
+            chunks.append(make_chunk(meta, source, group["path"], piece))
 
-        if len(content) <= CHUNK_SIZE:
+    # Drop exact duplicates within the page.
+    unique = []
+    seen = set()
 
-            chunk_text = build_chunk_text(
-                content,
-                section["headings"]
-            )
+    for chunk in chunks:
+        key = chunk["content"]
+        if key not in seen:
+            seen.add(key)
+            unique.append(chunk)
 
-            final_chunks.append(
-                {
-                    "content": chunk_text,
-                    "source": section["source"],
-                    "H1": section["headings"][1],
-                    "H2": section["headings"][2],
-                    "H3": section["headings"][3],
-                    "H4": section["headings"][4],
-                    "H5": section["headings"][5],
-                    "H6": section["headings"][6],
-                }
-            )
-
-        # ----------------------------------------------------
-        # Oversized section
-        # ----------------------------------------------------
-
-        else:
-
-            final_chunks.extend(
-                split_large_section(section)
-            )
-
-    return final_chunks
+    return unique
 
 
 # ============================================================
-# WRITE JSONL INCREMENTALLY
+# DEBUG EXPORT
 # ============================================================
 
 def main():
+    """Write every chunk to data/chunks/chunks.jsonl for inspection."""
 
-    OUTPUT_DIR.mkdir(
-        parents=True,
-        exist_ok=True
-    )
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-    txt_files = sorted(
-        INPUT_DIR.glob("*.txt")
-    )
+    files = sorted(INPUT_DIR.glob("*.txt"))
+    sizes = []
 
-    if not txt_files:
+    with OUTPUT_FILE.open("w", encoding="utf-8") as output:
+        for file_path in files:
+            for chunk in process_file(file_path):
+                sizes.append(len(chunk["content"]))
+                output.write(json.dumps(chunk, ensure_ascii=False) + "\n")
 
-        print(
-            f"No .txt files found in:\n{INPUT_DIR}"
-        )
+    sizes.sort()
+    print(f"Documents : {len(files)}")
+    print(f"Chunks    : {len(sizes)}")
+    if sizes:
+        print(f"Median    : {sizes[len(sizes) // 2]} chars")
+        print(f"Under 300 : {sum(size < 300 for size in sizes)}")
+    print(f"Output    : {OUTPUT_FILE}")
 
-        return
-
-    total_chunks = 0
-    processed_files = 0
-
-    # --------------------------------------------------------
-    # Write incrementally.
-    # We don't keep the entire dataset in RAM.
-    # --------------------------------------------------------
-
-    with OUTPUT_FILE.open(
-        "w",
-        encoding="utf-8"
-    ) as output:
-
-        for file_path in txt_files:
-
-            print(
-                f"Processing: {file_path.name}"
-            )
-
-            chunks = process_file(
-                file_path
-            )
-
-            for chunk in chunks:
-
-                total_chunks += 1
-
-                chunk["chunk_id"] = (
-                    f"chunk_{total_chunks:06d}"
-                )
-
-                output.write(
-                    json.dumps(
-                        chunk,
-                        ensure_ascii=False
-                    )
-                    + "\n"
-                )
-
-            processed_files += 1
-
-    # --------------------------------------------------------
-    # Summary
-    # --------------------------------------------------------
-
-    print("\n" + "=" * 50)
-    print("CHUNKING COMPLETED")
-    print("=" * 50)
-
-    print(
-        f"Documents processed : {processed_files}"
-    )
-
-    print(
-        f"Total chunks        : {total_chunks}"
-    )
-
-    print(
-        f"Output file         : {OUTPUT_FILE}"
-    )
-
-    print("=" * 50)
-
-
-# ============================================================
-# ENTRY POINT
-# ============================================================
 
 if __name__ == "__main__":
     main()

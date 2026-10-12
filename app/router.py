@@ -1,145 +1,82 @@
+import re
+
+
 # ============================================================
 # QUERY ROUTER
 # ============================================================
+
+GREETINGS = {
+    "hi", "hii", "hiii", "hello", "helo", "helloo", "hey", "heyy", "hi there",
+    "hello there", "hey there", "good morning", "good afternoon", "good evening",
+    "morning", "afternoon", "evening", "namaste",
+}
+
+THANKS = {
+    "thanks", "thank you", "thankyou", "thx", "ty", "thanks a lot",
+    "thank you so much", "many thanks", "great thanks", "ok thanks", "okay thanks",
+}
+
+GOODBYES = {
+    "bye", "goodbye", "bye bye", "see you", "see you later", "talk to you later",
+    "thats all", "that is all",
+}
+
+IDENTITY = {
+    "who are you", "what are you", "what is your name", "whats your name",
+    "are you a bot", "are you human",
+}
+
+CAPABILITY = {
+    "what can you do", "what can you help with", "how can you help me",
+    "what do you help with", "what information can you provide",
+    "what topics can you help with", "help",
+}
+
+RESPONSES = {
+    "greeting": "Hi! How can I help you with Consiva today?",
+    "thanks": "You're welcome! Let me know if you need anything else about Consiva.",
+    "goodbye": "Goodbye! Have a great day.",
+    "identity": (
+        "I'm Consiva's AI Assistant. I answer questions about Consiva and DPDP "
+        "compliance using the information on consiva.ai."
+    ),
+    "capability": (
+        "I can help with Consiva's plans and pricing, product features, policies, "
+        "and DPDP Act topics such as consent, Data Principal rights, breach "
+        "reporting and penalties."
+    ),
+}
+
+
+def normalize(question: str) -> str:
+    """Lower-case, drop punctuation and emoji, collapse spaces."""
+    question = question.lower().replace("'", "").replace("’", "")
+    question = re.sub(r"[^a-z0-9 ]+", " ", question)
+    return " ".join(question.split())
+
 
 def classify_query(question: str) -> str:
     """
     Classify the user's query before sending it to RAG.
 
-    Returns:
-        greeting   -> greeting message
-        thanks     -> thank-you message
-        goodbye    -> goodbye message
-        identity   -> assistant identity
-        capability -> what the assistant can help with
-        rag        -> send to RAG pipeline
+    Returns one of: greeting, thanks, goodbye, identity, capability, rag
     """
 
-    question = question.lower().strip()
+    text = normalize(question)
 
-    # --------------------------------------------------------
-    # GREETINGS
-    # --------------------------------------------------------
-
-    greetings = {
-        "hi",
-        "hello",
-        "hey",
-        "hii",
-        "hiii",
-        "helo",
-        "helloo",
-        "heyy",
-        "good morning",
-        "good afternoon",
-        "good evening",
-        "morning",
-        "afternoon",
-        "evening",
-    }
-
-    if question in greetings:
-        return "greeting"
-
-    # --------------------------------------------------------
-    # THANKS
-    # --------------------------------------------------------
-
-    thanks = {
-        "thanks",
-        "thank you",
-        "thankyou",
-        "thx",
-        "thanks a lot",
-        "thank you so much",
-        "many thanks",
-    }
-
-    if question in thanks:
-        return "thanks"
-
-    # --------------------------------------------------------
-    # GOODBYE
-    # --------------------------------------------------------
-
-    goodbyes = {
-        "bye",
-        "goodbye",
-        "see you",
-        "see you later",
-        "talk to you later",
-        "that's all",
-        "thats all",
-    }
-
-    if question in goodbyes:
-        return "goodbye"
-
-    # --------------------------------------------------------
-    # IDENTITY
-    # --------------------------------------------------------
-
-    identity_questions = {
-        "who are you",
-        "what are you",
-        "who are you?",
-        "what are you?",
-        "what is your name",
-        "what's your name",
-    }
-
-    if question in identity_questions:
-        return "identity"
-
-    # --------------------------------------------------------
-    # CAPABILITIES
-    # --------------------------------------------------------
-
-    capability_questions = {
-        "what can you do",
-        "what can you help with",
-        "how can you help me",
-        "what do you help with",
-        "what information can you provide",
-        "what topics can you help with",
-    }
-
-    if question in capability_questions:
-        return "capability"
-
-    # --------------------------------------------------------
-    # DEFAULT → RAG
-    # --------------------------------------------------------
+    for query_type, phrases in (
+        ("greeting", GREETINGS),
+        ("thanks", THANKS),
+        ("goodbye", GOODBYES),
+        ("identity", IDENTITY),
+        ("capability", CAPABILITY),
+    ):
+        if text in phrases:
+            return query_type
 
     return "rag"
 
 
-# ============================================================
-# DIRECT RESPONSES
-# ============================================================
-
 def get_direct_response(query_type: str):
-    """
-    Return a response for queries that don't need RAG.
-    """
-
-    if query_type == "greeting":
-        return "Hi! How can I help you with Consiva today?"
-
-    if query_type == "thanks":
-        return "You're welcome! Let me know if you need anything else about Consiva."
-
-    if query_type == "goodbye":
-        return "You're welcome! Have a great day."
-
-    if query_type == "identity":
-        return "I'm Consiva's AI Assistant. I can help you find information about Consiva and its DPDP compliance solutions."
-
-    if query_type == "capability":
-        return (
-            "I can help you with Consiva's DPDP compliance solutions, "
-            "features, pricing, data principal rights, consent management, "
-            "and other information available in the knowledge base."
-        )
-
-    return None
+    """Return a response for queries that don't need RAG."""
+    return RESPONSES.get(query_type)

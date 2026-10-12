@@ -18,6 +18,9 @@ from sitemap import get_sitemap_urls
 # ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+
+from config import SCRAPE_MAX_FAILURE_RATIO, SITEMAP_MIN_KEEP_RATIO  # noqa: E402
 
 RAW_DATA_DIR = BASE_DIR / "data" / "raw"
 
@@ -441,17 +444,54 @@ def scrape_all_pages():
     # ========================================================
     # IMPORTANT FOR PIPELINE
     # ========================================================
-    # If any page failed, return failure so pipeline.py
-    # does NOT continue to cleaning/vector update/baseline
-    # promotion with incomplete scraped data.
+    # A few failed pages keep their last good raw file and the
+    # pipeline continues. Many failures (credits, outage) stop it.
 
-    if failed > 0:
+    allowed_failures = int(len(urls) * SCRAPE_MAX_FAILURE_RATIO)
+
+    if failed > allowed_failures:
 
         raise RuntimeError(
-            f"Scraping completed with "
-            f"{failed} failed page(s). "
-            f"Pipeline execution should stop."
+            f"Scraping completed with {failed} failed page(s) "
+            f"(allowed: {allowed_failures}). Pipeline execution should stop."
         )
+
+    if failed:
+        logger.warning(
+            f"{failed} page(s) failed; their previous raw copies are reused."
+        )
+
+    remove_pages_not_in_sitemap(urls)
+
+
+# ============================================================
+# REMOVE PAGES THAT LEFT THE SITEMAP
+# ============================================================
+
+def remove_pages_not_in_sitemap(urls: list[str]) -> None:
+    """
+    Delete raw files of pages no longer listed in the sitemap, so the
+    cleaner and compare.py can report them as DELETED and their vectors
+    are removed. Skipped if the sitemap shrank suspiciously.
+    """
+
+    expected = {get_output_file(url).name for url in urls}
+    existing = sorted(RAW_DATA_DIR.glob("*.json"))
+    stale = [path for path in existing if path.name not in expected]
+
+    if not stale:
+        return
+
+    if len(urls) < len(existing) * SITEMAP_MIN_KEEP_RATIO:
+        logger.warning(
+            f"Sitemap has {len(urls)} URLs but {len(existing)} pages are stored; "
+            f"not deleting {len(stale)} page(s) in case the sitemap is incomplete."
+        )
+        return
+
+    for path in stale:
+        path.unlink()
+        logger.info(f"Removed page no longer in sitemap: {path.name}")
 
 
 # ============================================================

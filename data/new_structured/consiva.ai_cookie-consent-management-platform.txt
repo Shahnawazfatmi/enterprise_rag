@@ -1,18 +1,16 @@
-# ↑
+---
+title: Cookie Consent Management Platform & Software
+url: https://consiva.ai/cookie-consent-management-platform
+description: Deploy cookie consent management software to simplify compliance. Capture preferences, manage consent records and streamline privacy needs across sites today.
+---
 
-**ISO 9001** Certified·**ISO 27001** Certified·**NASSCOM** Member·**DSCI** Member · DSCI/AM/2026/089·**DPIIT** Recognised· [**Download White Paper**](https://consiva.ai/assets/documents/Consiva-The-Provable-Enterprise.pdf)
-
-[Home](https://consiva.ai/) › [Platform](https://consiva.ai/platform) › Cookie Consent Management Platform
-
-## DPDP Act 2023 · Sections 5–6 · Rule 3
+DPDP Act 2023 · Sections 5–6 · Rule 3
 
 # Cookie consent management for DPDP — including the trackers nobody told you about
 
 Continuous scanning finds every cookie, pixel and third-party script on your domains — including the ones a CMS plugin or a tag manager container added without telling the privacy team. Classify them, present a DPDP notice in any of the 22 Eighth Schedule languages, and keep a signed record of every choice.
 
-✓ 1,000 cookie consents free, every month, permanently✓ One script tag✓ India data residency✓ No card required
-
-[Start Free — Scan My Site →](https://app.consiva.ai/register) [See How It Works](https://consiva.ai/cookie-consent-management-platform#how)
+Included: 1,000 cookie consents free, every month, permanently One script tag India data residency No card required
 
 ## Your banner is probably sitting on top of tags that already fired
 
@@ -28,15 +26,13 @@ You do not have to take our word for any of this, and you do not need Consiva to
 
 Open your own site in a private window. Open DevTools, go to the Network tab, filter to your analytics or advertising domain, and hard-refresh. If you see requests to those domains before you interact with the banner, your tags are firing pre-consent.
 
-We wrote the full test up, with what to look for and the common causes: → [Your Tags Are Firing Before Consent. Here's How to Check in 10 Minutes](https://consiva.ai/blog/tags-firing-before-consent)
+We wrote the full test up, with what to look for and the common causes: Your Tags Are Firing Before Consent. Here's How to Check in 10 Minutes
 
 If the test comes back clean, you do not need us for this. If it does not, the free plan will fix it today.
 
 ## What Consiva does
 
 Four steps, run continuously rather than once at setup — shown here as a workflow before the detail below.
-
-1
 
 Discover, on a schedule
 
@@ -48,8 +44,6 @@ found: 19
 
 pre-consent: 11
 
-2
-
 Classify by purpose
 
 Each finding gets a proposed DPDP purpose — you confirm or change it. You own the classification; Consiva proposes a starting point.
@@ -59,8 +53,6 @@ Necessary
 Analytics
 
 Unclassified
-
-3
 
 Block by default
 
@@ -72,33 +64,31 @@ AnalyticsHELD
 
 MarketingHELD
 
-4
-
 Record it, durably
 
 Every grant, partial grant and withdrawal is written to an append-only log with purpose, notice version, timestamp, channel and region.
 
 purpose: analytics
 
-notice\_v: 4 · web-banner
+notice_v: 4 · web-banner
 
-signed ✓
+signed
 
-**Presents the notice in the right language.** All 22 Eighth Schedule languages on Pro and Enterprise; English and Hindi on Free.
+Presents the notice in the right language. All 22 Eighth Schedule languages on Pro and Enterprise; English and Hindi on Free.
 
-**Re-scans on a schedule.** A tracker added next month shows up in the next cycle, with a difference report against the last one.
+Re-scans on a schedule. A tracker added next month shows up in the next cycle, with a difference report against the last one.
 
 ## See it working
 
 consiva.ai/dashboard/banner-builder
 
-Consiva.ai🎨 Banner BuilderBanner Builder — acme.inLANGUAGEहिन्दी (Hindi) ▾PURPOSES✓ आवश्यक (Necessary) — Always on☐ विश्लेषण (Analytics) — GA4☐ मार्केटिंग (Marketing) — Meta PixelScript key: sk\_live\_a1c9…LIVE PREVIEW · MOBILE🍪 हम कुकीज़ काउपयोग करते हैंस्वीकार करेंवरीयताएं
+Consiva.ai Banner BuilderBanner Builder — acme.inLANGUAGEहिन्दी (Hindi) ▾PURPOSES आवश्यक (Necessary) — Always on विश्लेषण (Analytics) — GA4 मार्केटिंग (Marketing) — Meta PixelScript key: sk_live_a1c9…LIVE PREVIEW · MOBILE हम कुकीज़ काउपयोग करते हैंस्वीकार करेंवरीयताएं
 
 This is the Banner Builder. On the left you configure purposes — Strictly Necessary is always on and cannot be switched off, because a visitor cannot refuse the cookies that make the site function. Analytics and Marketing are opt-in, each named against the actual tag it governs, so a visitor is consenting to something specific rather than to a category. The language selector is set to Hindi here; the live preview on the right updates as you type, including on the mobile simulation. Below the preview is the script key. Nothing goes live until you publish, and publishing writes a new banner version — so a consent record captured today can be tied to the exact notice text that was on screen when it was captured.
 
 consiva.ai/dashboard/domains — Cookies
 
-Cookies — acme.in19 foundNAMECATEGORYTYPEPROVIDERTHIRD-PARTYVENDOR\_gaAnalyticsHTTP CookieGoogle AnalyticsYesGoogle LLC\_fbpMarketingHTTP CookieMeta PixelYesMeta Platformssession\_recUnclassifiedJS CookieLegacy agency scriptYes—cart\_idNecessaryHTTP Cookieacme.inNo—
+Cookies — acme.in19 foundNAMECATEGORYTYPEPROVIDERTHIRD-PARTYVENDOR_gaAnalyticsHTTP CookieGoogle AnalyticsYesGoogle LLC_fbpMarketingHTTP CookieMeta PixelYesMeta Platformssession_recUnclassifiedJS CookieLegacy agency scriptYes—cart_idNecessaryHTTP Cookieacme.inNo—
 
 This is the real per-domain cookie inventory the scan populates — name, DPDP category, type, provider, whether it's third-party, and the vendor it belongs to where known. “Unclassified” findings (like the legacy agency script here) are the ones worth a conversation with whoever owns the tag manager — a cookie nobody can name is usually a cookie nobody is still using on purpose.
 
@@ -144,7 +134,7 @@ Translation and legal equivalence are not the same thing. A translated string ca
 
 ## What you get on each plan
 
-## | | Free (₹0) | Pro (₹5,999/mo) | Enterprise |
+| | Free (₹0) | Pro (₹5,999/mo) | Enterprise |
 | --- | --- | --- | --- |
 | Domains | 1 | 5 + add-on packs | Unlimited |
 | Cookie consents / month | 1,000 | 15,000 | Unlimited |
@@ -153,7 +143,7 @@ Translation and legal equivalence are not the same thing. A translated string ca
 | Banner languages | English, Hindi | All 22 | All 22 + regional |
 | Signed consent log | ● | ● | ● |
 | Consent analytics | Basic | Enhanced + CSV | Enhanced + CSV |
-## | Webhooks and REST API | — | ● | ● |
+| Webhooks and REST API | — | ● | ● |
 
 Add-on packs on annual Pro: Domain Pack +10 domains ₹80,000/yr · Cookie Consent Pack +10,000/mo ₹14,400/yr · Form Consent Pack +1,000/mo ₹3,360/yr.
 
@@ -161,19 +151,19 @@ Add-on packs on annual Pro: Domain Pack +10 domains ₹80,000/yr · Cookie Conse
 
 The section that matters if the Board ever asks.
 
-**The consent record.** Append-only, one row per decision, carrying: an anonymised visitor identifier, the timestamp to the second, the action (granted, partially granted, withdrawn), the exact purpose set, the notice version that was on screen, the channel (web, mobile SDK, API) and the region. Exportable as CSV. Because the notice version is on the record, you can demonstrate not just that consent was given but what the visitor was shown when she gave it — which is the question that actually gets asked.
+The consent record. Append-only, one row per decision, carrying: an anonymised visitor identifier, the timestamp to the second, the action (granted, partially granted, withdrawn), the exact purpose set, the notice version that was on screen, the channel (web, mobile SDK, API) and the region. Exportable as CSV. Because the notice version is on the record, you can demonstrate not just that consent was given but what the visitor was shown when she gave it — which is the question that actually gets asked.
 
-**The scan record.** Every cycle, timestamped, with a difference report. If a tracker appeared in March and was categorised in March, the record shows it. This is what makes “we did not know it was there” a defensible statement for a specific window rather than a general admission.
+The scan record. Every cycle, timestamped, with a difference report. If a tracker appeared in March and was categorised in March, the record shows it. This is what makes “we did not know it was there” a defensible statement for a specific window rather than a general admission.
 
-**The withdrawal trail.** A withdrawal is recorded against the same notice version as the original grant, so the pair reads as a single history rather than two unrelated events.
+The withdrawal trail. A withdrawal is recorded against the same notice version as the original grant, so the pair reads as a single history rather than two unrelated events.
 
-**What Consiva cannot see, stated plainly.** Consent taken offline, in a call centre, or on paper does not appear in these records unless it is submitted through the API. Exports say so. An evidence pack that silently omits its own blind spots will be relied on, and that is worse than no evidence pack.
+What Consiva cannot see, stated plainly. Consent taken offline, in a call centre, or on paper does not appear in these records unless it is submitted through the API. Exports say so. An evidence pack that silently omits its own blind spots will be relied on, and that is worse than no evidence pack.
 
 ## Deploying it
 
-**Any site, one script tag.** Copy one <script> tag into your <head>. Works with React, Next.js, Vue, Angular, plain HTML, PHP and via Google Tag Manager.
+Any site, one script tag. Copy one <script> tag into your <head>. Works with React, Next.js, Vue, Angular, plain HTML, PHP and via Google Tag Manager.
 
-**Honest timing.** The banner itself is genuinely a same-day job: register, verify, review the first scan, configure, deploy. What takes longer is the classification review — deciding what each tracker is actually for, and whether you still need it. Budget an afternoon with whoever owns the tag manager. Most of the value is in that conversation, not in the install.
+Honest timing. The banner itself is genuinely a same-day job: register, verify, review the first scan, configure, deploy. What takes longer is the classification review — deciding what each tracker is actually for, and whether you still need it. Budget an afternoon with whoever owns the tag manager. Most of the value is in that conversation, not in the install.
 
 ## A realistic scenario
 
@@ -181,52 +171,42 @@ A D2C brand runs one storefront and three campaign microsites. The privacy team 
 
 The team removes the two dead vendors outright, classifies the remainder, and publishes banners in English, Hindi, Tamil and Marathi to match where their orders actually come from. The recording script is reclassified as analytics and held until consent. The next scheduled scan flags a new tracker within the cycle; it turns out to be a partner tag added for a Diwali campaign, which is categorised before the campaign goes live rather than after.
 
-Illustrative. Not based on a named Consiva customer.
-
 ## Where operations can help
 
 Most teams run cookie consent themselves — it is the part of a privacy programme that genuinely does not need outside help. Where a Managed Privacy Officer engagement adds something is the recurring hygiene nobody has time for: reviewing each scan cycle, chasing the owner of a new tag, keeping banner copy current as purposes change, and keeping the consent evidence in a state where it could be handed over tomorrow.
 
-[Start Free — Scan My Site →](https://app.consiva.ai/register) [Talk to a Privacy Expert](https://consiva.ai/contact)
-
 ## Related capabilities
-
-[Consent Management Platform\\
-\\
-Purpose-specific consent beyond cookies, across forms, apps and offline channels](https://consiva.ai/consent-management-platform) [Data Principal Rights Management\\
-\\
-What happens when a visitor asks what you hold on her](https://consiva.ai/data-principal-rights-management) [Data Fiduciary Obligations, Sections 4–10\\
-\\
-The notice and consent obligations this module implements](https://consiva.ai/dpdp/data-fiduciary-obligations)
 
 ## Frequently asked questions
 
-## What is a cookie consent management platform?+
+### What is a cookie consent management platform?
 
 Software that discovers the cookies and trackers on your website, classifies them by purpose, presents a consent notice to visitors, holds non-essential scripts until the visitor agrees to the relevant purpose, and keeps a durable record of every decision. The last two are what distinguish a consent platform from a banner: a banner asks the question, a platform enforces the answer and can prove it was asked.
 
-## How does cookie consent software work?+
+### How does cookie consent software work?
 
 A crawler scans your domain and returns every cookie, pixel and third-party script it observes, noting which ones fire before any consent decision. You confirm a DPDP purpose category for each. A single script tag in your <head> then presents the notice, holds non-essential scripts until the matching purpose is consented to, and writes a signed record of the visitor's choice. Scheduled re-scans catch anything added later.
 
-## Why is cookie consent important for websites?+
+### Why is cookie consent important for websites?
 
 Because most trackers on a typical Indian site process personal data, and under DPDP that requires notice and consent unless a specific exemption applies. The practical risk is narrower than the legal one: a banner that fires after your tags have already loaded gives you the appearance of consent without the substance, and it is trivially disprovable by anyone who opens DevTools. Note that the substantive DPDP obligations and the penalty regime commence on 13 May 2027, so this is a window to get right rather than an emergency.
 
-## What features should cookie compliance software have?+
+### What features should cookie compliance software have?
 
 Automatic and repeated discovery rather than a manual list; purpose-level classification; genuine script blocking until consent, not just a banner; withdrawal as easy as acceptance, which Rule 3(c)(i) requires explicitly; notices in the languages your visitors actually read; and an exportable consent record that includes the notice version, so you can show what the visitor was looking at when she agreed.
 
-Does Consiva work with Google Consent Mode v2?+
+### Does Consiva work with Google Consent Mode v2?
 
 Consent Mode v2 and DPDP consent are different things and it is worth being precise about it. Consent Mode communicates a visitor's choice to Google's tags. It does not obtain consent, does not produce a record you could show the Data Protection Board, and does not govern non-Google tags on your site. It is a signalling mechanism downstream of consent, not a substitute for it. We wrote this up at /blog/consent-mode-v2-is-not-consent.
 
-Is the free plan actually free, or is it a trial?+
+### Is the free plan actually free, or is it a trial?
 
 Free, permanently, with no card required and no expiry: one domain, 1,000 cookie consents and 50 form consents a month, basic scanning, English and Hindi banners, and manual rights request handling. It is not a trial of Pro — there is no free trial of the paid plans. Automated scanning, all 22 languages, multi-domain support and breach tracking are what Pro adds.
+
+### How does a cookie consent solution help with compliance?
+
+It replaces a manually maintained cookie list with continuous discovery, so every tracker gets a DPDP purpose category and non-essential scripts are held until the visitor consents. Each decision is written to a signed, append-only record tied to the notice version shown, so you can demonstrate what a visitor was told and what she agreed to — the evidence a Rule 3 notice and a Board enquiry both depend on.
 
 ## Scan your site. See what's actually firing.
 
 Free plan, one domain, 1,000 cookie consents a month — no credit card, live in minutes.
-
-[Start Free — Scan My Site →](https://app.consiva.ai/register) [See the Platform](https://consiva.ai/platform)
