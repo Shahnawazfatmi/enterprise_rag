@@ -8,6 +8,40 @@ No articles found in this category.
 
 Try selecting a different filter above.
 
+Data Privacy
+
+## Data Retention Under the DPDP Act: Rules, Policies, and Best Practices
+
+How to build a data retention policy DPDP regulators would recognise, without deleting things you're legally required to keep. Which records you wipe, which you're allowed to keep — and who makes that call.
+
+Consiva Team · 12 Oct 2026
+
+## DPDP Compliance for Fintech and Banking Companies: A Practical Guide
+
+Where DPDP compliance for fintech and banking collides with RBI and PMLA, and what to do about it — retention, localisation, consent, the lending exemptions, vendors and a sample retention matrix.
+
+Consiva Team · 08 Oct 2026
+
+## How to Conduct a Data Privacy Impact Assessment (DPIA) Under the DPDP Act
+
+What a data privacy impact assessment really involves, and how to run one when the Rules don't hand you a template — who has to do one, the seven steps, and what the finished document looks like.
+
+Consiva Team · 05 Oct 2026
+
+## DPDP Compliance for Healthcare Companies: Key Requirements and Best Practices
+
+What DPDP compliance for healthcare asks of hospitals, labs, clinics and healthtech teams — the requirements in the order a patient meets them, where hospitals slip, and seven steps to get moving.
+
+Consiva Team · 01 Oct 2026
+
+Technology
+
+## The AI Data Visibility Gap: How Enterprises Can Discover, Trace and Prove Personal Data Across Their AI Estate
+
+How AI Privacy Intelligence helps enterprises discover, trace and prove personal data across prompts, RAG, agents and shadow AI. No rip and replace.
+
+Consiva Team · 25 Sep 2026
+
 ## Privacy Governance Is Not About Company Size. It’s About the Data You Handle.
 
 A business can have 20 employees or 20,000 — the question that actually matters is what personal data it collects, uses, stores, shares and retains, and how that data is governed. Why every digitally enabled organization in India needs a Personal Data Footprint, not just a consent banner.

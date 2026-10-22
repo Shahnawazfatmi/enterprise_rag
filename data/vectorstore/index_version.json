@@ -1,0 +1,6 @@
+{
+  "updated_at": "2026-10-21T05:03:20.503857+00:00",
+  "vectors": 1150,
+  "chunker_version": "2026-10-10.3",
+  "embedding_model": "BAAI/bge-m3"
+}

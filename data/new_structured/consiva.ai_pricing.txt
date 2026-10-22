@@ -30,7 +30,7 @@ Included: Manual Rights Request Handling
 
 Included: 1 Onboarding Session
 
-Not included: WordPress Plugin
+Included: WordPress Plugin
 
 Not included: Shopify Integration
 

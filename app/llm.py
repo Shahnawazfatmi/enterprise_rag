@@ -78,7 +78,7 @@ def extract_response_content(response) -> str:
 
 
 # ============================================================
-# LOAD MODEL (LLM_PROVIDER = openai | gemini)
+# LOAD MODEL (LLM_PROVIDER = gemini | openai)
 # ============================================================
 
 # gpt-5.x, gpt-6.x and o-series are reasoning models: they take
@@ -133,7 +133,7 @@ def load_llm() -> BaseChatModel:
     loaders = {"openai": load_openai, "gemini": load_gemini}
 
     if LLM_PROVIDER not in loaders:
-        raise LLMUnavailableError(f"Unknown LLM_PROVIDER '{LLM_PROVIDER}' (use openai or gemini)")
+        raise LLMUnavailableError(f"Unknown LLM_PROVIDER '{LLM_PROVIDER}' (use gemini or openai)")
 
     logger.info(f"Initializing LLM: {llm_name()}")
     return loaders[LLM_PROVIDER]()

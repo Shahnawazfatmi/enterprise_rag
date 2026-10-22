@@ -1,0 +1,101 @@
+---
+title: OneTrust Alternatives in India for DPDP Compliance (2026)
+url: https://consiva.ai/blog/onetrust-alternatives-india
+description: OneTrust is the category leader and for many organisations the right answer. For Indian mid-market businesses subject only to DPDP, it's often more platform than needed. Here are the alternatives, including where we're not the fit.
+---
+
+Technology
+
+# OneTrust Alternatives for Indian Businesses
+
+OneTrust is the most established privacy platform in the market and for large multi-jurisdiction organisations it is frequently the correct choice. For an Indian mid-market business whose obligation is DPDP, it is often more platform than the problem requires, at a price that reflects global capability. This is a map of the alternatives — including where each one, ours included, is the wrong answer.
+
+Consiva Editorial Team August 25, 2026 9 min read
+
+## First: when OneTrust is the right answer
+
+Worth stating plainly before listing alternatives. Choose a global platform like OneTrust if you have multi-jurisdiction obligations across GDPR, UK GDPR, CCPA/CPRA, LGPD and DPDP together; if you need deep enterprise integrations into ServiceNow, Salesforce, Workday and SAP; if you are a large enterprise with a mature privacy function that will actually use a broad module suite; if procurement requires a vendor with a long global track record and extensive certifications; or if you need third-party risk, ESG or ethics modules alongside privacy.
+
+If two or more of those describe you, the rest of this article is probably not for you, and that is fine.
+
+## Where the fit breaks down for Indian buyers
+
+Four recurring issues, none of which is a criticism of the product. Price against an India-only obligation — global platform pricing reflects global capability an India-only company doesn't use. GDPR-native design — DPDP is not a regional variant of GDPR; it has no legitimate-interest basis, no sensitive personal data category, its own Rule 3 notice content requirements, and a nomination right with no GDPR equivalent. Indian sectoral retention mandates — reconciling the section 12 erasure right and the Rule 8(3) one-year floor against RBI, PMLA, Income-tax, Companies Act, IRDAI, SEBI and TRAI retention requirements. See how erasure and retention interact. Implementation weight — enterprise privacy platforms assume a privacy team, and many Indian mid-market companies have one person doing this alongside another job.
+
+## The alternatives
+
+Global platforms — TrustArc, Securiti.ai, Didomi, Usercentrics. Comparable positioning to OneTrust with different strengths. All GDPR-native, all priced accordingly.
+
+Cookie-only tools — Cookiebot, CookieYes and similar. Genuinely good at cookie scanning and banners, and inexpensive. The limitation is scope: no rights workflows, no breach module, no retention register. A cookie banner is roughly one obligation out of a dozen.
+
+Indian DPDP-native platforms. A growing set, including Consiva, OneConsent (Easyrewardz), Consentin (Leegality), Digital Anumati, and Seqrite's DPDP line. Broadly India-first design, INR pricing, India hosting, better handling of Indian sectoral requirements — varying maturity. OneConsent is worth a specific mention: built by Easyrewardz around CDP integration, aimed at enterprise retail brands with consent fragmented across POS, loyalty, CDP and marketing automation. Demo-led with no self-serve tier.
+
+Consultancy-led readiness programmes. KPMG, Deloitte, EY, PwC and specialist Indian firms. Excellent for assessment, legal determinations and documentation. Typically no ongoing software.
+
+Build in-house. Viable if you have engineering capacity and a narrow footprint. Underestimated costs: 22-language notice delivery, versioned consent records, Rule 8 clocks with 48-hour notices, withdrawal propagation. Most teams that start here rebuild it twice.
+
+| | Global platforms | Cookie-only tools | India-native platforms |
+| --- | --- | --- | --- |
+| Multi-jurisdiction depth | Strongest | Minimal | Varies |
+| DPDP-specific depth | Configurable | Minimal | Strongest |
+| Indian retention mandates | Build it | No | Varies |
+| Price for India-only scope | High | Low | Low–moderate |
+| Implementation weight | Heavy | Light | Light–moderate |
+| Free tier | Rarely | Sometimes | Sometimes |
+
+## Eight questions that separate them
+
+- Are Data Principal rights requests metered or charged per request?
+- How many Eighth Schedule languages are live today, not on the roadmap?
+- How does the product handle a conflict between an erasure request and a statutory retention mandate?
+- Does it run the Rule 8 erasure clocks and the 48-hour pre-erasure notice?
+- Are you a registered Consent Manager, or a consent management platform? Only one answer can be true before 13 Nov 2026
+- Will you sign a DPA, and can I see your subprocessor list with processing locations?
+- Is there a contractual uptime commitment, and where is it — the contract or the website?
+- What happens to my consent records if I leave?
+
+Question three is the one that separates DPDP-native products from adapted ones, because it is the hardest problem in Indian privacy and most tools don't address it at all.
+
+### See where Consiva fits — and where it doesn't
+
+Published INR pricing, unmetered rights requests, and the Rule 8 retention and erasure mechanics handled rather than configured.
+
+## Where Consiva fits, and where it doesn't
+
+Consider Consiva if your obligation is DPDP-first; you want published INR pricing rather than a quote; you want to start self-serve without a sales cycle; you need the Rule 8 retention and erasure mechanics handled rather than configured; you want the CERT-In and DPDP breach clocks tracked together; or you are a mid-market company without a dedicated privacy team.
+
+Don't choose Consiva if you need mature multi-jurisdiction privacy management across many countries; you need deep enterprise integrations into ServiceNow, Salesforce, Workday or SAP; you need third-party risk, ESG or ethics modules; you require a contractual uptime SLA today — we run from a single Indian data centre and we don't publish an uptime figure we can't stand behind; or your procurement mandates a vendor with a decade of global references.
+
+Those are real limitations. We would rather you knew them now.
+
+Published pricing: ₹0 free (one domain, 1,000 cookie consents/month) · ₹5,999/month or ₹60,000/year for Pro · Enterprise custom. Rights requests unmetered on every plan.
+
+## Frequently Asked Questions
+
+### What are the best OneTrust alternatives in India?
+
+For multi-jurisdiction needs, TrustArc, Securiti, Didomi and Usercentrics. For cookie consent only, Cookiebot or CookieYes. For DPDP-first requirements, India-native platforms including Consiva, OneConsent, Consentin and Digital Anumati.
+
+### Is OneTrust worth it for DPDP compliance alone?
+
+If DPDP is your only obligation, it is usually more platform than the problem requires. It becomes compelling where you have several jurisdictions, deep enterprise integrations, and a privacy team to use the module suite.
+
+### Can a cookie consent tool make us DPDP compliant?
+
+No. Cookie consent is one obligation. DPDP also requires notice content per Rule 3, Data Principal rights workflows, retention and erasure logic, breach intimation, a grievance mechanism and records.
+
+### Is a cheaper Indian platform riskier than a global one?
+
+Not inherently, but diligence differs. Ask for the DPA, the subprocessor list with locations, the security posture, and evidence of certifications — and check whether claimed certifications cover the hosted platform or only software development.
+
+### Should we use a consultancy or software?
+
+Usually both. Consultancies make the legal determinations and design the programme; software operates it and produces the evidence. A consultancy engagement without a platform leaves you with documents and no records.
+
+## See the Full Pricing Table — Free to Start
+
+One domain, 1,000 cookie consents a month, no credit card, unmetered rights requests.
+
+## Related Articles
+
+### Stay Ahead of DPDP Updates

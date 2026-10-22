@@ -1,0 +1,134 @@
+---
+title: DPDP Compliance for Healthcare: Protect Patient Data Today
+url: https://consiva.ai/blog/dpdp-healthcare
+description: Learn how DPDP compliance for healthcare protects patient data, manages consent, reduces privacy risks, and supports India's DPDP Act rules for providers now.
+---
+
+# DPDP Compliance for Healthcare Companies: Key Requirements and Best Practices
+
+What DPDP compliance for healthcare asks of hospitals, labs, clinics and healthtech teams
+
+Consiva Editorial TeamOctober 1, 2026Updated October 20268 min read
+
+Picture a diagnostic centre on a busy Monday. A patient gives her name, age and mobile number at the front desk and signs a form she doesn’t bother to read. Within the hour that number has reached the lab system, a WhatsApp reminder tool, the billing software and, quite possibly, a marketing list.
+
+She hasn’t even seen the doctor.
+
+That trail is what DPDP compliance for healthcare is really about. Forget the medicine for a minute. The question is where the data goes once the form is signed, and whether anyone at the centre could draw that map from memory.
+
+(Probably not.)
+
+Some timing, because it matters. The Data Protection Board already exists. The duties, and the penalties for breaking them, start together on 13 May 2027. That’s about seven months away. For a hospital with a dozen connected systems, seven months disappears fast.
+
+## Health data gets no special label. That’s the trap.
+
+Early drafts of the law had a separate category for sensitive data. The final Act dropped it for health data. A cancer diagnosis and a newsletter sign-up now sit under the same rules.
+
+Sounds like good news. It isn’t, really. The penalties don’t scale by data type, they scale by what you got wrong. Skip reasonable security safeguards and the ceiling is ₹250 crore, the highest in the whole schedule. Consent and rights failures top out at ₹50 crore. If I sat on a hospital board I’d read that first number twice, because patient records are about the juiciest target an attacker could ask for.
+
+Size counts too. The government can name Significant Data Fiduciaries, partly on volume and sensitivity of data, and big hospital groups and insurers fit the profile. Get named and you pick up an India-based DPO, an independent auditor and a yearly impact assessment.
+
+## Who holds the data?
+
+Hospitals, clinics, labs, pharmacies, telemedicine apps and insurers are all data fiduciaries. They decide what gets collected and why.
+
+Everybody else in the chain is a processor. Your HMIS vendor. The cloud host. The SMS and WhatsApp provider, the teleradiology partner, the TPA’s portal.
+
+Here’s what surprises people: a contract with a processor doesn’t hand the liability over. If your lab software vendor leaks reports, that’s still your problem. So the useful question isn’t “do we use vendors?” It’s whether you can name every one of them and produce a valid contract for each. That list is usually longer than anyone expects.
+
+## The requirements, in the order a patient meets them
+
+Here’s DPDP compliance for healthcare as it looks from the patient’s side of the desk.
+
+Notice, then consent. Two steps, kept apart. The notice says what you’re collecting, why, how to withdraw consent and how to complain to the Board, in plain words, in English or any scheduled language. A notice on its own isn’t consent. One signature at the bottom of a long admission form rarely does both jobs.
+
+Emergencies and outbreaks. Section 7(f) lets you process data to respond to a medical emergency that threatens life or health right away, and 7(g) covers treatment during an epidemic or public health threat. Read both narrowly. A patient on a trolley doesn’t have to tick anything. A follow-up promotional email does.
+
+Children, and patients with a guardian. You need verifiable consent from a parent or lawful guardian. There’s a carve-out for clinical establishments, mental health facilities and medical professionals, but it isn’t blanket: it covers only notified classes, and only where the data serves essential health services in the child’s interest. Tracking a child’s behaviour inside your app is still off the table. Paediatric hospitals and vaccination apps, read this part slowly.
+
+Security. Encryption, access controls, activity logs, and log retention of a year at least (Rule 8(3)). This is the obligation with the ₹250 crore ceiling attached, so give it a proper budget line, not whatever’s left over.
+
+Breaches. Tell affected patients without delay. Give the Board the full picture within 72 hours. And CERT-In’s 6-hour reporting duty? That one applies today, not in 2027.
+
+Patient rights. Access, correction, erasure, grievance, nomination. A grievance needs an answer within 90 days. For the other rights the Rules fix no deadline, which means you set your own turnaround, publish it, then keep to it.
+
+Erasure versus medical records. A patient asks you to delete. A medical-records rule says keep the file. Both are real. Decide how you’ll reconcile them before the first request lands. We walked through this exact collision in Erasure Doesn’t Mean Delete.
+
+Research. Health data used for research, archiving or statistics can qualify for an exemption under the Second Schedule conditions, provided nothing is decided about the individual from it.
+
+Cross-border moves. Teleradiology partners, overseas cloud hosts and global research sponsors all send patient data across a border. The Act allows transfers outside restricted countries, but stricter sector rules still apply, so check before you sign.
+
+Figure 1. Where patient data creates DPDP risk. Illustrative gap severity by touchpoint and obligation, not a client assessment.
+
+## Where hospitals slip
+
+Rarely in the clinical systems. Almost always at the edges.
+
+A reminder tool one department set up years ago, no contract, nobody sure who owns it. A patient portal whose analytics tags fire before anyone clicks accept (the ten-minute test in Your Tags Are Firing Before Consent catches this). Lab reports sent as open links. One front-desk login shared by three shifts. A decade of old consent forms that no longer match how the data is used. Most gaps in DPDP compliance for healthcare look like this, small and boring until they aren’t.
+
+That last one has a specific fix. If consent was collected before the Act, those patients should get the new notice and a chance to confirm or withdraw. Somebody has to find them first, though.
+
+## What good looks like on the ground
+
+| Obligation | In a well-run hospital | The usual gap |
+| --- | --- | --- |
+| Notice and consent | Separate notice, separate consent, patient's own language | One bundled admission form |
+| Vendors | Every processor named, contracted, expiry tracked | Departmental tools nobody registered |
+| Security | Role-based access, encryption, logs kept a year | Shared logins, open report links |
+| Breach | Both clocks (CERT-In 6 hours, Board 72 hours) rehearsed | A plan that exists on paper only |
+| Rights | One queue, published turnaround, 90-day grievance cap | Requests land in a general inbox |
+| Retention | Medical-record rules reconciled with erasure | No written position |
+
+This is a general run-down of how hospitals and health tech teams tend to operate - no single client is being rated here.
+
+## 7 Key Steps to get Moving On Right Away
+
+1st, Get a handle on your patient data. If you can’t see it, you can’t touch it, so to speak - you can’t delete, lock up or get to the bottom of an issue if you don’t know it’s even happening. Start by mapping out your HMIS, lab systems, imaging tools and billing. Then go back and include each app that connects to those.
+
+Next, take another look at your admission forms. We’re talking about un-bundling the lot - keep notice, consent and treatment consent as 3 separate things.
+
+Then get contracts in place for every single vendor. And next... keep a close eye on those end dates. What often happens is that a problem gets swept under the rug and only shows its ugly head when an audit comes knocking.
+
+4th, have a breach drill and run 2 clocks simultaneously. Don’t just focus on the names on the org chart - who’s actually going to be handling things when it’s 2am?
+
+Choose a ‘Rights Turnaround Time’ and display it somewhere where people will notice it. Get a retention plan in writing too - keep it plain and easy enough for your teams to follow.
+
+Last but not least, train up your front desk staff - they are, after all, gathering most of your data in the course of their day to day work. In many respects they act as de facto privacy team - even if some fancy org chart title says otherwise.
+
+If you want a place to start, Consiva’s healthcare industry page covers the Fourth Schedule carve-out and patient-data handling in more detail. The data fiduciary obligations page sets out the duties behind notice and consent, and penalties and enforcement shows which failure attaches to which ceiling.
+
+Seven months is enough if you begin with the data map. It isn’t if you wait until the rules feel urgent.
+
+A quick check for this week
+
+Could you list every system and vendor that touches a patient’s phone number? Could you show where each one’s contract stands? And if a patient asked for their data tomorrow, who would pick up the request?
+
+## Frequently Asked Questions
+
+### Does the DPDP Act treat health data as sensitive?
+
+No, not as its own category. The Act uses one set of rules for every kind of personal data, health records included. But the risk is still higher for you. Weak security can draw the biggest penalty in the Act, and a large hospital chain could be named a Significant Data Fiduciary, which means yearly DPIAs, audits and an India-based DPO.
+
+### Can a hospital use patient data without consent in an emergency?
+
+Yes, but only in tight situations. If someone’s life is on the line right now, Section 7(f) lets you get on with it, and 7(g) does the same when an epidemic or health scare hits. A routine check-up won’t cut it, and neither will a follow-up call or a promo SMS. Those still need notice and consent the normal way, so jot it down every time you lean on the emergency route.
+
+### Are children's records exempt from parental consent in healthcare?
+
+Only partly. Notified groups like clinics and healthcare professionals can skip parental consent, but only while giving health services that are in the child’s interest. That’s where it stops. You can’t use the carve-out to track a child or monitor their behaviour, and anything outside care, like ads or analytics, still needs consent from a parent.
+
+### When does DPDP compliance for healthcare become mandatory?
+
+The Board’s already up, but the real duties, and the fines, only bite from 13 May 2027. That covers notice, consent, security, breach reporting and patient rights. CERT-In’s rule to report cyber incidents within 6 hours applies right now, though. So use the months you have to map patient data, fix your forms and get vendor contracts signed.
+
+### Is a hospital responsible if its lab, billing or IT vendor leaks patient data?
+
+Yes, the hospital still carries the blame. Under the Act, you’re the Data Fiduciary, and that doesn’t change when a lab, billing firm or IT company handles the data for you. You can only use such vendors under a proper contract. Make sure it covers how they protect the data, how fast they tell you about a breach and when they delete it.
+
+### What should a hospital do if patient data is breached?
+
+Tell the Data Protection Board and every patient whose data was affected. The DPDP Rules say patients should hear from you without delay, and the Board needs a full report within 72 hours. Don’t forget CERT-In, which already expects a report within 6 hours. It helps to have a plan ready in advance that says who leads, who reports and who talks to patients.
+
+### See how Consiva handles patient data: Consiva for Healthcare
+
+Prefer to start small? Start on the free plan: 1,000 cookie consents a month, no credit card. Or talk to the team.

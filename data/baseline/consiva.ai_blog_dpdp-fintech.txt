@@ -1,0 +1,120 @@
+---
+title: DPDP Compliance for Fintech: Protect Customer Data Safely!
+url: https://consiva.ai/blog/dpdp-fintech
+description: Explore DPDP compliance for fintech to protect customer data, manage consent, reduce privacy risks, and meet India's DPDP Act requirements with confidence now.
+---
+
+# DPDP Compliance for Fintech and Banking Companies: A Practical Guide
+
+Where DPDP compliance for fintech and banking collides with RBI and PMLA, and what to do about it
+
+Consiva Editorial TeamOctober 8, 2026Updated October 20269 min read
+
+Say a customer applies for a personal loan on a Sunday night, cricket on in the background. She taps through the screens, taps “Allow” on the permissions, done. By Monday morning her PAN has gone to a KYC vendor, her bank statement to whoever does the scoring, her phone number to a collections agency’s dialler, and there’s a copy of the whole lot sitting in a cloud bucket in a region nobody chose. Four vendors, one tap.
+
+That, more or less, is what DPDP compliance for fintech has to deal with. The data’s trail, I mean, rather than the app itself.
+
+Dates first, because people always ask. The Data Protection Board is already up and running, but the real duties (and the penalties for ignoring them) start on 13 May 2027. Roughly seven months. And if you can’t show reasonable security safeguards, the penalty can go up to ₹250 crore, the top figure in the whole schedule.
+
+## “But we’re RBI-regulated”
+
+I’d lay a bet that’s the first thing someone says in that room straight out. Alright. Banks and NBFCs have their hands full with RBI directions and PMLA & CERT-In and no doubt one audit on top of another - you’d think DPDP would just be another layer of that then. Not so. It’s a totally separate bit of legislation & it’s a game changer when it comes to how lenders handle customers’ personal data - from getting them signed up thru to collections.
+
+The RBI is pretty keen on data security, Know Your Customer checks and where the data actually gets stored. DPDP comes at it from the customer’s side. What did she agree to, exactly? Can she take it back? Can she ask what you’ve got on her? And what do you do when something leaks?
+
+One more thought, and it’s only a hunch: partner banks and bigger enterprise customers will probably start asking fintechs for proof of DPDP readiness, much like they ask for security certificates now.
+
+## Where the two rulebooks pull in different directions
+
+This is where DPDP compliance for fintech gets properly tricky. Three places, really.
+
+Retention first, since it’s the one that makes compliance teams wince. DPDP says erase personal data once the customer withdraws consent or the purpose is done, unless you need to keep it to comply with a law. The Act gives a bank as its own example: customer closes a savings account, banking law says keep her identity records a while longer, so the bank keeps them. And RBI’s KYC rules do say that, five years after the relationship ends, at the least. So when someone writes in saying “delete everything,” the real answer is “most of it, not all.” Delete what you can. Lock away what you have to keep. And tell her which is which, and why.
+
+Then where the data lives. RBI’s payment-data circular wants payment system data stored only in systems in India, and the digital lending guidelines want all lending data on servers in India. DPDP is more relaxed. No blanket localisation, though the government can block transfers to countries it names. The Act also says stricter Indian laws on transfers still apply, so on this one RBI effectively wins. Worth checking which cloud region you’re really in, and whether a support team overseas can open production data (it’s worth asking, anyway).
+
+Consent is the third. Account Aggregators, regulated by RBI, already move financial data against signed consent artefacts. DPDP is bringing in Consent Managers as well, with registration opening in mid-November 2026 and the standards still not published. Commentators are already asking which regulator handles a consent failure, RBI or the Board. Nobody has an answer yet. My advice: don’t touch your AA flows, and wrap a proper DPDP notice and consent around everything that sits outside them.
+
+## The exemptions everyone in lending likes
+
+Section 17(1) switches off most of the consent and rights obligations in some situations. Two are relevant to you. One is processing in the interest of preventing, detecting, investigating or prosecuting an offence, which is fraud and AML work, basically. The other is working out the financial information, assets and liabilities of someone who has defaulted on a loan. (There’s a third, for enforcing a legal right or claim.)
+
+But read what’s left on. Sections 8(1) and 8(5) still apply, so you’re on the hook for your own compliance and for reasonable security safeguards. And an exemption only covers the purpose it names. Running fraud analytics doesn’t give you licence to reuse the same data for cross-selling, and underwriting isn’t on the list at all, so credit scoring still needs a notice and a stated purpose.
+
+## Your vendors, who are really your problem
+
+Think about how many people an average loan file passes through - DSAs, call centres, recovery agents, KYC providers, the data analysts who look at it all, the cloud companies that host it. They’re mostly processors acting for you, and the liability stays right where it was. The Act holds you responsible for what your processors do, whatever the contract says, and lets you use them only under a valid contract. RBI’s outsourcing principles say much the same.
+
+Which means in practice, you need a list of every vendor that handles customer data with a contract for each one & clauses about what happens in case of a breach and how to wipe the data when they’re done & a list of all the subcontractors they bring in. If getting all that sorted out takes more than a day or two you get your project from the get go.
+
+Figure 1. Where DPDP bites in a lending journey, stage by stage.
+
+## The loan journey, step by step
+
+Take onboarding. KYC is mandatory, sure, but it doesn’t let you skip the notice. The Act’s own illustration is a bank’s video-KYC flow, and even there the notice has to come with, or before, the request for the data. Put the optional bits (marketing, sharing data for other purposes) as separate choices.
+
+Underwriting. If a model makes or shapes the decision, you should be able to say what data went into it. Rejected applicants are the people most likely to complain, so assume somebody will ask.
+
+Servicing and marketing. Marketing needs its own consent, and withdrawing it has to be as easy as giving it. If your app and your CRM don’t agree on who opted out, that’s a finding waiting to happen.
+
+Collections is where it gets ugly. Recovery agents are processors. The defaulter exemption lets you trace assets and liabilities, it doesn’t open up somebody’s whole contact list. Brief the agency, then audit it.
+
+And closure. The account ends but the data doesn’t just disappear, which is where the retention matrix comes in. One more point: when a bank and a fintech share a customer, work out who’s the fiduciary and who’s the processor for each data flow, and write it down. Vague roles are where the blame goes to hide.
+
+## A sample retention matrix
+
+| Data | Why you hold it | On a deletion request |
+| --- | --- | --- |
+| KYC identity records | RBI KYC rules: five years after the relationship ends, at least | Retain, restrict access, tell the customer |
+| Transaction records | PMLA and RBI record-keeping | Retain for the period they require, then delete |
+| Marketing consent and preferences | Your own purpose | Delete on withdrawal |
+| Rejected-application data | Underwriting purpose, now served | Delete unless a dispute or regulator needs it |
+
+Illustrative, not legal advice. Confirm exact periods with your compliance team.
+
+Each row should name the law that makes you keep the data. If one can’t, it’s a candidate for deletion. And anything retained wants a restricted-access flag, so it doesn’t wander off into marketing.
+
+## Might you be “significant”?
+
+Big banks, payment companies and large lenders are the obvious candidates for Significant Data Fiduciary status. If you’re notified you’d need an India-based DPO, an independent data auditor, a DPIA and audit every year, and a check that your algorithms don’t put customers’ rights at risk. As of early September 2026, nobody had been notified, but the test looks at the volume and sensitivity of the data you process, so I’d plan as if you might be.
+
+RBI’s moving as well. It has draft data-governance guidance, open for comments until 17 August 2026, which is meant to sit alongside DPDP for the sector. More rules coming, then, not fewer.
+
+## What I’d do between now and May
+
+1. Work out where customer data really lives. Vendors’ systems count.
+2. Build that retention matrix.
+3. Rewrite your notices and consent screens for each stage. Existing customers need a fresh notice too. The Act says as soon as reasonably practicable, and you can keep processing until they withdraw.
+4. Vendor contracts, with expiry dates somebody really tracks.
+5. A breach drill using every clock you’ve got. CERT-In’s six hours applies already. From May 2027 you tell affected customers without delay and give the Board detailed information within 72 hours, and RBI’s IT-outsourcing direction expects incidents to reach RBI within six hours of detection.
+6. One queue for rights requests, with a published turnaround.
+7. Check where the data physically sits and who can get at it.
+
+Seven months is plenty if you start with the data map. It isn’t if you wait for the rules to feel urgent.
+
+If you’d like to see how DPDP compliance for fintech maps to a lender or bank, Consiva’s BFSI page walks through the RBI, PMLA and DPDP overlay, and the free plan is a low-risk way to start with consent capture. Or talk to the team.
+
+## Frequently Asked Questions
+
+### Does being RBI-compliant mean we're covered for DPDP?
+
+No, sadly not. RBI’s rules mostly deal with security, KYC and keeping data in India. DPDP asks for a lot more on top of that, including clear consent, easy withdrawal, customer rights, deletion and breach alerts to customers and the Board. Think of them as two separate checklists. Ticking every box on one doesn’t tick anything on the other.
+
+### A customer wants their KYC data gone. Do we have to delete it?
+
+Not when the law says it stays. Take RBI’s KYC rules: identity records stick around for five years after the account closes, request or no request. What you should do is delete whatever you’re free to delete, lock down what’s left so it’s only used for that legal reason, and tell the customer clearly why some of it is staying.
+
+### Does the fraud exemption mean consent doesn't matter?
+
+Not at all. The fraud exemption only means you don’t need consent when you process data to prevent or detect offences. That’s the full extent of it. You still have to keep the data secure, and you can’t take that same data and use it for marketing or anything else. Any other use needs its own valid reason under the Act.
+
+### When does DPDP compliance for fintech become mandatory?
+
+The main DPDP duties and penalties start on 13 May 2027. But one rule is already live: CERT-In expects cyber incidents to be reported within 6 hours. So 2027 isn’t a reason to relax. Spend these months tracking down where customer data actually lives, putting together a retention matrix, rewriting notices and consent screens, and sorting out the vendor contracts nobody’s looked at in years.
+
+### Can a fintech share customer data with lending partners or vendors under the DPDP Act?
+
+Yes, as long as you do it properly. Vendors that work on data for you, like KYC, collections or cloud providers, need a signed contract, and you’re still responsible for what they do. Giving data to another company for its own use, such as a lending partner, usually needs a clear notice and the customer’s consent. RBI’s digital lending rules apply on top as well.
+
+### Can a customer withdraw consent while a loan or bank account is still active?
+
+Yes, they can pull consent at any time, and it should be as easy to do as giving it. Once they do, you and your vendors must stop using any data that relied on that consent. Data you have to keep by law, like KYC records or loan papers, can stay. If the withdrawal means you can’t keep the account running, that consequence falls on the customer.

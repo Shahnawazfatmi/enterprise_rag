@@ -1,0 +1,249 @@
+---
+title: Pricing — DPDP Compliance Platform Plans
+url: https://consiva.ai/pricing
+description: Consiva.ai pricing — Free plan with 1,000 cookie consents/mo. Pro at ₹5,999/mo + taxes. Enterprise plans for large organisations. Start free, no credit card required.
+---
+
+## Basic plan (Limited Time Offer)
+
+Regular price: ₹2,499 (the offer price below applies now)
+
+Price: ₹0
+
+No Credit Card Required
+
+Full DPDP Compliance For Individuals And Small Sites. No Time Limit.
+
+Cookie Consents 1,000 / Mo
+
+Form Consents 50 / Mo
+
+Domains 1
+
+Included: DPDP Banner (English & Hindi)
+
+Included: Basic Cookie Scanning
+
+Included: Basic Analytics (7 And 30 Days)
+
+Included: Manual Rights Request Handling
+
+Included: 1 Onboarding Session
+
+Included: WordPress Plugin
+
+Not included: Shopify Integration
+
+Not included: Native Android/iOS SDK Integration
+
+Not included: CERT-In Breach Tracker
+
+Not included: Automated DSR Workflows
+
+Not included: 20+ Eighth Schedule Languages
+
+Not included: Enhanced Analytics & CSV Export
+
+Not included: Data Breach Management
+
+Not included: Regulator Requests (CERT-In, DPB, SEBI)
+
+Not included: DPIA & Audits Management
+
+Not included: Business Processes, Retention Rules & Data Flow Lineage
+
+Not included: ROPA Auto-Generation
+
+Not included: Vendor Risk & DPA Tracking
+
+Not included: Parental Consent (DPDP §9)
+
+Not included: Integrations Hub — Data Discovery, Webhooks & OMNI Channel Alerts
+
+## Pro plan (Most Popular)
+
+Price: ₹5,999
+
+Save ₹11,988/yr
+
+/Month + Taxes · Billed Monthly
+
+Everything A Growing Business Needs — Full Automation, 20+ Languages, And CERT-In Breach Tracking.
+
+Cookie Consents 15,000 / Mo
+
+Form Consents 1,500 / Mo
+
+Domains 5 + Add-Ons
+
+Included: Automated, Scheduled Cookie Scanning
+
+Included: DPDP + GDPR Banners
+
+Included: 20+ Eighth Schedule Languages
+
+Included: Enhanced Analytics — Exportable CSV
+
+Included: Form & Data Consent Management
+
+Included: Automated DSR Workflows
+
+Included: CERT-In Breach Tracker
+
+Included: Consent Renewal Tracking
+
+Included: DPDP Act 2023 Dashboard
+
+Included: Compliance Score & Audit Trail
+
+Included: Data Breach Management
+
+Included: Vendor Risk & DPA Tracking
+
+Included: Multi-Domain Management
+
+Included: WordPress Plugin
+
+Included: Shopify Integration
+
+Included: Native Android/iOS SDK Integration
+
+Included: 5 Onboarding Sessions + Email Support
+
+Not included: Regulator Requests (CERT-In, DPB, SEBI)
+
+Not included: DPIA & Audits Management
+
+Not included: Data Flow Lineage
+
+Not included: Retention Rules
+
+Not included: Business Processes
+
+Not included: ROPA Auto-Generation
+
+Not included: Parental Consent (DPDP §9)
+
+Not included: Integrations Hub — Data Discovery, Webhooks & OMNI Channel Alerts
+
+## Enterprise plan
+
+Price: Custom
+
+On-Prem Or Cloud · SLA Guaranteed
+
+For Large Enterprises, Government Bodies, SDFs, And Organisations With Custom Compliance Needs.
+
+Schedule a Demo
+
+Cookie Consents Unlimited
+
+Form Consents Unlimited
+
+Domains Unlimited
+
+Included: Everything In Pro
+
+Included: Regulator Requests (CERT-In, DPB, SEBI)
+
+Included: DPIA & Audits Management — DPDP-Native Templates, SDF Annual Audit Trail & DPO Workflow
+
+Included: Data Flow Lineage
+
+Included: Retention Rules
+
+Included: Business Processes
+
+Included: ROPA Auto-Generation
+
+Included: Parental Consent (DPDP §9)
+
+Included: Integrations Hub — Data Discovery, Webhooks & OMNI Channel Alerts
+
+Included: Multi-Framework Routing — DPDP, GDPR, CCPA & More
+
+Included: Full CERT-In Breach Module — Playbooks & Auto-Notifications
+
+Included: Regional & Dialect Language Customisation
+
+Included: Custom Rights & System-Of-Record Integration
+
+Included: Dedicated Account Manager
+
+Included: Custom SLAs & Contracts
+
+Included: Priority Support
+
+Included: SSO / SAML
+
+Included: Custom Data-Retention Period (Logs)
+
+Included: On-Prem Deployment Option
+
+## Add-On Packs
+
+· Available on annual Pro and Enterprise plans · 20% off pay-as-you-go rates · Prices exclude applicable taxes
+
+### Domain Pack
+
++10 domains
+
+Price: ₹80,000/yr
+
+₹8,000 per domain per year
+
+Save ₹20,000 vs pay-as-you-go
+
+### Cookie Consent Pack
+
++10,000 cookie consents/mo
+
+Price: ₹14,400/yr
+
+₹1,200/month billed annually
+
+Save ₹3,600 vs pay-as-you-go
+
+### Form Consent Pack
+
++1,000 form consents/mo
+
+Price: ₹3,360/yr
+
+₹280/month billed annually
+
+Save ₹840 vs pay-as-you-go
+
+Pricing FAQ
+
+## Common Pricing Questions
+
+### Is there a free trial for paid plans?
+
+The Pro plan doesn't include a time-limited trial. Instead, our Free plan is permanently free with no credit card required — use it for as long as you need to evaluate the platform, then upgrade to Pro whenever you're ready for higher limits and full automation.
+
+### What happens if my consent limit gets exceeded?
+
+We'll shoot you an alert when you hit 80% and then again at 95% usage. Once you've gone over your limit, that consent banner just keeps on showing up (we don't let compliance fall through the gaps) but we do pause any recording you're doing until you either upgrade or add a Cookie Pack to your account.
+
+### Can I just cancel my subscription whenever I feel like it?
+
+You can, yes. Monthly plans can be cancelled at any time & you get to keep using the service til the end of your current billing cycle. Annual plans are a no-refund deal after 30 days, but if you do cancel before your renewal date you should be good.
+
+### Do you offer any breaks for NGOs or startups?
+
+We do — we're giving registered Indian NGOs and DPIIT-recognized startups a 30% discount. If you want to claim your discount just send us your registration certificate to support@consiva.ai (email).
+
+### Is the annual discount applied automatically?
+
+Yes. Toggle the billing switch above to Annual and the discounted price is applied immediately at checkout. Annual billing is charged as a single upfront payment.
+
+### What payment methods do you accept?
+
+We accept all major credit and debit cards, UPI, net banking, and bank transfer (for Enterprise plans). GST invoices are issued for all Indian customers. International cards accepted for global customers.
+
+Get Started Today
+
+## Start Free — No Credit Card Required
+
+Get your DPDP compliance setup in under 10 minutes. Free plan available forever.

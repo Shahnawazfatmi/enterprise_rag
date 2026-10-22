@@ -126,7 +126,15 @@ RELATIVE_RELEVANCE_MARGIN = _float("RELATIVE_RELEVANCE_MARGIN", 0.2)
 # LLM
 # ============================================================
 
-# OpenAI (OPEN_AI_API_KEY is accepted as an alias of the standard name).
+# "gemini" (default) or "openai".
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini").lower()
+
+# Gemini: the primary LLM.
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+
+# OpenAI: optional, used only with LLM_PROVIDER=openai.
+# OPEN_AI_API_KEY is accepted as an alias of the standard name.
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or os.getenv("OPEN_AI_API_KEY")
 # gpt-4.1-mini: ~1-2 s answers, low temperature for consistent wording.
 # gpt-5.4-mini scored the same on the eval (reasoning model, ~2-3 s).
@@ -135,12 +143,6 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 # Reasoning models (gpt-5.x, o-series) only: none / low / medium / high.
 # Answering from retrieved text needs little reasoning; "low" keeps it fast.
 OPENAI_REASONING_EFFORT = os.getenv("OPENAI_REASONING_EFFORT", "low")
-
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
-
-# "openai" or "gemini". Defaults to OpenAI when its key is set.
-LLM_PROVIDER = (os.getenv("LLM_PROVIDER") or ("openai" if OPENAI_API_KEY else "gemini")).lower()
 
 LLM_TEMPERATURE = _float("LLM_TEMPERATURE", 0.1)
 LLM_TIMEOUT_SECONDS = _int("LLM_TIMEOUT_SECONDS", 45)

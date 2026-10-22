@@ -5,8 +5,8 @@
   "pages": {
     "consiva.ai_": {
       "file": "consiva.ai_.txt",
-      "hash": "b63aa6ca7be6506ac4f2dfbf271f29e02b7f4afd46e942285184b22877858d32",
-      "updated_at": "2026-10-10T16:30:55.577433+00:00"
+      "hash": "91b9d672c8c53a3b147d8114b6bff9f715df50adafdf78c88f0d703292da4da1",
+      "updated_at": "2026-10-21T05:03:22.058016+00:00"
     },
     "consiva.ai_about": {
       "file": "consiva.ai_about.txt",
@@ -15,8 +15,8 @@
     },
     "consiva.ai_blog": {
       "file": "consiva.ai_blog.txt",
-      "hash": "4c9790af7a85a7cdf69ae3a9728f463a573612c68d42b2ac03db6095b20d5b8b",
-      "updated_at": "2026-10-10T16:25:05.675067+00:00"
+      "hash": "05a7946ca0981fbee7149495c33ffb89540f61de156dea029623b66d21654475",
+      "updated_at": "2026-10-21T05:03:22.059016+00:00"
     },
     "consiva.ai_blog_ai-powered-dpdp-compliance-automation": {
       "file": "consiva.ai_blog_ai-powered-dpdp-compliance-automation.txt",
@@ -195,8 +195,8 @@
     },
     "consiva.ai_pricing": {
       "file": "consiva.ai_pricing.txt",
-      "hash": "be64c16aece05dd6b35f3f0da9de14f6cd84f9f1d5a6d09ed045f6823029d3ec",
-      "updated_at": "2026-10-10T16:30:55.589869+00:00"
+      "hash": "186474e76502dc979a95233bbce9353dc3d565606379769daf532fa699c0bc94",
+      "updated_at": "2026-10-16T09:06:12.529860+00:00"
     },
     "consiva.ai_blog_48-hour-pre-erasure-notice": {
       "file": "consiva.ai_blog_48-hour-pre-erasure-notice.txt",
@@ -302,7 +302,32 @@
       "file": "consiva.ai_vendor-dpa-register.txt",
       "hash": "00b01948b7011895bbb61737d69637772a359459622eae2de2f9984bd7b52f56",
       "updated_at": "2026-10-10T16:25:05.743019+00:00"
+    },
+    "consiva.ai_blog_ai-privacy-intelligence-data-visibility": {
+      "file": "consiva.ai_blog_ai-privacy-intelligence-data-visibility.txt",
+      "hash": "5fa3acf6cce6b37aa5706cd0d90d9c28c27a4e6bfa6c366159dac8e73eac1d92",
+      "updated_at": "2026-10-16T09:06:12.525469+00:00"
+    },
+    "consiva.ai_blog_data-privacy-impact-assessment": {
+      "file": "consiva.ai_blog_data-privacy-impact-assessment.txt",
+      "hash": "d864cec4482f96b7f9f2828e05c68cc9b679e6853bd7af6fdeee0e4b23a2cca7",
+      "updated_at": "2026-10-21T05:03:22.055014+00:00"
+    },
+    "consiva.ai_blog_dpdp-data-retention": {
+      "file": "consiva.ai_blog_dpdp-data-retention.txt",
+      "hash": "dd2c91423e22667109e6a43808c29012a7d21ed0aa66a9a8553c3be49104d40a",
+      "updated_at": "2026-10-21T05:03:22.056014+00:00"
+    },
+    "consiva.ai_blog_dpdp-fintech": {
+      "file": "consiva.ai_blog_dpdp-fintech.txt",
+      "hash": "005465a7d947550d3651e83bab060f632f1f3293406a9b6ecc78ad1902619f7c",
+      "updated_at": "2026-10-21T05:03:22.057016+00:00"
+    },
+    "consiva.ai_blog_dpdp-healthcare": {
+      "file": "consiva.ai_blog_dpdp-healthcare.txt",
+      "hash": "06303ee70eef9cca43ea8f070610a549350f94b8df2477ec8b255af7d5d32b8a",
+      "updated_at": "2026-10-21T05:03:22.057016+00:00"
     }
   },
-  "updated_at": "2026-10-12T04:48:02.948956+00:00"
+  "updated_at": "2026-10-22T04:15:07.821955+00:00"
 }
