@@ -5,6 +5,9 @@ services:
       dockerfile: dockerfile
     env_file:
       - .env
+    environment:
+      # CORS: the chat widget's domain (override with ALLOWED_ORIGINS in .env).
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://rag.consiva.tech}
     ports:
       - "8081:8000"
     volumes:
@@ -19,6 +22,9 @@ services:
     build:
       context: ./frontend
       dockerfile: dockerfile
+      args:
+        # Baked into the bundle at build time: rebuild after changing it.
+        VITE_API_URL: ${VITE_API_URL:-https://apirag.consiva.tech/ask}
     ports:
       - "8082:80"
     depends_on:
