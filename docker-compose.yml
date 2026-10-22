@@ -6,7 +6,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8000:8000"
+      - "8081:8000"
     volumes:
       # The vector index and pipeline data live on the host, so nightly
       # updates reach the running API without rebuilding the image.
@@ -20,7 +20,7 @@ services:
       context: ./frontend
       dockerfile: dockerfile
     ports:
-      - "5173:80"
+      - "8082:80"
     depends_on:
       - backend
     restart: unless-stopped

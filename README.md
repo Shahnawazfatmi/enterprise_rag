@@ -31,7 +31,7 @@ npm install
 npm run dev
 ```
 
-Docker: `docker compose up --build` (API on 8000, widget on 5173; `data/` and the model cache are volumes).
+Docker: `docker compose up --build` (API on 8081, widget on 8082; `data/` and the model cache are volumes).
 
 `POST /ask` body: `{"question": "...", "history": [{"role": "user"|"assistant", "content": "..."}]}`
 Response: `{"answer": "... [1]", "sources": [{"id": 1, "title", "section", "url"}], "query_type"}`.
