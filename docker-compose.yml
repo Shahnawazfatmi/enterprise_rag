@@ -6,8 +6,8 @@ services:
     env_file:
       - .env
     environment:
-      # CORS: the chat widget's domain (override with ALLOWED_ORIGINS in .env).
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://rag.consiva.tech}
+      # CORS: sites allowed to call the API (override with ALLOWED_ORIGINS in .env).
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://rag.consiva.tech,https://uat.consiva.ai}
     ports:
       - "8081:8000"
     volumes:

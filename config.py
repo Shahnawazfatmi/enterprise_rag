@@ -167,8 +167,10 @@ NOT_FOUND_ANSWER = (
 # API
 # ============================================================
 
+# Browsers send the origin without a trailing slash, so "https://site/" is
+# normalised to "https://site" (CORS compares origins exactly).
 ALLOWED_ORIGINS = [
-    origin.strip()
+    origin.strip().rstrip("/")
     for origin in os.getenv("ALLOWED_ORIGINS", "*").split(",")
     if origin.strip()
 ]
