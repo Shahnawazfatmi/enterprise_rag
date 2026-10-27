@@ -6,7 +6,7 @@ import numpy as np
 from langchain_huggingface import HuggingFaceEmbeddings
 
 from app.index import SearchIndex
-from app.llm import LLMUnavailableError, generate_answer, llm_name, load_llm
+from app.llm import LLMUnavailableError, generate_answer, llm_name, load_llms
 from app.router import classify_query, get_direct_response
 from config import (
     INDEX_VERSION_FILE,
@@ -137,11 +137,12 @@ class ConsivaRAG:
         self.index_error = None
         self.reload_index_if_changed()
 
+        # Primary LLM first, then the fallback.
         try:
-            self.llm = load_llm()
+            self.llms = load_llms()
         except LLMUnavailableError as error:
             logger.error(f"LLM not configured: {error}")
-            self.llm = None
+            self.llms = []
 
         logger.info("Consiva RAG initialized")
 
@@ -193,8 +194,9 @@ class ConsivaRAG:
             "index_loaded": self._index is not None,
             "chunks": len(self._index) if self._index is not None else 0,
             "index_error": self.index_error,
-            "llm_configured": self.llm is not None,
-            "llm": llm_name(),
+            "llm_configured": bool(self.llms),
+            "llm": self.llms[0][0] if self.llms else llm_name(),
+            "llm_fallback": self.llms[1][0] if len(self.llms) > 1 else None,
         }
 
     # --------------------------------------------------------
@@ -247,13 +249,13 @@ class ConsivaRAG:
         if not hits:
             return {"answer": NOT_FOUND_ANSWER, "sources": [], "query_type": "not_found"}
 
-        if self.llm is None:
+        if not self.llms:
             raise LLMUnavailableError(f"The language model ({llm_name()}) is not configured.")
 
         answer = generate_answer(
             question=question,
             context=build_context(hits),
-            llm=self.llm,
+            llms=self.llms,
             history=history,
         )
 

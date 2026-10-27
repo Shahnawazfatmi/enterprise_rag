@@ -7,7 +7,7 @@ consiva.ai ──scrape──> data/raw ──clean──> data/new_structured �
                                                                                 │
              data/vectorstore (Chroma) <──chunk + embed (bge-m3)── vector update ┘
                          │
-                 snapshot.npz ──> FastAPI (/ask) ──> Gemini (or OpenAI) ──> React chat widget
+                 snapshot.npz ──> FastAPI (/ask) ──> OpenAI (Gemini fallback) ──> React chat widget
 ```
 
 ## Setup
@@ -16,7 +16,7 @@ consiva.ai ──scrape──> data/raw ──clean──> data/new_structured �
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
-copy .env.example .env     # then fill in GEMINI_API_KEY and FIRECRAWL_API_KEY
+copy .env.example .env     # then fill in OPENAI_API_KEY, GEMINI_API_KEY (fallback) and FIRECRAWL_API_KEY
 ```
 
 ## Run

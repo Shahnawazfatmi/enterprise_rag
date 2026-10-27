@@ -6,6 +6,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from config import (
     GEMINI_API_KEY,
     GEMINI_MODEL,
+    LLM_FALLBACK_PROVIDER,
     LLM_MAX_RETRIES,
     LLM_PROVIDER,
     LLM_TEMPERATURE,
@@ -78,7 +79,7 @@ def extract_response_content(response) -> str:
 
 
 # ============================================================
-# LOAD MODEL (LLM_PROVIDER = gemini | openai)
+# LOAD MODELS (LLM_PROVIDER, then LLM_FALLBACK_PROVIDER = openai | gemini)
 # ============================================================
 
 # gpt-5.x, gpt-6.x and o-series are reasoning models: they take
@@ -86,9 +87,9 @@ def extract_response_content(response) -> str:
 REASONING_MODEL = re.compile(r"^(o\d|gpt-[5-9])")
 
 
-def llm_name() -> str:
-    model = OPENAI_MODEL if LLM_PROVIDER == "openai" else GEMINI_MODEL
-    return f"{LLM_PROVIDER}:{model}"
+def llm_name(provider: str = LLM_PROVIDER) -> str:
+    model = OPENAI_MODEL if provider == "openai" else GEMINI_MODEL
+    return f"{provider}:{model}"
 
 
 def load_openai() -> BaseChatModel:
@@ -128,30 +129,59 @@ def load_gemini() -> BaseChatModel:
     )
 
 
-def load_llm() -> BaseChatModel:
+def load_llms() -> list[tuple[str, BaseChatModel]]:
+    """
+    The primary LLM, then the fallback, as (name, model) pairs.
+
+    A provider without a key is skipped, so the API still answers with
+    whichever one is configured. Raises LLMUnavailableError if none is.
+    """
 
     loaders = {"openai": load_openai, "gemini": load_gemini}
+    llms = []
+    problems = []
 
-    if LLM_PROVIDER not in loaders:
-        raise LLMUnavailableError(f"Unknown LLM_PROVIDER '{LLM_PROVIDER}' (use gemini or openai)")
+    for provider in dict.fromkeys([LLM_PROVIDER, LLM_FALLBACK_PROVIDER]):
+        if provider in ("", "none"):
+            continue
 
-    logger.info(f"Initializing LLM: {llm_name()}")
-    return loaders[LLM_PROVIDER]()
+        if provider not in loaders:
+            problems.append(f"Unknown LLM provider '{provider}' (use openai or gemini)")
+            continue
+
+        try:
+            llms.append((llm_name(provider), loaders[provider]()))
+        except LLMUnavailableError as error:
+            problems.append(str(error))
+
+    for problem in problems:
+        logger.warning(f"LLM skipped: {problem}")
+
+    if not llms:
+        raise LLMUnavailableError("; ".join(problems) or "No LLM provider configured.")
+
+    logger.info("Initializing LLMs: " + " -> ".join(name for name, _ in llms))
+    return llms
 
 
 # ============================================================
 # GENERATE ANSWER
 # ============================================================
 
+# Gemini: RESOURCE_EXHAUSTED; OpenAI: insufficient_quota / rate_limit.
+QUOTA_MARKERS = ("RESOURCE_EXHAUSTED", "429", "insufficient_quota", "rate_limit")
+
+
 def generate_answer(
     question: str,
     context: str,
-    llm: BaseChatModel,
+    llms: list[tuple[str, BaseChatModel]],
     history: list[dict] | None = None,
 ) -> str:
     """
-    Generate a grounded answer.
+    Generate a grounded answer with the first LLM in `llms` that succeeds.
 
+    `llms` is the primary model, then the fallback (see load_llms).
     `history` is a list of {"role": "user" | "assistant", "content": str}
     used only to understand follow-up questions.
 
@@ -167,16 +197,23 @@ def generate_answer(
 
     messages.append(("human", question.strip()))
 
-    try:
-        response = llm.invoke(messages)
-    except Exception as error:
-        text = str(error)
-        logger.error(f"LLM inference failed ({llm_name()}): {text[:500]}")
+    errors = []
 
-        # Gemini: RESOURCE_EXHAUSTED; OpenAI: insufficient_quota / rate_limit.
-        if any(marker in text for marker in ("RESOURCE_EXHAUSTED", "429", "insufficient_quota", "rate_limit")):
-            raise LLMUnavailableError("The AI service quota is exhausted.") from error
+    for attempt, (name, llm) in enumerate(llms):
+        try:
+            answer = extract_response_content(llm.invoke(messages))
+        except Exception as error:
+            text = str(error)
+            logger.error(f"LLM inference failed ({name}): {text[:500]}")
+            errors.append(error)
+            continue
 
-        raise LLMUnavailableError("The AI service is unavailable.") from error
+        if attempt > 0:
+            logger.warning(f"Answered by fallback LLM {name}")
 
-    return extract_response_content(response)
+        return answer
+
+    if errors and all(any(marker in str(error) for marker in QUOTA_MARKERS) for error in errors):
+        raise LLMUnavailableError("The AI service quota is exhausted.") from errors[-1]
+
+    raise LLMUnavailableError("The AI service is unavailable.") from (errors[-1] if errors else None)

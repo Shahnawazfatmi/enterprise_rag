@@ -3,7 +3,7 @@ Evaluate retrieval and answer quality against evals/questions.jsonl.
 
 Usage (from the project root):
     python evals/run_eval.py                 # retrieval only (no LLM calls)
-    python evals/run_eval.py --answers       # retrieval + Gemini answers
+    python evals/run_eval.py --answers       # retrieval + LLM answers
     python evals/run_eval.py --answers --out evals/results/after.json
 
 Metrics:

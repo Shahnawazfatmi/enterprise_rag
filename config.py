@@ -126,14 +126,13 @@ RELATIVE_RELEVANCE_MARGIN = _float("RELATIVE_RELEVANCE_MARGIN", 0.2)
 # LLM
 # ============================================================
 
-# "gemini" (default) or "openai".
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini").lower()
+# "openai" or "gemini". The primary LLM answers every question; when it
+# fails (quota, outage, empty reply) the fallback answers instead.
+# LLM_FALLBACK_PROVIDER=none turns the fallback off.
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai").lower()
+LLM_FALLBACK_PROVIDER = os.getenv("LLM_FALLBACK_PROVIDER", "gemini").lower()
 
-# Gemini: the primary LLM.
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
-
-# OpenAI: optional, used only with LLM_PROVIDER=openai.
+# OpenAI: the primary LLM.
 # OPEN_AI_API_KEY is accepted as an alias of the standard name.
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or os.getenv("OPEN_AI_API_KEY")
 # gpt-4.1-mini: ~1-2 s answers, low temperature for consistent wording.
@@ -143,6 +142,10 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 # Reasoning models (gpt-5.x, o-series) only: none / low / medium / high.
 # Answering from retrieved text needs little reasoning; "low" keeps it fast.
 OPENAI_REASONING_EFFORT = os.getenv("OPENAI_REASONING_EFFORT", "low")
+
+# Gemini: the fallback LLM.
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
 
 LLM_TEMPERATURE = _float("LLM_TEMPERATURE", 0.1)
 LLM_TIMEOUT_SECONDS = _int("LLM_TIMEOUT_SECONDS", 45)
