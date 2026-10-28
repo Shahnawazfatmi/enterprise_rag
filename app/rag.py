@@ -1,12 +1,14 @@
+from collections.abc import Iterator
 import logging
 import re
 import threading
+import time
 
 import numpy as np
 from langchain_huggingface import HuggingFaceEmbeddings
 
 from app.index import SearchIndex
-from app.llm import LLMUnavailableError, generate_answer, llm_name, load_llms
+from app.llm import LLMUnavailableError, generate_answer, generate_answer_stream, llm_name, load_llms
 from app.router import classify_query, get_direct_response
 from config import (
     INDEX_VERSION_FILE,
@@ -226,7 +228,14 @@ class ConsivaRAG:
     # ASK QUESTION
     # --------------------------------------------------------
 
-    def ask_question(self, question: str, history: list[dict] | None = None) -> dict:
+    def prepare(self, question: str, history: list[dict] | None = None) -> tuple[dict | None, dict | None]:
+        """
+        Everything before the LLM call (routing and retrieval).
+
+        Returns (result, None) when the answer needs no LLM (greeting,
+        nothing found), otherwise (None, request) with the question,
+        history and hits for ask_question / stream_answer.
+        """
 
         if not question or not question.strip():
             raise ValueError("Question cannot be empty.")
@@ -235,7 +244,7 @@ class ConsivaRAG:
         query_type = classify_query(question)
 
         if query_type != "rag":
-            return {"answer": get_direct_response(query_type), "sources": [], "query_type": query_type}
+            return {"answer": get_direct_response(query_type), "sources": [], "query_type": query_type}, None
 
         history = clean_history(history)
         hits = self.retrieve(retrieval_query(question, history))
@@ -247,21 +256,72 @@ class ConsivaRAG:
         )
 
         if not hits:
-            return {"answer": NOT_FOUND_ANSWER, "sources": [], "query_type": "not_found"}
+            return {"answer": NOT_FOUND_ANSWER, "sources": [], "query_type": "not_found"}, None
 
         if not self.llms:
             raise LLMUnavailableError(f"The language model ({llm_name()}) is not configured.")
 
+        return None, {"question": question, "history": history, "hits": hits}
+
+    def ask_question(self, question: str, history: list[dict] | None = None) -> dict:
+
+        result, request = self.prepare(question, history)
+
+        if result is not None:
+            return result
+
         answer = generate_answer(
-            question=question,
-            context=build_context(hits),
+            question=request["question"],
+            context=build_context(request["hits"]),
             llms=self.llms,
-            history=history,
+            history=request["history"],
         )
 
         return {
             "answer": answer,
-            "sources": cited_sources(answer, hits),
+            "sources": cited_sources(answer, request["hits"]),
+            "query_type": "rag",
+        }
+
+    def stream_answer(self, request: dict) -> Iterator[tuple[str, dict]]:
+        """
+        The answer for a request from prepare(), while the LLM writes it:
+        ("delta", {"text"}) pieces, ("reset", {}) when the fallback LLM
+        starts over, then ("done", ...) with the same fields as ask_question.
+        """
+
+        started = time.perf_counter()
+        first_text = None
+        pieces = []
+
+        for event, text in generate_answer_stream(
+            question=request["question"],
+            context=build_context(request["hits"]),
+            llms=self.llms,
+            history=request["history"],
+        ):
+            if event == "reset":
+                pieces.clear()
+                yield "reset", {}
+                continue
+
+            if first_text is None:
+                first_text = time.perf_counter() - started
+
+            pieces.append(text)
+            yield "delta", {"text": text}
+
+        answer = "".join(pieces).strip()
+
+        logger.info(
+            "Streamed answer: first text after %.2f s, done after %.2f s",
+            first_text or 0.0,
+            time.perf_counter() - started,
+        )
+
+        yield "done", {
+            "answer": answer,
+            "sources": cited_sources(answer, request["hits"]),
             "query_type": "rag",
         }
 

@@ -9,6 +9,10 @@ import './App.css'
  */
 const API_URL = import.meta.env.VITE_API_URL || '/api/ask'
 
+// Same question, answered as server-sent events while the LLM writes.
+const STREAM_URL = `${API_URL.replace(/\/+$/, '')}/stream`
+
+// /ask: the whole request. /ask/stream: the longest wait between two pieces.
 const REQUEST_TIMEOUT_MS = 60000
 
 // Earlier turns sent with each question so follow-ups make sense.
@@ -20,6 +24,94 @@ const newId = () =>
 const ERROR_MESSAGES = {
   429: 'You are sending questions too quickly. Please wait a minute and try again.',
   503: 'The assistant is temporarily unavailable. Please try again in a little while.',
+}
+
+const statusError = (status) =>
+  new Error(
+    ERROR_MESSAGES[status] || 'Sorry, something went wrong. Please try again.',
+  )
+
+// "event: delta\ndata: {...}" -> { event, data }
+function parseEvent(block) {
+  let event = 'message'
+  const data = []
+
+  for (const line of block.split('\n')) {
+    if (line.startsWith('event:')) event = line.slice(6).trim()
+    else if (line.startsWith('data:')) data.push(line.slice(5).trimStart())
+  }
+
+  return { event, data: data.length ? JSON.parse(data.join('\n')) : {} }
+}
+
+/*
+ * Ask through /ask/stream. onEvent(event, data) receives delta, reset
+ * and done (see app/main.py). An API without the streaming endpoint
+ * (404/405) is asked through /ask instead and reported as one done.
+ */
+async function askBackendStream(question, history, onEvent) {
+  const controller = new AbortController()
+  let timer
+
+  const restartTimer = () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+  }
+
+  restartTimer()
+
+  try {
+    const response = await fetch(STREAM_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, history }),
+      signal: controller.signal,
+    })
+
+    if (response.status === 404 || response.status === 405) {
+      clearTimeout(timer)
+      onEvent('done', await askBackend(question, history))
+      return
+    }
+
+    if (!response.ok) throw statusError(response.status)
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+
+    for (;;) {
+      const { value, done } = await reader.read()
+      if (done) break
+
+      restartTimer()
+      buffer += decoder.decode(value, { stream: true })
+
+      let end
+      while ((end = buffer.indexOf('\n\n')) !== -1) {
+        const { event, data } = parseEvent(buffer.slice(0, end))
+        buffer = buffer.slice(end + 2)
+
+        if (event === 'error') throw statusError(data.status)
+
+        onEvent(event, data)
+        if (event === 'done') return
+      }
+    }
+
+    // The connection closed before the answer was complete.
+    throw statusError(500)
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      throw new Error('The assistant took too long to answer. Please try again.')
+    }
+    if (error instanceof TypeError) {
+      throw new Error('Sorry, I could not connect to the assistant right now. Please try again.')
+    }
+    throw error
+  } finally {
+    clearTimeout(timer)
+  }
 }
 
 async function askBackend(question, history) {
@@ -125,7 +217,9 @@ function App() {
   const [isOpen, setIsOpen] = useState(false)
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState([])
+  // isThinking: waiting for the first words. isAnswering: until the answer is complete.
   const [isThinking, setIsThinking] = useState(false)
+  const [isAnswering, setIsAnswering] = useState(false)
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
@@ -137,7 +231,7 @@ function App() {
   const sendMessage = async () => {
     const question = input.trim()
 
-    if (!question || isThinking) return
+    if (!question || isAnswering) return
 
     const userMessage = {
       id: newId(),
@@ -154,22 +248,73 @@ function App() {
     setMessages((previous) => [...previous, userMessage])
     setInput('')
     setIsThinking(true)
+    setIsAnswering(true)
+
+    const answerId = newId()
+    let text = ''
+    let shown = false
+    let frame = 0
+
+    const setAnswer = (fields) =>
+      setMessages((previous) =>
+        previous.map((message) =>
+          message.id === answerId ? { ...message, ...fields } : message,
+        ),
+      )
+
+    // At most one render per animation frame, not one per token.
+    const showText = () => {
+      frame = 0
+      setAnswer({ content: text })
+    }
+
+    const handleEvent = (event, data) => {
+      if (event === 'delta') {
+        text += data.text
+
+        if (!shown) {
+          shown = true
+          setIsThinking(false)
+          setMessages((previous) => [
+            ...previous,
+            { id: answerId, role: 'assistant', content: text, sources: [] },
+          ])
+        } else if (!frame) {
+          frame = requestAnimationFrame(showText)
+        }
+      } else if (event === 'reset') {
+        // The fallback model starts the answer again.
+        text = ''
+        cancelAnimationFrame(frame)
+        showText()
+      } else if (event === 'done') {
+        cancelAnimationFrame(frame)
+        frame = 0
+
+        const final = {
+          content:
+            data.answer ||
+            'I could not find an answer to that question.',
+          sources: data.sources || [],
+        }
+
+        if (shown) {
+          setAnswer(final)
+        } else {
+          shown = true
+          setMessages((previous) => [
+            ...previous,
+            { id: answerId, role: 'assistant', ...final },
+          ])
+        }
+      }
+    }
 
     try {
-      const data = await askBackend(question, history)
-
-      const assistantMessage = {
-        id: newId(),
-        role: 'assistant',
-        content:
-          data.answer ||
-          'I could not find an answer to that question.',
-        sources: data.sources || [],
-      }
-
-      setMessages((previous) => [...previous, assistantMessage])
+      await askBackendStream(question, history, handleEvent)
     } catch (error) {
       console.error('Chat API error:', error)
+      cancelAnimationFrame(frame)
 
       const errorMessage = {
         id: newId(),
@@ -178,9 +323,14 @@ function App() {
         isError: true,
       }
 
-      setMessages((previous) => [...previous, errorMessage])
+      // A half-written answer is replaced by the error notice.
+      setMessages((previous) => [
+        ...previous.filter((message) => message.id !== answerId),
+        errorMessage,
+      ])
     } finally {
       setIsThinking(false)
+      setIsAnswering(false)
     }
   }
 
@@ -288,7 +438,7 @@ function App() {
                 onKeyDown={handleKeyDown}
                 placeholder="Ask anything related to Consiva AI..."
                 rows={1}
-                disabled={isThinking}
+                disabled={isAnswering}
                 aria-label="Ask AI Assistant"
               />
 
@@ -296,7 +446,7 @@ function App() {
                 type="button"
                 className="send-button"
                 onClick={sendMessage}
-                disabled={!input.trim() || isThinking}
+                disabled={!input.trim() || isAnswering}
                 aria-label="Send message"
               >
                 <span>→</span>

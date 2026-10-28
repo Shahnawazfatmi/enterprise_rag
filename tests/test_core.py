@@ -267,5 +267,50 @@ class ChunkIdTests(unittest.TestCase):
         self.assertTrue(build_chunk_id("p", "text").startswith("p::"))
 
 
+class FakeLLM:
+    """Streams the given pieces, then raises `error` if set."""
+
+    def __init__(self, pieces, error=None):
+        self.pieces, self.error = pieces, error
+
+    def stream(self, messages):
+        from types import SimpleNamespace
+
+        for piece in self.pieces:
+            yield SimpleNamespace(content=piece)
+        if self.error:
+            raise self.error
+
+
+class StreamingTests(unittest.TestCase):
+
+    def stream(self, *llms):
+        from app.llm import generate_answer_stream
+
+        return list(generate_answer_stream("q", "[1] source", [(f"llm{i}", llm) for i, llm in enumerate(llms)]))
+
+    def test_pieces_are_streamed_in_order(self):
+        events = self.stream(FakeLLM(["Pro costs ", "5,999 [1]."]))
+        self.assertEqual(events, [("delta", "Pro costs "), ("delta", "5,999 [1].")])
+
+    def test_fallback_before_any_text_needs_no_reset(self):
+        events = self.stream(FakeLLM([], RuntimeError("down")), FakeLLM(["Answer."]))
+        self.assertEqual(events, [("delta", "Answer.")])
+
+    def test_fallback_after_partial_text_resets(self):
+        events = self.stream(FakeLLM(["Half"], RuntimeError("cut")), FakeLLM(["Full answer."]))
+        self.assertEqual(events, [("delta", "Half"), ("reset", ""), ("delta", "Full answer.")])
+
+    def test_empty_stream_counts_as_failure(self):
+        events = self.stream(FakeLLM([" "]), FakeLLM(["Answer."]))
+        self.assertEqual(events, [("delta", " "), ("reset", ""), ("delta", "Answer.")])
+
+    def test_all_failing_raises_quota_error(self):
+        from app.llm import LLMUnavailableError
+
+        with self.assertRaisesRegex(LLMUnavailableError, "quota"):
+            self.stream(FakeLLM([], RuntimeError("429 RESOURCE_EXHAUSTED")))
+
+
 if __name__ == "__main__":
     unittest.main()

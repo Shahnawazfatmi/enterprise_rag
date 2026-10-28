@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 import logging
 import re
 
@@ -56,10 +57,8 @@ Sources:
 # RESPONSE CONTENT EXTRACTION
 # ============================================================
 
-def extract_response_content(response) -> str:
-    """Convert LangChain model response content into a clean string."""
-
-    content = getattr(response, "content", None)
+def content_text(content) -> str:
+    """Text of a LangChain message or stream chunk (a string or a list of parts)."""
 
     if isinstance(content, list):
         parts = []
@@ -68,9 +67,15 @@ def extract_response_content(response) -> str:
                 parts.append(item)
             elif isinstance(item, dict) and item.get("text"):
                 parts.append(str(item["text"]))
-        content = "".join(parts)
+        return "".join(parts)
 
-    answer = str(content or "").strip()
+    return str(content or "")
+
+
+def extract_response_content(response) -> str:
+    """Convert LangChain model response content into a clean string."""
+
+    answer = content_text(getattr(response, "content", None)).strip()
 
     if not answer:
         raise LLMUnavailableError("The language model returned an empty response.")
@@ -172,6 +177,29 @@ def load_llms() -> list[tuple[str, BaseChatModel]]:
 QUOTA_MARKERS = ("RESOURCE_EXHAUSTED", "429", "insufficient_quota", "rate_limit")
 
 
+def build_messages(question: str, context: str, history: list[dict] | None = None) -> list[tuple[str, str]]:
+    """System prompt with the numbered sources, earlier turns, then the question."""
+
+    messages = [("system", SYSTEM_PROMPT + context)]
+
+    for message in history or []:
+        role = "human" if message["role"] == "user" else "ai"
+        messages.append((role, message["content"]))
+
+    messages.append(("human", question.strip()))
+
+    return messages
+
+
+def unavailable_error(errors: list[Exception]) -> LLMUnavailableError:
+    """The error to raise when every LLM failed."""
+
+    if errors and all(any(marker in str(error) for marker in QUOTA_MARKERS) for error in errors):
+        return LLMUnavailableError("The AI service quota is exhausted.")
+
+    return LLMUnavailableError("The AI service is unavailable.")
+
+
 def generate_answer(
     question: str,
     context: str,
@@ -189,14 +217,7 @@ def generate_answer(
     were an answer, so the API can return HTTP 503.
     """
 
-    messages = [("system", SYSTEM_PROMPT + context)]
-
-    for message in history or []:
-        role = "human" if message["role"] == "user" else "ai"
-        messages.append((role, message["content"]))
-
-    messages.append(("human", question.strip()))
-
+    messages = build_messages(question, context, history)
     errors = []
 
     for attempt, (name, llm) in enumerate(llms):
@@ -213,7 +234,50 @@ def generate_answer(
 
         return answer
 
-    if errors and all(any(marker in str(error) for marker in QUOTA_MARKERS) for error in errors):
-        raise LLMUnavailableError("The AI service quota is exhausted.") from errors[-1]
+    raise unavailable_error(errors) from (errors[-1] if errors else None)
 
-    raise LLMUnavailableError("The AI service is unavailable.") from (errors[-1] if errors else None)
+
+def generate_answer_stream(
+    question: str,
+    context: str,
+    llms: list[tuple[str, BaseChatModel]],
+    history: list[dict] | None = None,
+) -> Iterator[tuple[str, str]]:
+    """
+    generate_answer, but yields ("delta", text) pieces while the LLM writes.
+
+    Same prompt and the same fallback order. If an LLM fails after it has
+    already sent text, ("reset", "") is yielded before the next one starts,
+    so the client discards the partial answer. Raises LLMUnavailableError
+    when every LLM fails.
+    """
+
+    messages = build_messages(question, context, history)
+    errors = []
+
+    for attempt, (name, llm) in enumerate(llms):
+        answer = ""
+
+        try:
+            for chunk in llm.stream(messages):
+                text = content_text(chunk.content)
+                if text:
+                    answer += text
+                    yield "delta", text
+
+            if not answer.strip():
+                raise LLMUnavailableError("The language model returned an empty response.")
+
+        except Exception as error:
+            logger.error(f"LLM inference failed ({name}): {str(error)[:500]}")
+            errors.append(error)
+            if answer:
+                yield "reset", ""
+            continue
+
+        if attempt > 0:
+            logger.warning(f"Answered by fallback LLM {name}")
+
+        return
+
+    raise unavailable_error(errors) from (errors[-1] if errors else None)
