@@ -312,5 +312,137 @@ class StreamingTests(unittest.TestCase):
             self.stream(FakeLLM([], RuntimeError("429 RESOURCE_EXHAUSTED")))
 
 
+class AnswerLengthTests(unittest.TestCase):
+
+    def test_detail_only_when_asked(self):
+        from app.router import wants_detail
+
+        for text in ("Explain the DPDP penalties in detail", "tell me more", "Give me the full list of rights",
+                     "walk me through the breach process step by step"):
+            self.assertTrue(wants_detail(text), text)
+
+        for text in ("What does the Pro plan cost?", "What are the penalties under the DPDP Act?",
+                     "Is there a free plan and what are its limits?"):
+            self.assertFalse(wants_detail(text), text)
+
+    def test_steps_questions_get_numbered_lists(self):
+        from app.llm import system_prompt
+        from app.router import wants_steps
+
+        for text in ("What should a company do after a personal data breach?", "How do I set up the banner?",
+                     "How can we comply with the DPDP Act?", "What are the steps to file a grievance?"):
+            self.assertTrue(wants_steps(text), text)
+
+        for text in ("What does the Pro plan cost?", "What is a consent manager?",
+                     "What are the penalties under the DPDP Act?"):
+            self.assertFalse(wants_steps(text), text)
+
+        self.assertIn("This question asks what to do", system_prompt(steps=True))
+        self.assertNotIn("This question asks what to do", system_prompt())
+
+    def test_detailed_prompt_changes_only_the_format_rule(self):
+        from app.llm import system_prompt
+
+        normal, detailed = system_prompt(), system_prompt(detailed=True)
+        self.assertIn("numbered list", normal)
+        self.assertIn("The facts decide how many points", normal)
+        self.assertIn("detailed answer", detailed)
+        self.assertEqual(normal.split("\n6.")[0], detailed.split("\n6.")[0])
+        self.assertEqual(normal.split("\n7.")[1], detailed.split("\n7.")[1])
+
+
+class LinkCatalogTests(unittest.TestCase):
+
+    def test_canonical_urls(self):
+        from ingestion.link_catalog import canonical_url
+
+        self.assertEqual(canonical_url("https://app.consiva.ai/register?ga_consent=0&ads_consent=0"),
+                         "https://app.consiva.ai/register?plan=free")
+        self.assertEqual(canonical_url("https://app.consiva.ai/register?plan=pro&utm_source=x"),
+                         "https://app.consiva.ai/register?plan=pro")
+        self.assertEqual(canonical_url("https://consiva.ai/contact#form"), "https://consiva.ai/contact")
+        self.assertIsNone(canonical_url("https://consiva.ai/assets/images/a.jpg"))
+        self.assertIsNone(canonical_url("https://example.com/page"))
+
+    def test_entries_from_pages_and_links(self):
+        from ingestion.link_catalog import HOMEPAGE, build_entries
+
+        pages = [
+            {"url": "https://consiva.ai/pricing", "metadata": {"title": "Pricing | Consiva", "description": "Plans"},
+             "markdown": "[Get Started Free](https://app.consiva.ai/register?ga_consent=0) "
+                         "[Start Free](https://app.consiva.ai/register?plan=free&utm_source=a) "
+                         "[Book a Demo](https://consiva.ai/contact) ![x](https://consiva.ai/assets/a.png)"},
+            {"url": "https://consiva.ai/", "metadata": {"title": "Home"}, "markdown": ""},
+        ]
+        entries = {entry["url"]: entry for entry in build_entries(pages)}
+
+        self.assertEqual(entries["https://app.consiva.ai/register?plan=free"]["kind"], "action")
+        self.assertIn("Get Started Free", entries["https://app.consiva.ai/register?plan=free"]["text"])
+        self.assertEqual(entries["https://consiva.ai/contact"]["kind"], "action")
+        self.assertEqual(entries["https://consiva.ai/pricing"]["label"], "Pricing")
+        # The homepage is offered as the free website check, once.
+        self.assertIn("Scan my website", entries[HOMEPAGE]["text"])
+        self.assertFalse(any("/assets/" in url for url in entries))
+
+
+class NextStepTests(unittest.TestCase):
+
+    def setUp(self):
+        from app.next_step import LinkCatalog
+
+        records = [
+            {"url": "https://consiva.ai/pricing", "kind": "product", "label": "Pricing", "text": "plans"},
+            {"url": "https://app.consiva.ai/register?plan=free", "kind": "action", "label": "Sign up", "text": "start"},
+            {"url": "https://consiva.ai/blog/x", "kind": "blog", "label": "Blog", "text": "other"},
+        ]
+        vectors = np.array([[1, 0, 0], [0.8, 0.6, 0], [0, 0, 1]], dtype=np.float32)
+        self.catalog = LinkCatalog(records, vectors)
+
+    def shortlist(self, exclude=(), limit=1, min_score=0.3):
+        vector = np.array([1, 0, 0], dtype=np.float32)
+        return [c["url"] for c in self.catalog.shortlist(vector, vector, set(exclude), limit, min_score)]
+
+    def test_relevant_actions_are_always_offered(self):
+        self.assertEqual(self.shortlist(limit=1), ["https://consiva.ai/pricing", "https://app.consiva.ai/register?plan=free"])
+
+    def test_sign_up_links_are_marked_as_chatbot(self):
+        from app.next_step import with_utm
+
+        self.assertEqual(with_utm("https://app.consiva.ai/register?plan=free"),
+                         "https://app.consiva.ai/register?plan=free&utm_source=chatbot&ga_consent=0&ads_consent=0")
+        self.assertEqual(with_utm("https://consiva.ai/contact"), "https://consiva.ai/contact?utm_source=chatbot")
+
+    def test_cited_pages_and_weak_links_are_dropped(self):
+        urls = self.shortlist(exclude={"https://consiva.ai/pricing"}, limit=3)
+        self.assertEqual(urls, ["https://app.consiva.ai/register?plan=free"])
+
+    def test_cited_action_links_are_still_offered(self):
+        urls = self.shortlist(exclude={"https://app.consiva.ai/register?plan=free"}, limit=3)
+        self.assertIn("https://app.consiva.ai/register?plan=free", urls)
+
+    def test_pick_uses_the_catalog_url(self):
+        from types import SimpleNamespace
+        from app.next_step import NextStepChoice, choose_next_step
+
+        def llm(choice=None, error=None):
+            def invoke(messages):
+                if error:
+                    raise error
+                return choice
+            return SimpleNamespace(with_structured_output=lambda schema: SimpleNamespace(invoke=invoke))
+
+        candidates = [{"url": "https://consiva.ai/contact", "kind": "action", "label": "Contact", "text": "demo"}]
+        pick = NextStepChoice(option=1, question="Do you want to book a demo?", button="Book a demo")
+
+        step = choose_next_step("q", "a", candidates, [("down", llm(error=RuntimeError("x"))), ("ok", llm(pick))])
+        self.assertTrue(step["url"].startswith("https://consiva.ai/contact"))
+        self.assertIn("utm_source=chatbot", step["url"])
+        self.assertEqual(step["label"], "Book a demo")
+
+        none = NextStepChoice(option=0, question="", button="")
+        self.assertIsNone(choose_next_step("q", "a", candidates, [("ok", llm(none))]))
+        self.assertIsNone(choose_next_step("q", "a", candidates, [("ok", llm(NextStepChoice(option=5, question="x", button="y")))]))
+
+
 if __name__ == "__main__":
     unittest.main()

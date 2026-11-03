@@ -80,3 +80,33 @@ def classify_query(question: str) -> str:
 def get_direct_response(query_type: str):
     """Return a response for queries that don't need RAG."""
     return RESPONSES.get(query_type)
+
+
+# The user explicitly asks for a long answer. Everything else is answered
+# at the length its facts need (see FORMAT_RULES in app/llm.py).
+WANTS_DETAIL = re.compile(
+    r"\b(in detail|in depth|detailed|elaborate|step[- ]by[- ]step|comprehensive|deep dive|"
+    r"full (list|details|explanation)|complete (list|guide|details)|everything (about|on)|"
+    r"tell me more|more (detail|details|info|information)|walk me through|"
+    r"explain (fully|thoroughly|everything|all))\b",
+    re.IGNORECASE,
+)
+
+
+def wants_detail(question: str) -> bool:
+    return bool(WANTS_DETAIL.search(question))
+
+
+# The user asks what to do or how to do something: the answer is a
+# numbered list of steps (the model alone often falls back to bullets).
+WANTS_STEPS = re.compile(
+    r"\bhow (do|can|should|to)\b(?! (you|they) (define|mean))|"
+    r"\bwhat (should|must|do|does) .{0,40}\b(do|take)\b|"
+    r"\b(steps?|step[- ]by[- ]step|process|procedure|checklist|set ?up|install|implement|configure)\b|"
+    r"\bafter (a|an|the)\b",
+    re.IGNORECASE,
+)
+
+
+def wants_steps(question: str) -> bool:
+    return bool(WANTS_STEPS.search(question))

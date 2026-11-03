@@ -38,7 +38,7 @@
     "article_section": null,
     "source_url": "https://consiva.ai/legal/refund-and-cancellation-policy",
     "status_code": 200,
-    "scrape_id": "01a161ce-928e-76da-bfc0-466d1417362d",
+    "scrape_id": "01a19fc4-49ee-7030-9357-6d83b4b05380",
     "num_pages": null,
     "total_pages": null,
     "content_type": "text/html",
@@ -50,16 +50,16 @@
     "concurrency_limited": false,
     "concurrency_queue_duration_ms": null,
     "error": null,
-    "cmp-verification": "cmp-verify-4666bd7a49d1495c92ef53f8f6641dd9",
+    "email": "support@consiva.ai",
+    "viewport": "width=device-width, initial-scale=1",
     "google-site-verification": "iQDsvOMXrCg1TyLyDM2m7BnolV5rOud7_tFlZ1sBUto",
+    "name": "Consiva.ai",
     "theme-color": [
       "#03070F",
       "#F8FAFF"
     ],
-    "name": "Consiva.ai",
-    "email": "support@consiva.ai",
-    "viewport": "width=device-width, initial-scale=1",
-    "indexId": "ae259e70-af33-4076-9ed6-a382b5f6e163"
+    "cmp-verification": "cmp-verify-4666bd7a49d1495c92ef53f8f6641dd9",
+    "indexId": "1cb9cd83-a357-4428-8191-2a296060404e"
   },
   "links": null,
   "images": null,

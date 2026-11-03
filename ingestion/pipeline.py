@@ -3,7 +3,10 @@ Nightly ingestion pipeline.
 
 Stages (each runs as its own process):
     scraping -> cleaning -> comparison -> vector_update
-    -> manifest_update -> baseline_promotion
+    -> manifest_update -> baseline_promotion -> link_catalog
+
+link_catalog (next-step links shown after answers) is optional: if it
+fails, the run still succeeds and the API keeps the previous catalog.
 
 Reliability features:
 - A lock file stops two runs from writing to the database at once.
@@ -419,6 +422,13 @@ def run_pipeline(skip_scrape: bool = False) -> None:
 
         mark("baseline_promotion")
         promote_baseline()
+
+        mark("link_catalog")
+        try:
+            run_stage("link_catalog", "link_catalog.py")
+        except Exception as error:
+            logger.error(f"Link catalog not updated (the previous one stays in use): {error}")
+            send_alert(f"Consiva pipeline: link catalog not updated: {error}")
 
         status = create_status(
             "success",

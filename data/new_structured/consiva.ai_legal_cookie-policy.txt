@@ -6,6 +6,8 @@ description: The cookies and similar technologies used on consiva.ai, what they 
 
 # Cookie Policy
 
+Effective: August 2026 Swaran Soft Support Solutions Pvt. Ltd. Governed by DPDP Act 2023
+
 ## 1. What This Covers
 
 This policy explains the cookies and similar technologies — local storage, pixels, tags and scripts — used on consiva.ai.

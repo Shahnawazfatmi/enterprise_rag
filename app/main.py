@@ -159,9 +159,11 @@ def ask_question_stream(payload: QuestionRequest, request: Request):
         reset {}                               discard the text so far (fallback LLM starts over)
         done  {"answer", "sources", "query_type"}   same fields as /ask; "answer" is final
         error {"status", "detail"}             the LLM failed after streaming started
+        next_step {"question", "label", "url"} optional, after done: a relevant link to offer
 
     Bad input, rate limits and retrieval errors still return normal HTTP
-    errors, because they happen before streaming starts.
+    errors, because they happen before streaming starts. Clients that stop
+    reading at done simply never see next_step.
     """
 
     check_rate_limit(request.client.host if request.client else "unknown")
@@ -176,10 +178,20 @@ def ask_question_stream(payload: QuestionRequest, request: Request):
         if result is not None:
             yield sse("delta", {"text": result["answer"]})
             yield sse("done", result)
+
+            # Greetings need no next step; "not found" may (talk to the team).
+            if result["query_type"] == "not_found":
+                step = rag.suggest_next_step(payload.question, result["answer"], [])
+                if step:
+                    yield sse("next_step", step)
             return
+
+        done = None
 
         try:
             for event, data in rag.stream_answer(prepared):
+                if event == "done":
+                    done = data
                 yield sse(event, data)
 
         except LLMUnavailableError as error:
@@ -188,6 +200,13 @@ def ask_question_stream(payload: QuestionRequest, request: Request):
         except Exception:
             logger.exception("Unexpected error while streaming")
             yield sse("error", {"status": 500, "detail": "Something went wrong. Please try again."})
+
+        if done:
+            step = rag.suggest_next_step(
+                prepared["question"], done["answer"], done["sources"], prepared["query_vector"],
+            )
+            if step:
+                yield sse("next_step", step)
 
     return StreamingResponse(
         events(),

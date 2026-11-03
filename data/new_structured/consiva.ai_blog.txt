@@ -8,6 +8,38 @@ No articles found in this category.
 
 Try selecting a different filter above.
 
+## Data Breach Response Plan Under DPDP: A Step-by-Step Guide for Businesses
+
+What good DPDP data breach response looks like when the clock is already running, and how to write the plan before you need it — what counts as a breach, the three clocks, and who gets told what, and when.
+
+Consiva Team · 26 Oct 2026
+
+## DPDP Compliance for HR and Employee Data: What Companies Need to Know
+
+Why DPDP compliance for HR is really a people-and-vendors problem, and where the law is clear (and where it isn't) — candidates, background checks, monitoring, HR vendors and the ex-employee email.
+
+Consiva Team · 23 Oct 2026
+
+Data Privacy
+
+## Privacy by Design Under the DPDP Act: A Practical Framework for Businesses
+
+Why privacy by design DPDP compliance is a product job first and a legal job second, and one way to get it done before May 2027 — collect less, explain simply, switch it off, safe by default, prove it.
+
+Consiva Team · 20 Oct 2026
+
+## Vendor Risk Management Under DPDP: How to Manage Third-Party Data Processors
+
+A practical guide to DPDP vendor risk management, for companies whose customer data sits in somebody else's systems — the register, risk tiers, the clauses that matter and offboarding.
+
+Consiva Team · 16 Oct 2026
+
+## How Businesses Should Handle Children's Personal Data Under the DPDP Act
+
+What DPDP children’s data rules mean for edtech, gaming, fintech and any other business that has customers under 18 — who counts as a child, verifiable parental consent, and the narrow exemptions.
+
+Consiva Team · 14 Oct 2026
+
 Data Privacy
 
 ## Data Retention Under the DPDP Act: Rules, Policies, and Best Practices

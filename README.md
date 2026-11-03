@@ -37,10 +37,23 @@ Docker: `docker compose up --build` (API on 8081, widget on 8082; `data/` and th
 Response: `{"answer": "... [1]", "sources": [{"id": 1, "title", "section", "url"}], "query_type"}`.
 Errors: 400 bad input, 429 rate limit, 503 knowledge base or LLM unavailable.
 
+`POST /ask/stream` takes the same body and sends server-sent events: `delta` (text), `reset`
+(fallback LLM restarts), `done` (same fields as `/ask`), `error`, and after `done` an optional
+`next_step` `{"question", "label", "url"}`: a relevant link from the site with a follow-up question
+(see `app/next_step.py`). `/ask` never includes a next step.
+
+Answers open with one direct sentence followed by bullet points (about 80 words, more for lists),
+as long as their facts need; only filler is cut (rule 6 in `app/llm.py`). "How do I / what should we do /
+set up / steps" questions get a numbered list (`app/router.py · wants_steps`), and questions that ask
+for detail ("explain in detail", "tell me more") get a fuller answer (`wants_detail`).
+
 ## Nightly pipeline
 
 `run_pipeline.bat` runs `ingestion/pipeline.py`:
-scraping → cleaning → comparison → vector update → manifest update → baseline promotion.
+scraping → cleaning → comparison → vector update → manifest update → baseline promotion → link catalog.
+
+- The link catalog (`data/vectorstore/link_catalog.npz`, built by `ingestion/link_catalog.py`) holds the
+  next-step links. If that stage fails, the run still succeeds and the previous catalog stays in use.
 
 - Only changed chunks are embedded; IDs are content hashes.
 - Changing chunking or cleaning? Bump `CHUNKER_VERSION` in `config.py`; the next run re-indexes every page.
@@ -64,4 +77,6 @@ Run the eval before and after any change to cleaning, chunking, retrieval or the
 ## Configuration
 
 All settings are in `config.py` and can be overridden in `.env` (see `.env.example`):
-chunk sizes, `TOP_K`, `MIN_RELEVANCE` (the "not found" threshold), rate limit, allowed origins, `LLM_PROVIDER` and model.
+chunk sizes, `TOP_K`, `MIN_RELEVANCE` (the "not found" threshold), rate limit, allowed origins, `LLM_PROVIDER` and model,
+`LLM_MAX_TOKENS` (safety cap on answer length), and the next step: `NEXT_STEP_ENABLED`, `NEXT_STEP_MIN_SCORE`,
+`NEXT_STEP_UTM`, and `LOGIN_URL` (the site never links to its sign-in page, so a "log in" step needs it).

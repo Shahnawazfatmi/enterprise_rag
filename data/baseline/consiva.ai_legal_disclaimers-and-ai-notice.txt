@@ -6,6 +6,8 @@ description: What Consiva is, what it is not, and where your own judgement and l
 
 # Disclaimers & AI Notice
 
+Effective: August 2026 Swaran Soft Support Solutions Pvt. Ltd. Governed by DPDP Act 2023
+
 Consiva.ai is a product and technology platform operated by Swaran Soft Support Solutions Private Limited.
 
 ## 1. What Consiva Is

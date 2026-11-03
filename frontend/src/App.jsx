@@ -45,13 +45,15 @@ function parseEvent(block) {
 }
 
 /*
- * Ask through /ask/stream. onEvent(event, data) receives delta, reset
- * and done (see app/main.py). An API without the streaming endpoint
- * (404/405) is asked through /ask instead and reported as one done.
+ * Ask through /ask/stream. onEvent(event, data) receives delta, reset,
+ * done and, after done, an optional next_step (see app/main.py). An API
+ * without the streaming endpoint (404/405) is asked through /ask
+ * instead and reported as one done.
  */
 async function askBackendStream(question, history, onEvent) {
   const controller = new AbortController()
   let timer
+  let answered = false
 
   const restartTimer = () => {
     clearTimeout(timer)
@@ -95,13 +97,15 @@ async function askBackendStream(question, history, onEvent) {
         if (event === 'error') throw statusError(data.status)
 
         onEvent(event, data)
-        if (event === 'done') return
+        if (event === 'done') answered = true
       }
     }
 
     // The connection closed before the answer was complete.
-    throw statusError(500)
+    if (!answered) throw statusError(500)
   } catch (error) {
+    // Only the optional next step was lost; the answer is already shown.
+    if (answered) return
     if (error.name === 'AbortError') {
       throw new Error('The assistant took too long to answer. Please try again.')
     }
@@ -166,6 +170,20 @@ function SourceList({ sources }) {
           </li>
         ))}
       </ol>
+    </div>
+  )
+}
+
+// A relevant link offered after the answer (see app/next_step.py).
+function NextStep({ step }) {
+  if (!step?.url) return null
+
+  return (
+    <div className="message-next-step">
+      <p>{step.question}</p>
+      <a href={step.url} target="_blank" rel="noreferrer">
+        {step.label}
+      </a>
     </div>
   )
 }
@@ -307,6 +325,12 @@ function App() {
             { id: answerId, role: 'assistant', ...final },
           ])
         }
+
+        // The answer is complete: the user can type while the next step loads.
+        setIsThinking(false)
+        setIsAnswering(false)
+      } else if (event === 'next_step' && data.url) {
+        setAnswer({ nextStep: data })
       }
     }
 
@@ -406,6 +430,7 @@ function App() {
                         {message.content}
                       </ReactMarkdown>
                       <SourceList sources={message.sources} />
+                      <NextStep step={message.nextStep} />
                     </>
                   ) : (
                     message.content

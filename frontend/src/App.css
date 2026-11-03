@@ -1091,3 +1091,33 @@
   text-decoration: underline;
   word-break: break-word;
 }
+
+/* Next step offered after an answer: a question and one button */
+.message-next-step {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(37, 99, 235, 0.35);
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.08);
+  font-size: 13px;
+}
+
+.message-bubble.assistant .message-next-step p {
+  margin: 0 0 8px;
+}
+
+.message-next-step a {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #4f46e5, #2563eb);
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.message-next-step a:hover,
+.message-next-step a:focus-visible {
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.35);
+}

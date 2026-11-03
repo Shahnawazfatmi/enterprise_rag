@@ -6,6 +6,40 @@ description: Achieve DPDP compliance with powerful software, solutions, platform
 
 ISO 9001 Certified·ISO 27001 Certified·NASSCOM Member·DSCI Member · DSCI/AM/2026/089·DPIIT Recognised· Download White Paper
 
+AI Consent Agent · DPDPA 2023 · GDPR
+
+## Is your website DPDPA & GDPR ready?
+
+Our AI agent scans your website for cookies, trackers, consent banner and privacy-policy gaps in minutes — free during our inaugural access offer.
+
+Your website address
+
+- No credit card
+- Read-only scan
+- Set up in 5 minutes
+
+1. _01_ Assess Scan your website for compliance gaps
+
+2. _02_ Understand Get clear insights & priority actions
+
+3. _03_ Act & Comply Fix issues and stay compliant always
+
+2 of 2 free scans left today on this device. Each website can be scanned once per day. Inaugural offer available to select customers for a limited period. Terms apply.
+
+What the scan covers
+
+DPDPA 2023 Fully aligned
+
+GDPR Ready Global standards
+
+Cookie Consent CMP built in
+
+Principal Rights Request workflows
+
+Data Discovery Mapping & ROPA
+
+India Residency Secure & local
+
 Built for India's DPDP Act 2023 — obligations take effect 13 May 2027
 
 # India's Consent Management & DPDP Platform for Global Businesses
@@ -581,6 +615,46 @@ Resources & Blog
 
 Expert guides on DPDP compliance, cookie consent management, data privacy, and CERT-In obligations — written for Indian compliance teams and legal officers.
 
+DPDP Compliance
+
+### Data Breach Response Plan Under DPDP: A Step-by-Step Guide for Businesses
+
+What good DPDP data breach response looks like when the clock is already running, and how to write the plan before you need it — what counts as a breach, the three clocks, and who gets told what, and when.
+
+Consiva Team · 26 Oct 2026
+
+DPDP Compliance
+
+### DPDP Compliance for HR and Employee Data: What Companies Need to Know
+
+Why DPDP compliance for HR is really a people-and-vendors problem, and where the law is clear (and where it isn't) — candidates, background checks, monitoring, HR vendors and the ex-employee email.
+
+Consiva Team · 23 Oct 2026
+
+Data Privacy
+
+### Privacy by Design Under the DPDP Act: A Practical Framework for Businesses
+
+Why privacy by design DPDP compliance is a product job first and a legal job second, and one way to get it done before May 2027 — collect less, explain simply, switch it off, safe by default, prove it.
+
+Consiva Team · 20 Oct 2026
+
+DPDP Compliance
+
+### Vendor Risk Management Under DPDP: How to Manage Third-Party Data Processors
+
+A practical guide to DPDP vendor risk management, for companies whose customer data sits in somebody else's systems — the register, risk tiers, the clauses that matter and offboarding.
+
+Consiva Team · 16 Oct 2026
+
+DPDP Compliance
+
+### How Businesses Should Handle Children's Personal Data Under the DPDP Act
+
+What DPDP children’s data rules mean for edtech, gaming, fintech and any other business that has customers under 18 — who counts as a child, verifiable parental consent, and the narrow exemptions.
+
+Consiva Team · 14 Oct 2026
+
 Data Privacy
 
 ### Data Retention Under the DPDP Act: Rules, Policies, and Best Practices
@@ -588,46 +662,6 @@ Data Privacy
 How to build a data retention policy DPDP regulators would recognise, without deleting things you're legally required to keep. Which records you wipe, which you're allowed to keep — and who makes that call.
 
 Consiva Team · 12 Oct 2026
-
-DPDP Compliance
-
-### DPDP Compliance for Fintech and Banking Companies: A Practical Guide
-
-Where DPDP compliance for fintech and banking collides with RBI and PMLA, and what to do about it — retention, localisation, consent, the lending exemptions, vendors and a sample retention matrix.
-
-Consiva Team · 08 Oct 2026
-
-DPDP Compliance
-
-### How to Conduct a Data Privacy Impact Assessment (DPIA) Under the DPDP Act
-
-What a data privacy impact assessment really involves, and how to run one when the Rules don't hand you a template — who has to do one, the seven steps, and what the finished document looks like.
-
-Consiva Team · 05 Oct 2026
-
-DPDP Compliance
-
-### DPDP Compliance for Healthcare Companies: Key Requirements and Best Practices
-
-What DPDP compliance for healthcare asks of hospitals, labs, clinics and healthtech teams — the requirements in the order a patient meets them, where hospitals slip, and seven steps to get moving.
-
-Consiva Team · 01 Oct 2026
-
-Technology
-
-### The AI Data Visibility Gap: How Enterprises Can Discover, Trace and Prove Personal Data Across Their AI Estate
-
-How AI Privacy Intelligence helps enterprises discover, trace and prove personal data across prompts, RAG, agents and shadow AI. No rip and replace.
-
-Consiva Team · 25 Sep 2026
-
-DPDP Compliance
-
-### Privacy Governance Is Not About Company Size. It’s About the Data You Handle.
-
-A business can have 20 employees or 20,000 — the question that actually matters is what personal data it collects, uses, stores, shares and retains, and how that data is governed. Why every digitally enabled organization in India needs a Personal Data Footprint, not just a consent banner.
-
-Consiva Team · 18 Sep 2026
 
 FAQ
 

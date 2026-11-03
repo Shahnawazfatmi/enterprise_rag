@@ -6,6 +6,8 @@ description: How Swaran Soft Support Solutions Private Limited handles personal 
 
 # Privacy Policy
 
+Effective: August 2026 Last updated: October 2026 Swaran Soft Support Solutions Pvt. Ltd. Governed by DPDP Act 2023
+
 ## 1. Who We Are and What This Covers
 
 Consiva.ai is a product and technology platform operated by Swaran Soft Support Solutions Private Limited ("we", "us", "our"), Tower A, Unit No. 2, 2nd Floor, The Cityscape, Sector-66, Golf Course Extension Road, Gurugram, Haryana – 122102, India. CIN: U72200DL2005PTC136405.
@@ -201,6 +203,14 @@ Where our customers use the platform to process children's data with verifiable 
 ## 13. Automated Decision-Making
 
 We do not make decisions producing legal effects about you by solely automated means. Where the platform uses automated processing to assist with classification or suggestions, those outputs require human review — see our Disclaimers & AI Notice.
+
+## Language of this notice
+
+This notice is available in English. You may also ask for it in any language listed in the Eighth Schedule to the Constitution of India, and we will provide it on request — write to privacy@consiva.ai (email) and tell us the language you choose.
+
+## Personal data breaches
+
+If a personal data breach affects your personal data, we will inform the Data Protection Board of India and each affected person, as the DPDP Act, 2023 and the DPDP Rules, 2025 require. We will tell affected people what happened, how it may affect them, what we have done and are doing about it, the safety steps they can take, and who to contact at Consiva.
 
 ## 14. Cookies
 

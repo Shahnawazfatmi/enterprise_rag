@@ -151,6 +151,11 @@ LLM_TEMPERATURE = _float("LLM_TEMPERATURE", 0.1)
 LLM_TIMEOUT_SECONDS = _int("LLM_TIMEOUT_SECONDS", 45)
 LLM_MAX_RETRIES = _int("LLM_MAX_RETRIES", 2)
 
+# Safety cap on answer length (output tokens). The prompt lets the facts
+# decide the length; this only stops a runaway answer. Normal answers are
+# 20-450 tokens and detailed ones up to ~600, so it must stay well above that.
+LLM_MAX_TOKENS = _int("LLM_MAX_TOKENS", 1500)
+
 # Thinking tokens for Gemini 2.5+/3.x. 0 = off: answering from retrieved
 # text needs no long reasoning, and thinking made answers take ~60 s.
 # Use -1 (model decides) for models that require thinking.
@@ -158,6 +163,33 @@ LLM_THINKING_BUDGET = _int("LLM_THINKING_BUDGET", 0)
 
 # Conversation turns (user + assistant messages) used for follow-ups.
 MAX_HISTORY_MESSAGES = _int("MAX_HISTORY_MESSAGES", 6)
+
+# ============================================================
+# NEXT STEP (a link and a follow-up question after the answer)
+# ============================================================
+
+# Built nightly from the scraped site by ingestion/link_catalog.py.
+LINK_CATALOG_FILE = VECTORSTORE_DIR / "link_catalog.npz"
+
+# "false" turns the next-step card off.
+NEXT_STEP_ENABLED = os.getenv("NEXT_STEP_ENABLED", "true").lower() == "true"
+
+# Links shortlisted by meaning; the LLM picks one of them or none.
+NEXT_STEP_CANDIDATES = _int("NEXT_STEP_CANDIDATES", 4)
+
+# Links scoring below this (blend of question and answer similarity) are never offered.
+NEXT_STEP_MIN_SCORE = _float("NEXT_STEP_MIN_SCORE", 0.45)
+
+# The pick is a short extra call after the answer: fail fast, never retry.
+NEXT_STEP_TIMEOUT_SECONDS = _int("NEXT_STEP_TIMEOUT_SECONDS", 8)
+
+# Added to every next-step link so sign-ups from the chatbot can be counted.
+NEXT_STEP_UTM = os.getenv("NEXT_STEP_UTM", "utm_source=chatbot")
+
+# Links that are not on the website itself. The site never links to its
+# sign-in page, so a "log in" step is offered only when LOGIN_URL is set.
+LOGIN_URL = os.getenv("LOGIN_URL", "")
+
 
 NOT_FOUND_ANSWER = (
     "I couldn't find that information in the Consiva knowledge base. "
@@ -197,6 +229,7 @@ STAGE_TIMEOUTS_SECONDS = {
     "cleaning": _int("TIMEOUT_CLEANING", 10 * 60),
     "comparison": _int("TIMEOUT_COMPARISON", 10 * 60),
     "vector_update": _int("TIMEOUT_VECTOR_UPDATE", 120 * 60),
+    "link_catalog": _int("TIMEOUT_LINK_CATALOG", 20 * 60),
 }
 
 # Optional Slack / Teams / generic webhook for failure alerts.

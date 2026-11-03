@@ -9,12 +9,18 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 from app.index import SearchIndex
 from app.llm import LLMUnavailableError, generate_answer, generate_answer_stream, llm_name, load_llms
-from app.router import classify_query, get_direct_response
+from app.next_step import LinkCatalog, choose_next_step
+from app.router import classify_query, get_direct_response, wants_detail, wants_steps
 from config import (
     INDEX_VERSION_FILE,
+    LINK_CATALOG_FILE,
     MAX_CHUNKS_PER_PAGE,
     MAX_HISTORY_MESSAGES,
     MIN_RELEVANCE,
+    NEXT_STEP_CANDIDATES,
+    NEXT_STEP_ENABLED,
+    NEXT_STEP_MIN_SCORE,
+    NEXT_STEP_TIMEOUT_SECONDS,
     NOT_FOUND_ANSWER,
     RELATIVE_RELEVANCE_MARGIN,
     RETRIEVAL_CANDIDATES,
@@ -146,6 +152,15 @@ class ConsivaRAG:
             logger.error(f"LLM not configured: {error}")
             self.llms = []
 
+        # Same models for the next-step pick, but quick: short timeout, no retries.
+        self._links = None
+        self._links_version = None
+        self.next_step_llms = []
+
+        if NEXT_STEP_ENABLED and self.llms:
+            self.next_step_llms = load_llms(timeout=NEXT_STEP_TIMEOUT_SECONDS, max_retries=0, max_tokens=150)
+            self.reload_links_if_changed()
+
         logger.info("Consiva RAG initialized")
 
     # --------------------------------------------------------
@@ -191,6 +206,32 @@ class ConsivaRAG:
 
         return self._index
 
+    def reload_links_if_changed(self) -> None:
+        """Load the next-step link catalog, and again when the pipeline rebuilds it."""
+
+        try:
+            version = LINK_CATALOG_FILE.stat().st_mtime_ns
+        except FileNotFoundError:
+            return
+
+        if version == self._links_version:
+            return
+
+        with self._lock:
+            if version == self._links_version:
+                return
+
+            try:
+                links = LinkCatalog.load()
+            except Exception:
+                logger.exception("Could not load the link catalog; next steps are off until it loads")
+                self._links_version = version
+                return
+
+            self._links = links
+            self._links_version = version
+            logger.info(f"Link catalog loaded: {len(links)} links")
+
     def status(self) -> dict:
         return {
             "index_loaded": self._index is not None,
@@ -199,13 +240,16 @@ class ConsivaRAG:
             "llm_configured": bool(self.llms),
             "llm": self.llms[0][0] if self.llms else llm_name(),
             "llm_fallback": self.llms[1][0] if len(self.llms) > 1 else None,
+            "next_step_links": len(self._links) if self._links is not None else 0,
         }
 
     # --------------------------------------------------------
     # RETRIEVAL
     # --------------------------------------------------------
 
-    def retrieve(self, query: str) -> list[dict]:
+    def search(self, query: str) -> tuple[list[dict], np.ndarray]:
+        """Hits for the query, and the query vector (reused for the next step)."""
+
         corrected = self.index.correct_spelling(query)
 
         if corrected != query:
@@ -214,7 +258,7 @@ class ConsivaRAG:
 
         query_vector = np.asarray(self.embeddings.embed_query(query), dtype=np.float32)
 
-        return self.index.search(
+        hits = self.index.search(
             query_vector=query_vector,
             query_text=query,
             candidates=RETRIEVAL_CANDIDATES,
@@ -223,6 +267,11 @@ class ConsivaRAG:
             relative_margin=RELATIVE_RELEVANCE_MARGIN,
             max_per_page=MAX_CHUNKS_PER_PAGE,
         )
+
+        return hits, query_vector
+
+    def retrieve(self, query: str) -> list[dict]:
+        return self.search(query)[0]
 
     # --------------------------------------------------------
     # ASK QUESTION
@@ -247,7 +296,7 @@ class ConsivaRAG:
             return {"answer": get_direct_response(query_type), "sources": [], "query_type": query_type}, None
 
         history = clean_history(history)
-        hits = self.retrieve(retrieval_query(question, history))
+        hits, query_vector = self.search(retrieval_query(question, history))
 
         logger.info(
             "Retrieved %d chunks: %s",
@@ -261,7 +310,14 @@ class ConsivaRAG:
         if not self.llms:
             raise LLMUnavailableError(f"The language model ({llm_name()}) is not configured.")
 
-        return None, {"question": question, "history": history, "hits": hits}
+        return None, {
+            "question": question,
+            "history": history,
+            "hits": hits,
+            "query_vector": query_vector,
+            "detailed": wants_detail(question),
+            "steps": wants_steps(question),
+        }
 
     def ask_question(self, question: str, history: list[dict] | None = None) -> dict:
 
@@ -275,6 +331,8 @@ class ConsivaRAG:
             context=build_context(request["hits"]),
             llms=self.llms,
             history=request["history"],
+            detailed=request["detailed"],
+            steps=request["steps"],
         )
 
         return {
@@ -299,6 +357,8 @@ class ConsivaRAG:
             context=build_context(request["hits"]),
             llms=self.llms,
             history=request["history"],
+            detailed=request["detailed"],
+            steps=request["steps"],
         ):
             if event == "reset":
                 pieces.clear()
@@ -324,6 +384,62 @@ class ConsivaRAG:
             "sources": cited_sources(answer, request["hits"]),
             "query_type": "rag",
         }
+
+    # --------------------------------------------------------
+    # NEXT STEP
+    # --------------------------------------------------------
+
+    def suggest_next_step(
+        self,
+        question: str,
+        answer: str,
+        sources: list[dict],
+        query_vector: np.ndarray | None = None,
+    ) -> dict | None:
+        """
+        One relevant link and follow-up question after an answer, or None
+        (see app/next_step.py). Never raises: a failed suggestion only
+        means no card under the answer.
+        """
+
+        if not self.next_step_llms:
+            return None
+
+        self.reload_links_if_changed()
+
+        if self._links is None:
+            return None
+
+        started = time.perf_counter()
+
+        try:
+            if query_vector is None:
+                query_vector = self.embeddings.embed_query(question)
+
+            answer_vector = self.embeddings.embed_query(f"{question}\n{answer[:1500]}")
+
+            candidates = self._links.shortlist(
+                question_vector=query_vector,
+                answer_vector=answer_vector,
+                exclude_urls={source.get("url", "").rstrip("/") for source in sources},
+                limit=NEXT_STEP_CANDIDATES,
+                min_score=NEXT_STEP_MIN_SCORE,
+            )
+
+            step = choose_next_step(question, answer, candidates, self.next_step_llms)
+
+        except Exception:
+            logger.exception("Next step failed")
+            return None
+
+        logger.info(
+            "Next step: %s (%d candidates, %.2f s)",
+            step["url"] if step else "none",
+            len(candidates),
+            time.perf_counter() - started,
+        )
+
+        return step
 
 
 # ============================================================

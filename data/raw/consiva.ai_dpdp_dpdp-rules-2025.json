@@ -38,7 +38,7 @@
     "article_section": null,
     "source_url": "https://consiva.ai/dpdp/dpdp-rules-2025",
     "status_code": 200,
-    "scrape_id": "01a161cf-f8f6-74a4-94a9-73f73ae8ee67",
+    "scrape_id": "01a19b8b-5369-7776-9868-ceb891860eb8",
     "num_pages": null,
     "total_pages": null,
     "content_type": "text/html",
@@ -51,15 +51,15 @@
     "concurrency_queue_duration_ms": null,
     "error": null,
     "viewport": "width=device-width, initial-scale=1",
-    "cmp-verification": "cmp-verify-4666bd7a49d1495c92ef53f8f6641dd9",
-    "name": "Consiva.ai",
     "google-site-verification": "iQDsvOMXrCg1TyLyDM2m7BnolV5rOud7_tFlZ1sBUto",
     "email": "support@consiva.ai",
+    "cmp-verification": "cmp-verify-4666bd7a49d1495c92ef53f8f6641dd9",
     "theme-color": [
       "#03070F",
       "#F8FAFF"
     ],
-    "indexId": "b955b032-fd27-47e9-98bb-611a672233ca"
+    "name": "Consiva.ai",
+    "indexId": "c3b46bde-9f88-4ce8-b0d7-58d425843c0a"
   },
   "links": null,
   "images": null,
