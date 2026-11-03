@@ -1,0 +1,111 @@
+---
+title: Children’s Data Protection DPDP: Expert Help!
+url: https://consiva.ai/blog/dpdp-children-personal-data
+description: Protect children’s personal data with DPDP-aligned privacy practices. Explore consent, data handling, and compliance solutions with Consiva AI. Get expert help today.
+---
+
+# How Businesses Should Handle Children's Personal Data Under the DPDP Act
+
+What's a child's data protection -DPDP- rules mean for edtech, gaming, fintech and any other business that has customers under 18?
+
+Consiva Editorial TeamOctober 14, 2026Updated October 20269 min read
+
+Imagine a fifteen year old lands on your website to sign up. There’s a routine check on your sign up form asking “Are you 18 or over?” & a big bright button marked Yes that she’s been wanting to click. She taps it (what else is she going to do, she wants to get in) and before you know it lunch time rolls around and she’s browsing around, clicking on things, looking at ads and producing all the kind of behavioural data your product team goes wild for.
+
+Under the DPDP Act, that’s a problem. A fairly big one, as it happens.
+
+Dates first. The real duties start on 13 May 2027, so the children’s rules turn up together with everything else. And the penalty for getting the children’s obligations wrong goes up to ₹200 crore, which is only a notch under the ceiling for security failures. About seven months, then.
+
+## Who counts as a child (older than you’d think)
+
+The Act says a child is anyone who hasn’t completed eighteen years of age. Not thirteen, not sixteen, eighteen. If your website sign up process or your analytics are built around some lower age limit that was nicked from another country’s law, that’s the first thing you need to go back and re-check because a big chunk of your teenage customers have just been bumped up to “children” in DPDP terms.
+
+People with disabilities who have a lawful guardian are covered by the same parental-consent rule, so it’s not just about kids in the classical sense.
+
+## What Section 9 asks for
+
+It’s short, which helps. Before you process a child’s personal data you need verifiable consent from a parent or lawful guardian. You can’t process it in a way that’s likely to have a detrimental effect on the child’s well-being. And you can’t do tracking, behavioural monitoring or targeted advertising directed at children.
+
+Read that last one slowly if you run an ad SDK, a recommendation engine or some funnel-optimisation tool. The Act doesn’t say “tracking for marketing.” It just says tracking.
+
+The “detrimental effect” bit is the vague one. The Act doesn’t define it, so it comes down to judgement, and my own read is that pushy recommendation loops, manipulative nudges and heavy profiling of minors are the obvious exposure. Write down why you think a given feature is safe for children. “We didn’t think about it” won’t go far as a defence.
+
+## What “verifiable” means when you’re building it
+
+A tick-box won’t do. Under Rule 10 you get the parent’s consent first and carry out due diligence that she’s an identifiable adult, using reliable identity and age details you already hold, details she gives you, or a virtual token from an authorised entity, a Digital Locker service for example. “Verifiable” means you can demonstrate that the consent came from a parent or guardian, and not from the child.
+
+The step before that is what catches people. As far as I can tell the Rules don’t tell you how to work out that a user is a child in the first place. You’re expected to have technical and organisational measures in place so parental consent happens before you touch the data. A self-declared “I’m 18” button is a shaky foundation, and I wouldn’t fancy defending it to the Board.
+
+## The exemptions are narrower than they look
+
+Section 9(4) lets the Rules exempt some classes of business and some purposes from the consent and tracking provisions. The Fourth Schedule does that, but only for five kinds of operator: healthcare, allied healthcare, educational institutions, crèches and day care, and transport engaged by them. And there are conditions even then.
+
+A clinic can process a child’s data to deliver health services. A school can monitor for educational activities or the safety of enrolled children. A crèche can track for safety, and a transport provider hired by a school can follow the child’s location in transit. None of them gets to build advertising profiles. And if you’re an edtech platform rather than a school, don’t assume the exemption covers you. It follows the class of entity and the purpose, not the fact that your users happen to be students.
+
+## Teenagers, family accounts and the awkward middle
+
+Every product team asks this one. What about sixteen- and seventeen-year-olds? Still children, under the Act. Section 9(5) does let the government notify an age above which a particular business is exempt, but only where it’s satisfied the processing is verifiably safe, and as far as I know none has been notified. Until one is, plan on eighteen.
+
+Family accounts need some thought too. A parent who sets up a profile for her child, a school that bulk-uploads a class list, a shared tablet at home. In each case somebody has to be able to show who consented, and on whose behalf.
+
+## When the parent knocks
+
+The Act says a Data Principal, where she’s a child, includes the parent or lawful guardian. So requests to see, correct or erase a child’s data (and complaints) will often come from a parent rather than the child. That’s fine until somebody emails saying she’s the mother of one of your users. You’ll need some way of checking she is who she says before you hand over or delete anything, and your rights queue needs to tell an adult account holder from a parent acting for a minor.
+
+## Where businesses trip on children’s data protection DPDP rules
+
+Mostly in dull places. The age question gets answered by a checkbox. An analytics or ad SDK sits quietly inside an app thousands of teenagers use. A recommendation engine builds a profile from a minor’s viewing. Parental consent is collected once, with nothing to prove it, and nobody looks at it again. Data hangs about after a parent withdraws consent. A processor somewhere in the chain has never been told that part of the data belongs to children.
+
+Across sectors it all comes down to this.
+
+| Business | Where the trouble usually lies | What you can do about it |
+| --- | --- | --- |
+| Edtech and coaching | All these new tools for profiling students and selling ads to them | Take a closer look at what they're really up to - and switch off the ads when you can |
+| Gaming and social apps | They're tracking your behaviour all over the place, hitting you with targeted ads in the app | Lock under-18s out, get rid of the profiling and targeted ads. Gaming and social apps, by the way, are particularly prone to this sort of thing |
+| Fintech and teen accounts | Some of these services are building credit-style profiles of minors - and then pushing them financial products | Get some parental verification set up, and make sure the kid isn't getting marketed to like a customer |
+| Paediatric healthcare | Health services are using parent-child records, sending out reminders and marketing materials | Stick to what you're supposed to be doing - and don't get sidetracked. Don't get too excited - we're not saying this is all bad news, but you do need to keep things in check |
+| Retail and e-commerce | Some of these retailers are pushing products towards kids - and others are creating family accounts where the parent's details are getting shared | Keep the adult and child profiles separate, and make sure you verify the parent before sharing any of their info |
+
+Illustrative summary, not legal advice.
+
+Figure 1. Is this user a child? What you must do next.
+
+## Retention and breaches, where the bill gets big
+
+Children’s data shouldn’t sit around waiting for a future campaign. Once the purpose is served, or a parent withdraws consent, it has to be erased unless a law says otherwise, and that includes whatever your processors are holding. (We went through the mechanics in why erasure doesn’t mean delete.) And if there’s a data breach which involves kids’ records, you can bet the regulatory spotlight will shine on you, and so will the size of the fine that’s heading your way. So, for goodness’ sake, lock those datasets down tighter than Fort Knox, using whatever access controls you’ve got.
+
+## A Pre-2027 To-Do List
+
+First things first, get a handle on exactly how a child’s data is creeping into your systems - that’s every single place it can end up, whether that’s signup forms or school integrations, parent accounts or support tickets, free trials or whatnot. Then ask yourself how you’re planning to tell a kid from a grown-up - and be honest with yourselves, because the answer may not be as rock-solid as you’d like.
+
+Now it’s time to get the parent’s consent sorted out, and this needs to be a proper process, not just a click on an email link. You need to verify that the person consenting is an adult, and you need to record exactly what they gave their consent for, and it should be dead simple for them to withdraw it if they change their mind. Turn off tracking, behavioral profiling and all those targeted ads for anyone under the age of 18. Next, go through your processors and tell them which datasets contain kids’ data, and keep proof of all of this, because if a complaint ever lands on your doorstep you’ll be the one who has to prove that consent was genuinely obtained.
+
+You’ve got 7 months to get this sorted, providing you don’t just sit on your hands and start worrying about who’s going to be the first one fined. And if you’ve been treating children’s data protection as an edtech problem, it’s high time you took a wider view, since any product that has under-18 users is going to be in scope.
+
+If you want to dive deeper into the sector side of things, Consiva does a great rundown of the edtech and healthcare sectors on their website - both places where this regulation bites particularly hard. And if you’d like to see how consent and age flows work in a platform, talk to the team.
+
+## Frequently Asked Questions
+
+### Who counts as a child under the DPDP Act?
+
+Anyone who hasn’t turned eighteen. That catches far more of your users than most teams expect, because plenty of sign-up flows were built around thirteen or sixteen, borrowed from foreign laws. People with a disability who have a lawful guardian are covered by the same parental-consent rule too, so it isn’t only teenagers you need to think about.
+
+### Is a tick-box parental consent enough?
+
+No, and it’s probably the most common mistake out there. Consent has to be verifiable, which means you’ve done some due diligence that the person saying yes is an identifiable adult and really is the parent or guardian. You might use identity details you already hold, or a token from a service like DigiLocker. Whatever you pick, keep a record you can show later.
+
+### Can we run targeted ads or analytics on under-18 users?
+
+No. Tracking, behavioural monitoring and targeted advertising aimed at children are barred outright. The Fourth Schedule exemptions are narrow and cover specific purposes like health services, educational activities or a child’s safety. None of them opens the door to ad targeting, so switch off profiling and ad SDKs for anyone you know or suspect is under eighteen.
+
+### Do sixteen- and seventeen-year-olds need parental consent too?
+
+Yes. They’re still children under the Act. The government can notify an age above which a particular, verifiably safe business is exempt, but as far as we know nothing like that has been notified yet. Until it is, build your flows around eighteen and treat older teens the same way you’d treat a twelve-year-old.
+
+### What’s the penalty for getting children’s data wrong?
+
+Up to ₹200 crore for breaching the children’s obligations in Section 9, just one step below the top ceiling for security failures. The Board also weighs how quickly and how well you acted to limit the damage. So a dated record of your age checks, consent logs and fixes can make a real difference if something does go wrong.
+
+### When do the children’s data rules start, and where do we begin?
+
+The main duties, Section 9 included, begin on 13 May 2027. Start by mapping every place a child’s data can enter your systems: sign-up forms, school integrations, parent accounts, support tickets, free trials. Then decide honestly how you’ll tell a child from an adult, because the consent flow and everything after it depends on that answer.

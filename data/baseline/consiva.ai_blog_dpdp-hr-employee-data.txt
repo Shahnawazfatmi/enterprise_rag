@@ -1,0 +1,108 @@
+---
+title: DPDP Compliance for HR: Protect Employee Data
+url: https://consiva.ai/blog/dpdp-hr-employee-data
+description: Protect employee data with DPDP compliance for HR teams. Improve consent, access, and retention with Consiva AI. Talk to our team for support today.
+---
+
+# DPDP Compliance for HR and Employee Data: What Companies Need to Know
+
+Why DPDP compliance for HR is really a people-and-vendors problem, and where the law is clear (and where it isn't)
+
+Consiva Editorial TeamOctober 23, 2026Updated October 202610 min read
+
+Monday, 9:15. Three emails in the HR inbox before anyone’s finished their chai. One’s from a former employee, left in March, asking for “a copy of everything you hold about me.” One’s from the payroll vendor, subject line “minor incident, no action required” (the kind of line that rarely ends there). And one’s from the CEO, who’d quite like a dashboard of what the sales team types, all day long, “for productivity.”
+
+Welcome to DPDP compliance for HR. Candidates, ex-employees, vendors, monitoring and one very keen CEO. And the answer to most of it isn’t “just get consent,” which is what people tend to assume.
+
+Dates, since everyone asks. The real duties start on 13 May 2027, and if you can’t show reasonable security safeguards the penalty can go as high as ₹250 crore. Not telling the Board and the affected people about a breach can cost up to ₹200 crore. So about seven months. And HR files are exactly what an attacker wants: IDs, bank details, medical claims, salary slips, all in one place.
+
+## Good news, for once: consent often isn’t the point
+
+The Act gives you two ways to process personal data. Consent, or one of a short list of “legitimate uses.” Section 7(i) is the one with HR written all over it. It covers processing for the purposes of employment, or to protect the employer from loss or liability, and the examples it gives are things like corporate espionage and trade secrets, plus providing a service or benefit an employee has asked for. So payroll, attendance, leave, appraisals, statutory filings: no consent form needed for the everyday running of a job. A few lawyers point out that neither the Act nor the Rules put any extra conditions on this.
+
+Before anyone pops the champagne, though. Not needing consent to collect data doesn’t imply that you don’t need to think about anything else. You still have to provide people with a clear idea of what you’re doing with their info. This includes fairly basic stuff like giving people a way to use their rights, raise any issues that come up, and having some idea about how long you’re going to hold onto data. Consent is just one piece of the puzzle - the whole structure of your approach to privacy is just as important.
+
+And yeah, this means being transparent about what you’re up to - even when you don’t need consent to collect the data in the first place. If I were in your shoes, I’d make sure that every new employee gets a simple one-page privacy notice before they even start work. Just stick it in the on-boarding pack, put a copy on the intranet and update it every time you bring in a new tool. Keep it simple, keep it clear.
+
+## When things get unclear - tread with care
+
+Section 7(i) specifically says “employees.” So, what about people who aren’t yet employees? Law-firms have differing opinions - some think it’s not clear whether this rule applies to potential new employees because the text assumes a relationship between employer and employee already exists. Others point out that this might not even kick in during the recruitment process, or for one-off events like company family days. So - candidates, background checks and those kind of in-between things all sit in a pretty grey area.
+
+Background verification is the one I’d be most nervous about. The Act doesn’t ban it, but it doesn’t hand employers an unrestricted right to dig either, and nobody should assume Section 7(i) blesses every kind of pre-employment screening. My own take, and it’s only that: for candidates and anything optional, say plainly what you’re doing and get consent. It’s the safer ground while the lawyers argue it out.
+
+Then monitoring. “Protecting the employer from loss or liability” is a wide phrase, which is exactly why I wouldn’t read it as a free pass for keystroke tracking. Keep it proportionate, put it in writing, and tell the staff. That CEO dashboard is going to need a better reason than “productivity.”
+
+| HR activity | Likely ground | Watch out for |
+| --- | --- | --- |
+| Payroll, attendance, leave, statutory filings | It's a given all this stuff falls under employment use (section 7 (i)) plus all the other legal stuff you need to worry about | Security, vendors, and just how long you are supposed to keep all this stuff |
+| Appraisals, disciplinary records | Pretty much only employment use | Accuracy is key here, and also who else gets to see this stuff |
+| Candidate CVs and applications | Whether you have got this from a voluntary submission (section 7 (a)) or if the person has actually agreed to it, that's a different story altogether | Whether section 7 (i) even applies to candidates is still a bit up in the air |
+| Background verification | Going down the consent route is probably the safest bet | And on top of that, just how much information do you really need to collect here, which agency is involved etc |
+| Wellness schemes, optional events, and those staff photos in marketing | Again this is all about getting consent from the people involved | It's easy as pie for people to withdraw their consent too |
+| Email, CCTV and activity monitoring | This is probably a no brainer falls under employment use (section 7 (i)), but be careful | There is a big thing about proportionality, written policy and actually telling staff about it all |
+
+And all the stuff above is just a rough guide, take it for what it is and get proper advice for your sector.
+
+Figure 1. Where employee data goes: hire, onboard, work, exit and after exit, with the DPDP angle at each stage.
+
+## Rights, grievances and the nominee
+
+Now a wrinkle. The rights in Sections 11 and 12 (a summary of your data, correction, erasure) are written around processing the person has previously consented to, including consent under Section 7(a). Some commentators conclude employees will have rights to access, correct and erase, while others say the extra access and correction rights apply where consent is the ground. Which means nobody can say for certain how it plays out for Section 7(i) processing.
+
+So don’t wait to find out. Give people a self-service way to see and fix what’s in the HRMS. You’ll want it for your own sanity anyway. Every Data Fiduciary also has to set up a proper way to deal with grievances and publish contact details for someone who can answer questions. And an employee can nominate somebody to exercise her rights if she dies or can’t act, so HR needs a process for that too.
+
+## Your vendors hold more HR data than you do
+
+Payroll provider, HRMS, applicant-tracking system, background-check agency, insurer or TPA, benefits platform, maybe an offshore team. The payroll vendor alone has your whole company’s salaries and bank accounts, and you’ve possibly never met them. They’re processors, and you carry the can: the Act makes you responsible for processing done on your behalf irrespective of any agreement to the contrary, and Rule 6 wants a clause in the contract making the processor take reasonable security safeguards.
+
+So when that payroll vendor writes “minor incident, no action required,” you don’t just accept it. Ask what happened, to whom, and when they found out. And for every HR vendor I’d want to know what data they hold, where it sits, which sub-processors they use, who on their side can open it, and how quickly they’ll tell you if something goes wrong.
+
+## Exits, retention and the ex-employee email
+
+When someone leaves, the data doesn’t. You’re meant to erase personal data once the purpose is done, unless a law says you need to keep it, and to make your processors do the same. Labour, tax and provident-fund rules will keep plenty of records alive for years. So split the pile. Keep what those rules require and lock it down. The rest, like old personal notes or last year’s exit emails nobody needs, goes on a deletion schedule. Rule 6 also wants logs of who accessed HR systems kept for at least a year.
+
+Sooner or later that ex-employee email will land, asking for everything you hold on her. Nobody hands you a template for it, so decide now. Which HR records can go out, and which can’t (notes that name other staff, say)? And how will you check it’s really her before anything leaves the building?
+
+## Younger workers
+
+Got seventeen-year-old apprentices or interns? Then Section 9 applies. A child under the Act is anyone under eighteen, which means verifiable parental consent, and as far as I can see there’s no carve-out for employers. It’s an easy one to miss, because nobody reads the date of birth on an HR form with this in mind.
+
+## When there’s a breach
+
+If HR data leaks, the clocks are short. Affected staff and the Data Protection Board have to hear from you without delay, and the Board wants a detailed report within 72 hours. CERT-In runs its own six-hour clock alongside that. So decide now who from HR, IT and legal joins the call, and make sure every HR vendor contract has a breach notice window of hours, not days.
+
+## Who owns it in HR
+
+Name one person in HR to lead on this, but don’t let it stop with them. Most HR privacy slip-ups I’ve come across aren’t malicious. A salary sheet sent over email, an Aadhaar copy pasted into a team chat, a data request that sat in someone’s inbox for a month. A little training for the whole team on sharing files safely, and on where requests should go, fixes most of it.
+
+## The next 45 days
+
+Map employee and candidate data across the company and your vendors. Next to each use, note the ground: employment, consent, or “not sure yet”. Take a fresh look at what you collect from candidates and for background checks. Pull the payroll, HRMS and BGV contracts and check them for security clauses, breach windows and erasure on exit. Set up the employee access route and a grievance contact. Then run a mock breach with HR in the room. Seven months is enough if you start now, and not if you wait for the first ex-employee’s email to set the agenda.
+
+If you’d like to see how DPDP compliance for HR looks inside a platform, with vendor tracking, consent for the optional stuff and a rights queue, talk to the team, or start with the free plan.
+
+## Frequently Asked Questions
+
+### Do employers need consent to process employee data under DPDP?
+
+Not for the everyday running of a job. Section 7(i) covers processing for employment purposes, so payroll, attendance, leave, appraisals and statutory filings don’t need a consent form. You still owe staff security, a grievance contact and sensible retention. For optional extras like wellness schemes, staff photos in marketing or family events, consent is the safer route.
+
+### Does DPDP apply to job applicants?
+
+Yes, the employer is still a Data Fiduciary for candidate data. The open question is whether the employment ground covers people who aren’t employees yet, and lawyers don’t agree on it. Until that’s settled, tell candidates plainly what you collect and why, and rely on their voluntary submission of a CV or on their consent.
+
+### Can we run background verification checks under DPDP?
+
+The Act doesn’t ban them, but it doesn’t give employers an unlimited right to dig either. The safer approach is to get the candidate’s consent, collect only what the role genuinely needs, and make sure your verification agency is on a proper contract with security and erasure clauses. Don’t assume Section 7(i) covers every kind of screening.
+
+### Can employers monitor employees’ email, screens or keystrokes?
+
+Possibly, under the ground for protecting the employer from loss or liability, but it isn’t a blank cheque. Keep monitoring proportionate to a real risk, put it in a written policy and tell staff clearly what’s watched and why. Logging every keystroke “for productivity” is the kind of thing that’s very hard to defend if someone complains.
+
+### Are payroll, HRMS and other HR vendors covered by DPDP?
+
+Yes. They’re Data Processors, and the employer stays responsible for what they do with employee data, whatever the contract says. Each contract needs a security clause, a breach notice window measured in hours, and erasure terms for when the work ends. Ask where the data sits and which sub-processors they use too, because the answer is often a surprise.
+
+### How long can we keep a former employee’s data?
+
+Only as long as you need it for the purpose, or as long as a law requires. Labour, tax and provident-fund rules will keep some records alive for years, so hold those and lock them down. Delete the rest on a set schedule, make sure your HR vendors delete their copies as well, and get that confirmed in writing.

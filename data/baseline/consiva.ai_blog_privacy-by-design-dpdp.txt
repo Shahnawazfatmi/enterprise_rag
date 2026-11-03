@@ -1,0 +1,117 @@
+---
+title: Privacy by Design Under DPDP: Practical Guide
+url: https://consiva.ai/blog/privacy-by-design-dpdp
+description: Build privacy into products with DPDP privacy by design. Discover practical controls and compliance support from Consiva AI. Get expert guidance today.
+---
+
+Data Privacy
+
+# Privacy by Design Under the DPDP Act: A Practical Framework for Businesses
+
+Why privacy by design DPDP compliance is a product job first and a legal job second, and one way to get it done before May 2027
+
+Consiva Editorial TeamOctober 20, 2026Updated October 20269 min read
+
+Let me describe a meeting that’s probably happening somewhere right now. Two days before launch, loyalty app for a chain of chai shops (made up, but you’ll know the type). The signup screen wants name, phone, date of birth, home address, monthly income - income! for a cup of chai - and permission to read your contacts. Someone from legal asks why. The PM shrugs. “In case we need it later.” Nobody can say when later is. Four hours, three coffees and one slightly tense call with the engineers afterwards, half the fields are gone and the release slips a day.
+
+That, give or take, is the whole case for privacy by design under DPDP. Same argument, same people. In week one it costs you a whiteboard. In week fifty it costs you a sprint.
+
+Dates, quickly, because someone always asks. The real duties kick in on 13 May 2027, and the Act reckons a failure to take reasonable security safeguards is worth up to ₹250 crore, the top rung. Most of the other things you could get wrong land in the catch-all bucket, up to ₹50 crore. So about seven months. Not nothing, not plenty either.
+
+## A small confession about the phrase
+
+The DPDP Act never says “privacy by design.” Not once. That’s GDPR vocabulary (Article 25, data protection by design and by default), and a civil-society submission on the draft Rules argued that the Rules’ wording on technical measures is narrower than Article 25. So if somebody tells you the Act mandates privacy by design, they’re being generous.
+
+But, and it’s a big but, the Act is full of bits that add up to the same thing. A fiduciary has to put appropriate technical and organisational measures in place so the Act is observed (that’s Section 8(4)). Consent has to be limited to the data the purpose needs. Taking it back has to be as easy as giving it. And the data should go once the job’s done. Line those up and you’ve built privacy by design DPDP-style without ever using the label. What follows is my way of organising it, not the statute’s, so a product team can pick it up on a Monday.
+
+## Start at the form
+
+Back to the chai app. The first thing I’d do is sit with the signup form and ask, for every field, what breaks if it isn’t there? Phone number - we need it to send points. Name - nice on the receipt. Date of birth - fine for a birthday freebie, so make it optional and say why. Income? Contacts? Gone.
+
+The Act has its own example of this, a telemedicine app that also asks for the phone’s contact list, and the answer is the same: consent is limited to the data the service needs, so the extra ask doesn’t stand. If your honest answer to “why do we collect this” is “dunno, we always have,” that field is a liability sitting in your database.
+
+## The notice nobody reads (so make it readable)
+
+Then the notice. It has to come with or before the ask, and Rule 3 wants it in clear, plain language and able to stand on its own, with an itemised list of what you take and what for. No hiding it on page 14 of the privacy policy. It also needs a link, or some way, to withdraw consent, use her rights and complain to the Board, and you’ve got to offer it in English or any language in the Eighth Schedule.
+
+My test is simple. Show the screen to someone from the shop floor, not a lawyer, and ask what they just agreed to. If they can’t tell you, go again.
+
+## An off switch that works
+
+Say a customer gets fed up with the marketing texts and pulls her consent. You stop, and make your processors stop. She can also ask for her data to be corrected or erased, and she has a right to know who else has been given her info - a pretty unpleasant surprise for anyone whose vendor list is in disarray.
+
+The off switch can’t just be a button in the app that someone thoughtfully clicks and that’s it, it needs to actually reach all the different systems it’s connected to - the SMS vendor, the analytics platform, the warehouse, to name a few. Try being the customer and seeing if you can actually turn it off yourself. Then go check the vendor’s end a week later - because that’s usually where you’ll find the problem.
+
+## Boring defaults
+
+Rule 6 basically reads like a security to-do list: encryption, access control, logging and monitoring in place, backups, and keeping all your logs and data for a whole year. For the chai app that turns into masked data in test environments (please), phone numbers visible only to the loyalty team, and a retention period decided on day one, say two years after the last purchase. That number’s mine, not the law’s.
+
+It’s all very dull. That’s the point. I’d bet few breaches start with a default somebody set sensibly on day one.
+
+## Evidence, or it didn’t happen
+
+If there’s ever a dispute about whether you followed the rules, the Act forces the onus onto you: you have to prove you actually gave notice and got the right consent in line with what the Act requires. So log every piece of consent with the version of the notice, the date and time, keep copies of all past notices, and make a note of why you made the design decisions you made. And date it all. Future you, when you’re standing in front of the board, will be mighty grateful.
+
+## What to ask in the design review
+
+| Step | What to ask the team | Where the Act points |
+| --- | --- | --- |
+| Collect less | What breaks if we drop this field? | Section 6(1) |
+| Explain simply | Could a customer repeat back what they agreed to? | Section 5, Rule 3 |
+| Switch it off | Does withdrawal reach every system and vendor? | Sections 6(4), 6(6), 12 |
+| Safe by default | What are the default access, masking and retention? | Section 8(5), Rule 6, section 8(7) |
+| Prove it | Can we show who agreed to what, and when? | Section 6(10) |
+
+Illustrative design-review prompts, not legal advice.
+
+Figure 1. Privacy by design in five steps: collect less, explain simply, switch it off, safe by default, prove it.
+
+## Where it fits in the week
+
+You don’t need a new department. Bolt a short privacy check onto three things you already do. When a feature’s first written up, run the five steps on one page. At design review, hold the screens up against Rule 3 and the withdrawal path. Before launch, confirm the defaults, the logs and the vendor list. Thirty minutes each, with product, engineering and somebody from legal (or the DPO’s office) in the room.
+
+And if you might end up notified as a Significant Data Fiduciary, the formal grown-up version of all this is the DPIA, which Section 10 describes as a process covering a description of the rights of Data Principals and the purpose of processing, plus an assessment and management of the risk to those rights. Do the five steps on every feature and that exercise gets a lot less painful.
+
+## How teams fake it
+
+Never on purpose, to be fair. It’s what happens when the deadline’s tight. A cookie banner with a pre-ticked box, or one that only has “Accept all.” A privacy policy doing a notice’s job. Consent captured on screen and logged nowhere. A “delete my account” button that hides the record in the front end while the warehouse keeps hold of it. Production data copied to staging “just for testing” and left there for two years. An analytics tag fires off before the visitor has even had a chance to click anything - there’s a quick ten-minute test for it in Your Tags Are Firing Before Consent.
+
+And if you’re looking at this from the perspective of users under 18, the design needs to have age signals and parental consent built right in from day one, not just tacked on at the end as an afterthought.
+
+## Who gets to draw the line
+
+Not just lawyers alone please. The product team decides what data gets collected, design figures out how to explain it, engineering sorts out who gets access to what and where it lives, security comes in to lock it all down, and procurement has a say on what the vendors can do with it. Pick one person to be the point person on privacy by design & Data Protection by Design work and give them the real power to pull the plug on a launch - if not, it’s just a bunch of advice.
+
+Train the people who actually call the shots - designers and engineers - using specific examples from your own product rather than some generic slide presentation. That way they’ll remember the one field they argued over last quarter long after they’ve forgotten some jargon definition.
+
+## The next 30 days - a reality check
+
+Pick the journey that’s got the most personal data floating around. Run those five key steps on it with the whole team in the room. Write down what fields you can safely ditch, what notices need a rewrite, and all the places withdrawal just isn’t working. Fix the easy stuff this month & schedule the rest for later - and then, get to work on the next product. Seven months is long enough to sort out most of your main journeys if you start right now - but don’t wait until the Board comes along & asks you to.
+
+If you’re curious about how consent, notice and withdrawal all work in practice across web and app, try out our free plan - it’s a low-risk way to start, or give the team a shout.
+
+## Frequently Asked Questions
+
+### Does the DPDP Act mandate privacy by design?
+
+Not by name. The phrase never appears in the Act. But Section 8(4) asks for appropriate technical and organisational measures, consent has to be limited to the data a purpose needs, withdrawing it must be as easy as giving it, and data should go once the job’s done. Put those together and you’ve got privacy by design in all but name.
+
+### How is this different from GDPR’s Article 25?
+
+GDPR talks directly about data protection by design and by default. India’s Act and Rules use narrower wording and don’t adopt that idea outright. Nothing stops you borrowing GDPR good practice, though. If your product already meets Article 25 you’re most of the way there, but you’ll still need to check DPDP specifics like notice language and consent records.
+
+### Who in the company owns privacy by design?
+
+Legally, the company as Data Fiduciary. In practice it’s shared. Product decides what gets collected, design explains it, engineering controls access and storage, security locks it down and procurement deals with vendors. Name one person to lead it and give them the power to hold a launch, otherwise it turns into polite advice that everyone nods at and ignores.
+
+### What’s the simplest way to start on an existing product?
+
+Pick the journey that collects the most personal data, usually sign-up or checkout. Sit with the team and ask, field by field, what breaks if it disappears. Check the notice is readable, test whether withdrawal really reaches every system and vendor, and look at the default retention. Fix the easy wins this month and schedule the rest.
+
+### Do small startups have to follow this?
+
+Yes. Notified startups can be exempted from some provisions, but the core security duties in Section 8 still apply to everyone. Honestly, startups have the easier job here. Building privacy into a product with five screens is one whiteboard session. Retrofitting it into fifty screens and three years of messy data is a much bigger and costlier project.
+
+### When do these requirements become mandatory?
+
+Most of the main duties start on 13 May 2027, which leaves roughly seven months. That’s enough to rework your main journeys if you begin now. Fix the forms and notices first, then the withdrawal path and the defaults, and keep dated notes on each design decision so you can show what you did and why.

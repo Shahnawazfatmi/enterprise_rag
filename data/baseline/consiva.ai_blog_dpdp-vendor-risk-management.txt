@@ -1,0 +1,113 @@
+---
+title: DPDP Vendor Risk Management: Expert Help
+url: https://consiva.ai/blog/dpdp-vendor-risk-management
+description: Reduce third-party privacy risks with DPDP vendor risk management. Strengthen assessments, contracts, and oversight with Consiva AI. Contact our team today.
+---
+
+# Vendor Risk Management Under DPDP: How to Manage Third-Party Data Processors
+
+A practical guide to DPDP vendor risk management, for companies whose customer data sits in somebody else's systems
+
+Consiva Editorial TeamOctober 16, 2026Updated October 20269 min read
+
+Friday evening, 6:40 pm. An email lands from your collections vendor. A storage bucket was left open for a few days, it says, and some of your loan records were probably visible to anyone who stumbled on the link. Probably. Their account manager adds that the team will “look into it properly next week.”
+
+Next week. Meanwhile you’re the one who has to tell the Board, tell the customers, and explain why nobody on your side could say where that data was sitting in the first place.
+
+That’s the vendor problem under DPDP in about four lines. They slipped up, and you carry the liability.
+
+Dates, since people always ask. The real duties start on 13 May 2027, and if you can’t show reasonable security safeguards the penalty can climb to ₹250 crore. Not telling the Board and the affected customers about a breach can cost up to ₹200 crore. So, about seven months.
+
+## Your vendor’s mistake is your problem
+
+Start with Section 8(1). You’ve got to comply with the Act regardless of what any agreements say, and that includes anything that’s been done on your behalf by a Data Processor - the type of person or company that helps out with processing personal data. That’s anyone from a payroll provider to a cloud host to an agency making those outbound calls or the fancy analytics tool that some bright spark in marketing signed up for using their company card - they all count.
+
+Two more bits sit right beside it. You can bring a processor in only under a valid contract, and your duty to take reasonable security safeguards stretches to processing undertaken on your behalf by a Data Processor. As far as I can tell the Act gives processors no duties of their own. It all runs through you, and through whatever you’ve signed with them.
+
+A good reason to keep records, by the way. When the Board finally decides on a penalty it takes a long hard look at how quickly and effectively you acted to limit the damage from a breach. So keeping a nice tidy file of who you vetted as a vendor, what sensible clauses you managed to get them to agree to & how fast you moved to make things right is gonna look a heck of a lot better than a blank one - trust me on that.
+
+## What Rule 6 expects from the contract
+
+The Rules add some detail. Among its minimum safeguards, Rule 6 asks for an appropriate provision in the contract between the fiduciary and the processor for taking reasonable security safeguards. The same rule wants encryption or masking, access control over the computer resources you or your processor use, logging and monitoring, backups, and logs and personal data kept for one year. DSCI reads the contract provision as requiring the processor to uphold the same safeguards.
+
+So the contract has to say, in plain words, what the vendor will do to protect the data. “The vendor will take reasonable care” won’t do.
+
+## A register you could show a customer
+
+Here’s a reason to sort your vendor list that has nothing to do with the Board. Under Section 11 a customer can ask for the identities of all other Data Fiduciaries and Data Processors with whom her personal data has been shared. (Requests from law enforcement are the exception.) Can’t produce that list? Then you’ve got a rights-request problem on top of a governance one.
+
+A decent register holds the vendor’s name, what data they have and why, where it sits, their own sub-processors, when the contract starts and ends, who on your side owns the relationship, and the risk tier you’ve given them. Nothing fancy. A spreadsheet with an owner and a renewal date beats a clever tool nobody updates.
+
+Go see which vendors people have slipped your mind: that survey tool the team signed up to in spring, that freelancer they paired up with a shared login, the WhatsApp provider set up for sales, and the agency still holding onto old exports. Just go ask each department head what software they’re using and you’re likely to be surprised and a bit spooked.
+
+Figure 1. Vendor lifecycle: onboard, monitor, offboard.
+
+## Separate them into tiers - or you’ll be overwhelmed
+
+You’ve got more vendors than you think. You’d think you’ve got a handle on them, but if you lump them all together you’ll probably waste weeks on the harmless ones or overlook the ones that need the most attention. So sort them out into levels according to what kind of data they touch.
+
+| Tier | Typical vendors | What you need to do | How Often |
+| --- | --- | --- | --- |
+| 1: high-risk | Vendors dealing with sensitive data - like KYC, payments, and hosting - or any that hold health, financial, or kid's data | Full-on questionnaire, and evidence - like security reviews and a test to see if you can get your data erased | Every single year |
+| 2: medium-risk | CRM software, support desks, HR tools, analysis tools, and other programs your company uses | Get a copy of their questionnaire, check their certifications, and get a list of who they work with | Every 18 to 24 months, give or take |
+| 3: low-risk | Tools your company uses that don't touch personal data | Do some basic checks and review their contract terms | Every time you renew the contract |
+
+This is an illustrative approach, not legal advice, so tier them according to your company's data and risk.
+
+## Taking due diligence a step further than just a questionnaire
+
+A questionnaire only shows what a company is willing to tell you about themselves, so I would suggest you look for supporting documentation, for example: the latest security audit and a list of their current sub-processors, as well as a list of where your information is stored and a history of past security breaches and the response to the security incidents. For high risk vendors, I suggest asking them to delete a record and provide the steps to delete it, and who on their team has access to your data, as well as if that access is being logged. The most insight will be gained from how the vendor addresses the unanticipated questions.
+
+## The clauses that matter
+
+You don’t need a 60-page contract. You need the right dozen lines. The vendor should process only on your instructions and for the stated purpose, and the Rule 6 security provision should be spelled out rather than implied. Make the breach notice window hours, not days, because you’ll be racing a duty to tell affected customers without delay and give the Board detailed information within 72 hours, and CERT-In’s six-hour reporting window is already live. New sub-processors need your approval first. Say where the data may be stored, since the government can restrict transfers to notified countries, and Rule 15 allows transfers subject to requirements the Central Government specifies. Then add rights-request cooperation, audit rights, and erasure or return at the end.
+
+That last one matters more than it looks. When consent is withdrawn or the purpose is served, the Act says you must cause your Data Processor to erase it too, unless retention is needed for a law. Same when a customer withdraws consent and you have to cause the processor to cease processing. If the contract doesn’t let you instruct the vendor, you can’t do either.
+
+## Offboarding, where data goes to hide
+
+Ending a contract is the moment most companies stop paying attention. Ask for written confirmation that the data’s been erased or returned, backups included, on an agreed schedule. There’s an awkward clash with Rule 6, though: you have to keep logs and the associated data for a year, so a blanket “delete everything on exit” instruction doesn’t work. Spell out what goes straight away, what’s kept, and for how long.
+
+## Keep watching them
+
+Vendor you thought were sound in 2026 could suddenly have a sub-processor or a whole new data centre or maybe even get breached in 2027. So make a note of when contracts are up for renewal, take a close look at the top tier vendors at least once a year, keep an eye on the news for any vendor-related trouble, and make sure you’re the first to know about any major changes to your vendors’ contracts or setups. One off reviews at the time of signing? No way, you’ve barely even scratched the surface of your responsibilities.
+
+## If you’re the vendor
+
+Your customers will start sending you questionnaires. And if you serve foreign clients from India, Section 17(1)(d) takes personal data of people outside India, processed under a contract with a foreign party, out of most of Chapter II, except Sections 8(1) and 8(5). So the responsibility and security duties stay on. Get your evidence pack ready before anyone asks.
+
+## Where DPDP vendor risk management usually slips
+
+Same few places, every time. No register, so nobody knows who holds what. A contract with a security line but no breach notice window. An agreement that expired two years ago while the vendor’s still processing. Sub-processors changing without anyone being told. Offboarding that never happens because the team that owned the relationship has moved on. And somebody treating the vendor’s ISO certificate as proof that your data, specifically, is protected. It isn’t. It’s a start.
+
+## The next 60 days
+
+Build the register first, then tier it. Pull the contracts for your ten riskiest vendors and check them against the clauses above, fixing the breach notice window and the erasure clause wherever they’re missing. After that, run one breach drill that includes a vendor. Seven months is enough for all of it if you start now, and not if you wait for the first complaint to tell you which vendors you have.
+
+If you’d like to see how DPDP vendor risk management looks inside a platform, with a register, contract tracking and expiry dates, talk to the team, or start with Consiva’s page on data fiduciary obligations.
+
+## Frequently Asked Questions
+
+### Is a company liable for its vendor’s data breach under DPDP?
+
+Yes. The Data Fiduciary stays responsible for anything a Data Processor does on its behalf, whatever the contract says, and your security duty stretches to cover that vendor’s processing as well. So if your payroll or cloud provider leaks customer data, the Board will look at you first, and at how quickly you moved once you found out.
+
+### Do we need a written contract with every data processor?
+
+Yes. The Act lets you bring in a processor only under a valid contract, and the Rules expect that contract to include a provision on reasonable security safeguards. A loose line about “reasonable care” won’t do much for you. Spell out what the vendor will actually do: encryption, access control, logging, breach notice and erasure when the work ends.
+
+### What should a vendor register include?
+
+Keep it simple. The vendor’s name, what data they hold and why, where it sits, their own sub-processors, contract start and end dates, the person on your side who owns the relationship, and a risk tier. A customer can ask who her data has been shared with, so this same list becomes your answer to that request.
+
+### Can a vendor store our data outside India?
+
+Often, yes. The government can restrict transfers to countries it notifies, and Rule 15 allows transfers subject to conditions it may set. Stricter sector rules, like RBI’s localisation rules for payment data, can still apply on top. Write the permitted storage locations into the contract so a vendor can’t quietly move your data somewhere new.
+
+### What happens to vendor-held data when the contract ends?
+
+You have to make the processor erase it once the purpose is done, unless a law says it must be kept. Ask for written confirmation that covers backups too. Rule 6 also wants logs kept for a year, so agree upfront what gets deleted straight away, what’s held back, and for how long, rather than sending a vague “delete everything” email.
+
+### Does DPDP vendor risk management apply to startups?
+
+Yes. The government can exempt notified startups from some provisions, but responsibility for your processors, the valid-contract rule and the security safeguards in Sections 8(1), 8(2) and 8(5) stay in place. The good news is that a small team with a handful of vendors can usually build the register and fix the contracts in a week or two.
