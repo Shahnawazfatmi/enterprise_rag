@@ -1106,7 +1106,8 @@
   margin: 0 0 8px;
 }
 
-.message-next-step a {
+/* Scoped like `.message-bubble.assistant a` above, so the button stays white. */
+.message-bubble.assistant .message-next-step a {
   display: inline-block;
   padding: 6px 12px;
   border-radius: 9px;

@@ -6,11 +6,12 @@ import './App.css'
  * Backend endpoint. Set VITE_API_URL in frontend/.env for a remote API,
  * e.g. VITE_API_URL=http://172.16.10.117:8033/ask
  * Default '/api/ask' goes through the Vite dev proxy or the nginx proxy.
+ * The embeddable widget passes its own absolute URL (see widget.jsx).
  */
-const API_URL = import.meta.env.VITE_API_URL || '/api/ask'
+const DEFAULT_API_URL = import.meta.env.VITE_API_URL || '/api/ask'
 
 // Same question, answered as server-sent events while the LLM writes.
-const STREAM_URL = `${API_URL.replace(/\/+$/, '')}/stream`
+const streamUrl = (apiUrl) => `${apiUrl.replace(/\/+$/, '')}/stream`
 
 // /ask: the whole request. /ask/stream: the longest wait between two pieces.
 const REQUEST_TIMEOUT_MS = 60000
@@ -50,7 +51,7 @@ function parseEvent(block) {
  * without the streaming endpoint (404/405) is asked through /ask
  * instead and reported as one done.
  */
-async function askBackendStream(question, history, onEvent) {
+async function askBackendStream(apiUrl, question, history, onEvent) {
   const controller = new AbortController()
   let timer
   let answered = false
@@ -63,7 +64,7 @@ async function askBackendStream(question, history, onEvent) {
   restartTimer()
 
   try {
-    const response = await fetch(STREAM_URL, {
+    const response = await fetch(streamUrl(apiUrl), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ question, history }),
@@ -72,7 +73,7 @@ async function askBackendStream(question, history, onEvent) {
 
     if (response.status === 404 || response.status === 405) {
       clearTimeout(timer)
-      onEvent('done', await askBackend(question, history))
+      onEvent('done', await askBackend(apiUrl, question, history))
       return
     }
 
@@ -118,12 +119,12 @@ async function askBackendStream(question, history, onEvent) {
   }
 }
 
-async function askBackend(question, history) {
+async function askBackend(apiUrl, question, history) {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
 
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ question, history }),
@@ -231,7 +232,7 @@ function DiamondLogo() {
   )
 }
 
-function App() {
+function App({ apiUrl = DEFAULT_API_URL }) {
   const [isOpen, setIsOpen] = useState(false)
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState([])
@@ -335,7 +336,7 @@ function App() {
     }
 
     try {
-      await askBackendStream(question, history, handleEvent)
+      await askBackendStream(apiUrl, question, history, handleEvent)
     } catch (error) {
       console.error('Chat API error:', error)
       cancelAnimationFrame(frame)

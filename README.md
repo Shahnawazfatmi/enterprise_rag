@@ -33,6 +33,20 @@ npm run dev
 
 Docker: `docker compose up --build` (API on 8081, widget on 8082; `data/` and the model cache are volumes).
 
+### Embedding the chat on another site
+
+`npm run build` also builds `dist/widget.js` (`src/widget.jsx`, `vite.widget.config.js`): the same chat
+as one script, rendered in a shadow root so the host page's CSS and ours never mix. Any site adds:
+
+```html
+<script src="https://rag.consiva.tech/widget.js" defer></script>
+```
+
+The site's CSP must allow `https://rag.consiva.tech` in `script-src` and `https://apirag.consiva.tech`
+in `connect-src`, and the API's `ALLOWED_ORIGINS` must include the site. nginx serves `widget.js` with
+`Cache-Control: no-cache`, so every deploy reaches every embedding site at once.
+Optional: `data-api-url="https://.../ask"` on the script tag points it at another API.
+
 `POST /ask` body: `{"question": "...", "history": [{"role": "user"|"assistant", "content": "..."}]}`
 Response: `{"answer": "... [1]", "sources": [{"id": 1, "title", "section", "url"}], "query_type"}`.
 Errors: 400 bad input, 429 rate limit, 503 knowledge base or LLM unavailable.
