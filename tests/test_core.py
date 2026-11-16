@@ -256,6 +256,22 @@ class SearchIndexTests(unittest.TestCase):
         hits = self.search([0.9, 0.1, 0.0], "section 8(5)")
         self.assertIn("b", [hit["id"] for hit in hits])
 
+    def test_mean_vector_of_stored_chunks(self):
+        np.testing.assert_allclose(self.index.mean_vector(["a", "c", "gone"]), [0.5, 0, 0.5])
+        self.assertIsNone(self.index.mean_vector(["gone"]))
+
+    def test_next_step_answer_vector_uses_cited_chunks_without_embedding(self):
+        from app.rag import ConsivaRAG
+
+        rag = ConsivaRAG.__new__(ConsivaRAG)
+        rag._index = self.index
+        rag.reload_index_if_changed = lambda: None
+        hits = [{"id": "a"}, {"id": "b"}, {"id": "c"}]
+
+        np.testing.assert_allclose(rag.answer_vector("Price [1], cookies [3].", hits), [0.5, 0, 0.5])
+        np.testing.assert_allclose(rag.answer_vector("No citations.", hits), [1 / 3] * 3, rtol=1e-6)
+        self.assertIsNone(rag.answer_vector("No citations.", []))
+
 
 class ChunkIdTests(unittest.TestCase):
 

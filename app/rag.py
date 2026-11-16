@@ -389,17 +389,32 @@ class ConsivaRAG:
     # NEXT STEP
     # --------------------------------------------------------
 
+    def answer_vector(self, answer: str, hits: list[dict]) -> np.ndarray | None:
+        """Average stored vector of the chunks the answer cites, else of all hits; None without hits."""
+
+        numbers = sorted({int(number) for number in CITATION.findall(answer)})
+        cited = [hits[number - 1] for number in numbers if 1 <= number <= len(hits)]
+
+        return self.index.mean_vector([hit["id"] for hit in cited or hits])
+
     def suggest_next_step(
         self,
         question: str,
         answer: str,
         sources: list[dict],
         query_vector: np.ndarray | None = None,
+        hits: list[dict] | None = None,
     ) -> dict | None:
         """
         One relevant link and follow-up question after an answer, or None
         (see app/next_step.py). Never raises: a failed suggestion only
         means no card under the answer.
+
+        The answer side of the match is the average stored vector of the
+        chunks the answer cites (all hits if it cites none), not a new
+        embedding of the answer text: bge-m3 on a long answer costs about
+        1 s on a laptop and far more on a small server CPU, and picks the
+        same link in practice.
         """
 
         if not self.next_step_llms:
@@ -416,7 +431,10 @@ class ConsivaRAG:
             if query_vector is None:
                 query_vector = self.embeddings.embed_query(question)
 
-            answer_vector = self.embeddings.embed_query(f"{question}\n{answer[:1500]}")
+            answer_vector = self.answer_vector(answer, hits or [])
+
+            if answer_vector is None:
+                answer_vector = query_vector
 
             candidates = self._links.shortlist(
                 question_vector=query_vector,

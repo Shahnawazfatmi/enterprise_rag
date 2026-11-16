@@ -203,7 +203,7 @@ def ask_question_stream(payload: QuestionRequest, request: Request):
 
         if done:
             step = rag.suggest_next_step(
-                prepared["question"], done["answer"], done["sources"], prepared["query_vector"],
+                prepared["question"], done["answer"], done["sources"], prepared["query_vector"], prepared["hits"],
             )
             if step:
                 yield sse("next_step", step)

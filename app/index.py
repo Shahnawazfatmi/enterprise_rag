@@ -96,6 +96,7 @@ class SearchIndex:
         norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
         self.embeddings = embeddings / np.clip(norms, 1e-12, None)
         self.records = records
+        self.rows = {record["id"]: row for row, record in enumerate(records)}
         self._build_bm25()
 
     @classmethod
@@ -112,6 +113,12 @@ class SearchIndex:
 
     def __len__(self) -> int:
         return len(self.records)
+
+    def mean_vector(self, ids: list[str]) -> np.ndarray | None:
+        """Average stored vector of these chunks (ids no longer indexed are skipped), or None."""
+
+        rows = [self.rows[chunk_id] for chunk_id in ids if chunk_id in self.rows]
+        return self.embeddings[rows].mean(axis=0) if rows else None
 
     # --------------------------------------------------------
     # BM25
