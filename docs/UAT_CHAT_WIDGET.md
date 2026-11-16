@@ -43,7 +43,11 @@ curl -I https://rag.consiva.tech/widget.js
 ```
 
 You should see `Content-Type: application/javascript` and `Cache-Control: no-cache`.
-If you see `text/html`, the Consiva team has not deployed yet: wait for their go-ahead.
+
+If you see `text/html` instead, Cloudflare is still serving an old copy from before the deploy. It clears by
+itself within 4 hours. To fix it at once, whoever manages Cloudflare for `consiva.tech` purges this one
+URL: **Caching → Configuration → Custom Purge → `https://rag.consiva.tech/widget.js`**. This is needed
+only once; later updates are never held in that cache.
 
 ---
 
@@ -127,7 +131,7 @@ Nothing else is needed: the Consiva API already accepts requests from `https://u
 | No chat button at all | `script-src` blocks the widget (Console shows a CSP error for `widget.js`) | Add `https://rag.consiva.tech` to `script-src` in **both** the header and the meta tag |
 | Chat opens, but answers fail with "could not connect" | `connect-src` blocks the API | Use `https://apirag.consiva.tech` (no path) in `connect-src` |
 | Two chat buttons | The old widget is still rendered | Remove the old component (Step 1) |
-| `widget.js` returns an HTML page | The widget is not deployed yet | Ask the Consiva team; see "Before you start" |
+| `widget.js` returns an HTML page | Cloudflare still has the old copy | Wait up to 4 hours, or purge that URL in Cloudflare; see "Before you start" |
 
 ## How to undo
 
